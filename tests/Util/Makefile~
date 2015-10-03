@@ -1,0 +1,2 @@
+all: ../../libchora.a
+	g++ util_test.cpp -o util_test -lSDL2 -lSDL2_image -L../../ -I../../ -lchora -Wall -Wextra -O -g

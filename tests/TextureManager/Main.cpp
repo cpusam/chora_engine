@@ -1,0 +1,46 @@
+#include "../../src/Chora.hpp"
+
+int main(){
+	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Window *window = SDL_CreateWindow("Textures", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
+	
+	if(window == NULL){std::cout << "Error1!\n";return -1;}
+	
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+	if(renderer == NULL){std::cout << "Error2!\n";return -1;}
+	
+	SDL_Event event;
+	
+	try{
+	CTextureManager::instance()->add_texture(IMG_LoadTexture(renderer,"back.png"),"back");
+	} catch (const char * e)
+	{
+		std::cout << "Erro: " << e << std::endl;
+	}
+	bool isRunning = true;
+	
+	while(isRunning){
+		while(SDL_PollEvent(&event)){
+			switch(event.type){
+				case SDL_QUIT:
+					isRunning = false;
+				break;
+			}
+		}
+		
+		SDL_RenderClear(renderer);
+		SDL_RenderCopy(renderer,CTextureManager::instance()->get_texture("back"),NULL,NULL);
+		SDL_RenderPresent(renderer);
+		SDL_Delay(60);
+	}
+	
+	SDL_DestroyWindow(window);
+	SDL_DestroyRenderer(renderer);
+	
+	CTextureManager::instance()->destroy();
+	
+	SDL_Quit();
+	
+	return 0;
+}

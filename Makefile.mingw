@@ -1,0 +1,72 @@
+
+CXX = wine g++
+AR = wine ar
+RANLIB = wine ranlib
+CXXFLAGS = -g -w -mwindows
+BASE = obj/statemachine.o obj/vect.o obj/collision.o obj/movable.o obj/util.o obj/camera.o obj/animation.o obj/sprite.o obj/background.o obj/tilemap.o obj/soundplayer.o
+GUI = obj/widget.o obj/writer.o obj/label.o obj/button.o obj/bar.o
+GFX = obj/SDL_framerate.o
+DEPS = $(BASE) $(GUI) $(GFX)
+
+all: libchoraWIN.a
+
+libchora.a: $(DEPS) Chora.hpp src/sdl.hpp
+	@$(AR) rc $@ $(DEPS)
+	@$(RANLIB) $@
+
+obj/statemachine.o: src/statemachine.hpp src/statemachine.cpp
+	$(CXX) -c src/statemachine.cpp -o $@ $(CXXFLAGS)
+
+obj/vect.o: src/vect.hpp src/vect.cpp
+	$(CXX) -c src/vect.cpp -o $@ $(CXXFLAGS)
+
+obj/collision.o: src/collision.hpp src/collision.cpp
+	$(CXX) -c src/collision.cpp -o $@ $(CXXFLAGS)
+
+obj/movable.o: src/movable.hpp src/movable.cpp
+	$(CXX) -c src/movable.cpp -o $@ $(CXXFLAGS)
+
+obj/util.o: src/util.hpp src/util.cpp
+	$(CXX) -c src/util.cpp -o $@ $(CXXFLAGS)
+
+obj/camera.o: src/camera.hpp src/camera.cpp
+	$(CXX) -c src/camera.cpp -o $@ $(CXXFLAGS)
+
+obj/animation.o: src/animation.hpp src/animation.cpp
+	$(CXX) -c src/animation.cpp -o $@ $(CXXFLAGS)
+
+obj/sprite.o: src/sprite.hpp src/sprite.cpp
+	$(CXX) -c src/sprite.cpp -o $@ $(CXXFLAGS)
+
+obj/background.o: src/background.hpp src/background.cpp
+	$(CXX) -c src/background.cpp -o $@ $(CXXFLAGS)
+
+obj/tilemap.o: src/platform/tilemap.hpp src/platform/tilemap.cpp
+	$(CXX) -c src/platform/tilemap.cpp -o $@ $(CXXFLAGS)
+
+obj/soundplayer.o: src/sound/soundplayer.hpp src/sound/soundplayer.cpp
+	$(CXX) -c src/sound/soundplayer.cpp -o $@ $(CXXFLAGS)
+
+obj/SDL_framerate.o: src/SDL_gfx/SDL_framerate.hpp src/SDL_gfx/SDL_framerate.cpp
+	$(CXX) -c src/SDL_gfx/SDL_framerate.cpp -o $@ $(CXXFLAGS)
+
+#################################################
+obj/widget.o: src/gui/widget.hpp src/gui/widget.cpp
+	$(CXX) -c src/gui/widget.cpp -o $@ $(CXXFLAGS)
+
+obj/writer.o: src/gui/writer.hpp src/gui/writer.cpp
+	$(CXX) -c src/gui/writer.cpp -o $@ $(CXXFLAGS)
+
+obj/label.o: src/gui/label.hpp src/gui/label.cpp
+	$(CXX) -c src/gui/label.cpp -o $@ $(CXXFLAGS)
+
+obj/button.o: src/gui/button.hpp src/gui/button.cpp
+	$(CXX) -c src/gui/button.cpp -o $@ $(CXXFLAGS)
+
+obj/bar.o: src/gui/bar.hpp src/gui/bar.cpp
+	$(CXX) -c src/gui/bar.cpp -o $@ $(CXXFLAGS)
+
+clean:
+	rm -f libchoraWIN.a obj/*.o
+clean_objs:
+	rm -f  obj/*.o
