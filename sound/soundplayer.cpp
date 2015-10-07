@@ -1,36 +1,36 @@
 #include "soundplayer.hpp"
 
-int CSound::get_type (  )
+int SoundFX::get_type (  )
 {
 	return type;
 }
 
-std::string CSound::get_id (  )
+std::string SoundFX::get_id (  )
 {
 	return id;
 }
 
-std::string CSound::get_path (  )
+std::string SoundFX::get_path (  )
 {
 	return path;
 }
 
-Mix_Chunk * CSound::get_chunk (  )
+Mix_Chunk * SoundFX::get_chunk (  )
 {
 	return chunk;
 }
 
-Mix_Music * CSound::get_music (  )
+Mix_Music * SoundFX::get_music (  )
 {
 	return music;
 }
 
-int CSound::get_channel (  )
+int SoundFX::get_channel (  )
 {
 	return channel;
 }
 
-bool CSound::play ( int ch, int loops )
+bool SoundFX::play ( int ch, int loops )
 {
 	bool ret = false;
 
@@ -73,7 +73,7 @@ bool CSound::play ( int ch, int loops )
 	return ret;
 }
 
-bool CSound::pause (  )
+bool SoundFX::pause (  )
 {
 	bool ret = false;
 
@@ -111,7 +111,7 @@ bool CSound::pause (  )
 	return ret;
 }
 
-bool CSound::resume (  )
+bool SoundFX::resume (  )
 {
 	bool ret = false;
 
@@ -140,7 +140,7 @@ bool CSound::resume (  )
 	return ret;
 }
 
-void CSound::destroy (  )
+void SoundFX::destroy (  )
 {
 	if (chunk)
 		Mix_FreeChunk(chunk);
@@ -155,7 +155,7 @@ void CSound::destroy (  )
 	type = UNDEF_SOUND;
 }
 
-void CSound::set_chunk ( std::string p )
+void SoundFX::set_chunk ( std::string p )
 {
 	Mix_Chunk * c = Mix_LoadWAV(p.c_str());
 	if (c)
@@ -170,13 +170,13 @@ void CSound::set_chunk ( std::string p )
 	else
 	{
 		std::string t;
-		t = "CSound: não conseguiu abrir efeito ";
+		t = "SoundFX: não conseguiu abrir efeito ";
 		t.append(p);
 		throw t.c_str();
 	}
 }
 
-void CSound::set_music ( std::string p )
+void SoundFX::set_music ( std::string p )
 {
 	Mix_Music * m = Mix_LoadMUS(p.c_str());
 	if (m)
@@ -191,7 +191,7 @@ void CSound::set_music ( std::string p )
 	else
 	{
 		std::string t;
-		t = "CSound: não conseguiu abrir musica ";
+		t = "SoundFX: não conseguiu abrir musica ";
 		t.append(p);
 		throw t.c_str();
 	}
@@ -200,27 +200,27 @@ void CSound::set_music ( std::string p )
 
 /////////////////////////////////////////////////////////////////
 
-CSoundPlayer * CSoundPlayer::singleton = 0;
+SoundPlayer * SoundPlayer::singleton = 0;
 
 
-void CSoundPlayer::free_sounds (  )
+void SoundPlayer::free_sounds (  )
 {
-	for (std::vector <CSound>::iterator it = sound.begin(); it != sound.end(); it++)
+	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
 		it->destroy();
 
 	sound.clear();
 }
 
-bool CSoundPlayer::has_sound ( std::string id )
+bool SoundPlayer::has_sound ( std::string id )
 {
-	for (std::vector <CSound>::iterator it = sound.begin(); it != sound.end(); it++)
+	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
 		if (id == it->get_id())
 			return true;
 
 	return false;
 }
 
-bool CSoundPlayer::add_sound ( CSound s )
+bool SoundPlayer::add_sound ( SoundFX s )
 {
 	if (has_sound(s.get_id()))
 		return false;
@@ -229,31 +229,31 @@ bool CSoundPlayer::add_sound ( CSound s )
 	return true;
 }
 
-bool CSoundPlayer::playing ( std::string id )
+bool SoundPlayer::playing ( std::string id )
 {
-	for (std::vector <CSound>::iterator it = sound.begin(); it != sound.end(); it++)
+	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
 		if (it->get_id() == id && it->get_state() == PLAYING_SOUND)
 			return true;
 
 	return false;
 }
 
-bool CSoundPlayer::pause_sound ( std::string id )
+bool SoundPlayer::pause_sound ( std::string id )
 {
 	bool ret = false;
 
-	for (std::vector <CSound>::iterator it = sound.begin(); it != sound.end(); it++)
+	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
 		if (id == it->get_id())
 			it->pause();
 
 	return ret;
 }
 
-bool CSoundPlayer::resume_sound ( std::string id )
+bool SoundPlayer::resume_sound ( std::string id )
 {
 	bool ret = false;
 
-	for (std::vector <CSound>::iterator it = sound.begin(); it != sound.end(); it++)
+	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
 		if (id == it->get_id())
 		{
 			switch (it->get_type())
@@ -278,10 +278,10 @@ bool CSoundPlayer::resume_sound ( std::string id )
 	return ret;
 }
 
-bool CSoundPlayer::play_sound ( std::string id, int channel, int loops )
+bool SoundPlayer::play_sound ( std::string id, int channel, int loops )
 {
 	bool ret = false;
-	for (std::vector <CSound>::iterator it = sound.begin(); it != sound.end(); it++)
+	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
 		if (id == it->get_id())
 		{
 			if (it->get_state() == PAUSED_SOUND)
@@ -300,11 +300,11 @@ bool CSoundPlayer::play_sound ( std::string id, int channel, int loops )
 	return ret;
 }
 
-bool CSoundPlayer::halt_sound ( std::string id )
+bool SoundPlayer::halt_sound ( std::string id )
 {
 	bool ret = false;
 
-	for (std::vector <CSound>::iterator it = sound.begin(); it != sound.end(); it++)
+	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
 		if (id == it->get_id())
 		{
 			switch (it->get_type())
@@ -333,9 +333,9 @@ bool CSoundPlayer::halt_sound ( std::string id )
 	return ret;
 }
 
-int CSoundPlayer::update (  )
+int SoundPlayer::update (  )
 {
-	for (std::vector <CSound>::iterator it = sound.begin(); it != sound.end(); it++)
+	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
 		switch (it->get_type())
 		{
 		case CHUNK_SOUND:

@@ -1,13 +1,13 @@
 #include "label.hpp"
 
-void CLabel::str_to_surface ( std::string s )
+void GuiLabel::str_to_surface ( std::string s )
 {
 	int w, h;
 	if (texture)
 		SDL_DestroyTexture(texture);
 
 	if (s != "")
-		texture = CWriter::instance()->render_text(s, color, UTF8_TEXT);
+		texture = Writer::instance()->render_text(s, color, UTF8_TEXT);
 	else
 	{
 		texture = 0;
@@ -17,23 +17,23 @@ void CLabel::str_to_surface ( std::string s )
 	if (!texture)
 	{
 		char * e = new char[256];
-		sprintf(e, "CLabel: erro %s\n", SDL_GetError());
+		sprintf(e, "GuiLabel: erro %s\n", SDL_GetError());
 		throw (char *)e; // c++ esquisito
 	}
 
-	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+	SDL_QueryTexture(texture, 0, 0, &w, &h);
 
 	dim.x = pos.x + rel_pos.x, dim.y = pos.y + rel_pos.y;
 	dim.w = w, dim.h = h;
 }
 
-void CLabel::set_color ( SDL_Color c )
+void GuiLabel::set_color ( SDL_Color c )
 {
 	color = c;
 	str_to_surface(str);
 }
 
-void CLabel::set_str ( std::string s )
+void GuiLabel::set_str ( std::string s )
 {
 	if (s == str)
 		return;
@@ -43,12 +43,12 @@ void CLabel::set_str ( std::string s )
 	str_to_surface(s);
 }
 
-SDL_Texture * CLabel::get_texture (  )
+SDL_Texture * GuiLabel::get_texture (  )
 {
 	return texture;
 }
 
-void CLabel::set_texture ( SDL_Texture * t )
+void GuiLabel::set_texture ( SDL_Texture * t )
 {
 	if (texture && texture != t)
 		SDL_DestroyTexture(texture);
@@ -58,7 +58,7 @@ void CLabel::set_texture ( SDL_Texture * t )
 	if (texture)
 	{
 		int w, h;
-		SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+		SDL_QueryTexture(texture, 0, 0, &w, &h);
 		dim.w = w;
 		dim.h = h;
 	}
@@ -68,47 +68,47 @@ void CLabel::set_texture ( SDL_Texture * t )
 	}
 }
 
-int CLabel::get_texture_width (  )
+int GuiLabel::get_texture_width (  )
 {
 	int w;
 
 	if (!texture)
 		return 0;
 
-	SDL_QueryTexture(texture, NULL, NULL, &w, NULL);
+	SDL_QueryTexture(texture, 0, 0, &w, 0);
 	return w;
 }
 
-int CLabel::get_texture_height (  )
+int GuiLabel::get_texture_height (  )
 {
 	int h;
 
 	if (!texture)
 		return 0;
 
-	SDL_QueryTexture(texture, NULL, NULL, NULL, &h);
+	SDL_QueryTexture(texture, 0, 0, 0, &h);
 	return h;
 }
 
-std::string CLabel::get_str (  )
+std::string GuiLabel::get_str (  )
 {
 	return str;
 }
 
-void CLabel::draw ( SDL_Renderer * renderer )
+void GuiLabel::draw ( SDL_Renderer * renderer )
 {
 	if (!visible)
 		return;
 
 	SDL_Rect d = dim;
 	if (texture)
-		SDL_RenderCopy(renderer, texture, NULL, &d);
+		SDL_RenderCopy(renderer, texture, 0, &d);
 	child_draw(renderer);
 }
 
 ///////////////////////////////////////////////////////////
 
-void CLabelNumber::proc_value ( float v )   // para ser usada internamente
+void GuiLabelNumber::proc_value ( float v )   // para ser usada internamente
 {
 	int n = v, a, i;
 	std::string s, aux;
@@ -143,7 +143,7 @@ void CLabelNumber::proc_value ( float v )   // para ser usada internamente
 	set_str(s);
 }
 
-void CLabelNumber::set_left_zero ( int lz )
+void GuiLabelNumber::set_left_zero ( int lz )
 {
 	if (lz > -1 && lz != left_zero)
 	{
@@ -152,7 +152,7 @@ void CLabelNumber::set_left_zero ( int lz )
 	}
 }
 
-bool CLabelNumber::set_value ( float v )
+bool GuiLabelNumber::set_value ( float v )
 {
 	if (value == v)
 		return false;
@@ -165,27 +165,27 @@ bool CLabelNumber::set_value ( float v )
 
 /////////////////////////////////////////////////////////////
 
-void CTextInput::set_cursor_size ( int w, int h )
+void GuiTextInput::set_cursor_size ( int w, int h )
 {
 	cursor.w = w;
 	cursor.h = h;
 }
 
-void CTextInput::set_pos ( SVect p )
+void GuiTextInput::set_pos ( Vect p )
 {
-	CWidget::set_pos(p);
+	Widget::set_pos(p);
 	cursor.x = pos.x + rel_pos.x + get_texture_width();
 	cursor.y = pos.y + rel_pos.y;
 }
 
-void CTextInput::set_rel_pos ( SVect p )
+void GuiTextInput::set_rel_pos ( Vect p )
 {
-	CWidget::set_rel_pos(p);
+	Widget::set_rel_pos(p);
 	cursor.x = pos.x + rel_pos.x + get_texture_width();
 	cursor.y = pos.y + rel_pos.y;
 }
 
-void CTextInput::input ( SDL_Event & event )
+void GuiTextInput::input ( SDL_Event & event )
 {
 	if (!visible)
 		return;
@@ -232,7 +232,7 @@ void CTextInput::input ( SDL_Event & event )
 				str = s.str();
 				str_to_surface(str);
 				int w;
-				SDL_QueryTexture(get_texture(), NULL, NULL, &w, NULL);
+				SDL_QueryTexture(get_texture(), 0, 0, &w, 0);
 				cursor.x = pos.x + rel_pos.x + w;
 			}
 		}
@@ -247,7 +247,7 @@ void CTextInput::input ( SDL_Event & event )
 	child_input(event);
 }
 
-void CTextInput::draw ( SDL_Renderer * renderer )
+void GuiTextInput::draw ( SDL_Renderer * renderer )
 {
 	if (!visible)
 		return;
@@ -261,6 +261,6 @@ void CTextInput::draw ( SDL_Renderer * renderer )
 		SDL_RenderFillRect(renderer, &d);
 	}
 
-	CLabel::draw(renderer);
+	GuiLabel::draw(renderer);
 }
 

@@ -1,16 +1,16 @@
 #include "bar.hpp"
 
-void CBar::set_orientation ( int o )
+void GuiBar::set_orientation ( int o )
 {
 	ori = o;
 }
 
-void CBar::set_direction ( int d )
+void GuiBar::set_direction ( int d )
 {
 	dir = d;
 }
 
-void CBar::set_size ( float s )
+void GuiBar::set_size ( float s )
 {
 	size = s;
 
@@ -20,12 +20,12 @@ void CBar::set_size ( float s )
 		size = full_size;
 }
 
-void CBar::reset (  )
+void GuiBar::reset (  )
 {
 	size = full_size;
 }
 
-void CBar::add ( float s )
+void GuiBar::add ( float s )
 {
 	size += s;
 	if (size < 0)
@@ -33,7 +33,7 @@ void CBar::add ( float s )
 	else if (size > full_size)
 		size = full_size;
 }
-void CBar::draw ( SDL_Renderer * renderer )
+void GuiBar::draw ( SDL_Renderer * renderer )
 {
 	if (!visible)
 		return;

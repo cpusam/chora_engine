@@ -31,13 +31,18 @@ int main ( int argc, char **argv )
 		return 1;
 	}
 	
-	CTexturer::instance()->add(renderer, "image.png");
+	Texturer::instance()->add(renderer, "image.png");
+	SDL_Texture * image = Texturer::instance()->get_texture("image.png");
+	Animation anim;
 	
-	CCamera cam((SDL_Rect){40,40,200,200}, (SDL_Rect){40,40,200,200});
+	anim.
+
+	
+	Camera cam((SDL_Rect){40,40,200,200}, (SDL_Rect){0,0,2000,200});
 	SDL_Color color = {255, 255, 0, 255};
 	SDL_Color bg_color = {255, 255, 255, 255};
 	
-	SVect pos, vel;
+	Vect pos, vel;
 	
 	int done = 0;
 	while (!done)
@@ -104,8 +109,10 @@ int main ( int argc, char **argv )
 				}
 			}
 		}
-		
-		cam.lookat(pos + vel);
+		if (vel.x || vel.y)
+			printf("Está movendo %u\n", SDL_GetTicks());
+		pos += vel;
+		cam.lookat(pos);
 		
 		SDL_SetRenderDrawColor(renderer, 0,0,0,0);
 		SDL_RenderClear(renderer);
@@ -116,15 +123,15 @@ int main ( int argc, char **argv )
 		// lado esquerdo
 		fill_rect(&cam, renderer, color, (SDL_Rect){-20, 100, 100, 20});
 		// lado direito
-		fill_rect(&cam, renderer, color, (SDL_Rect){180, 150, 100, 20});
+		fill_rect(&cam, renderer, color, (SDL_Rect){pos.x, pos.y, 100, 20});
 		// lado de cima
 		fill_rect(&cam, renderer, color, (SDL_Rect){100, -20, 20, 100});
 		// lado de baixo
 		fill_rect(&cam, renderer, color, (SDL_Rect){100, 180, 20, 100});
 		
 		int ret = 0;
-		if ((ret = draw_texture(CTexturer::instance()->get_texture("image.png"), 50, 50, &cam, renderer)) < 0)
-		printf("Retornou %d em %u\n", ret, SDL_GetTicks());
+		if ((ret = draw_texture(Texturer::instance()->get_texture("image.png"), 50, 50, &cam, renderer)) < 0)
+			printf("Retornou %d em %u\n", ret, SDL_GetTicks());
 		
 		SDL_RenderPresent(renderer);
 		SDL_Delay(60);

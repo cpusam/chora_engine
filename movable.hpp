@@ -27,16 +27,16 @@
 #include "sdl.hpp"
 #include "vect.hpp"
 
-class CMovable
+class Movable
 {
 	protected:
-		SVect pos; // posição
-		SVect vel; // velocidade
-		SVect acc; // aceleração
+		Vect pos; // posição
+		Vect vel; // velocidade
+		Vect acc; // aceleração
 		SDL_Rect dim; // posição e dimensão
 
 	public:
-		CMovable (  )
+		Movable (  )
 		{
 			dim = (SDL_Rect)
 			{
@@ -44,17 +44,17 @@ class CMovable
 			};
 		}
 
-		virtual void set_pos ( SVect p );
+		virtual void set_pos ( Vect p );
 
-		virtual SVect get_pos (  );
+		virtual Vect get_pos (  );
 
-		virtual void set_vel ( SVect v );
+		virtual void set_vel ( Vect v );
 
-		virtual SVect get_vel (  );
+		virtual Vect get_vel (  );
 
-		virtual void set_acc ( SVect a );
+		virtual void set_acc ( Vect a );
 
-		virtual SVect get_acc (  );
+		virtual Vect get_acc (  );
 
 		virtual void set_dim ( SDL_Rect d );
 

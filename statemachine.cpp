@@ -1,23 +1,23 @@
 #include "statemachine.hpp"
 
-void CStateMachine::set_state ( int s )
+void StateMachine::set_state ( int s )
 {
 	state = s;
 }
 
-int CStateMachine::get_state (  )
+int StateMachine::get_state (  )
 {
 	return state;
 }
 
-int CStateMachine::update (  )
+int StateMachine::update (  )
 {
 	return get_state();
 }
 
 
 //////////////////////////////////////////////////////////////////
-bool CStatePatternMachine::have_state ( CState * s )
+bool StatePatternMachine::have_state ( CState * s )
 {
 	for (int i = 0; i < state.size(); i++)
 		if (state[i] == s)
@@ -26,7 +26,7 @@ bool CStatePatternMachine::have_state ( CState * s )
 	return false;
 }
 
-bool CStatePatternMachine::add_state ( CState * s )
+bool StatePatternMachine::add_state ( CState * s )
 {
 	if (!have_state(s))
 	{
@@ -37,7 +37,7 @@ bool CStatePatternMachine::add_state ( CState * s )
 	return false;
 }
 
-bool CStatePatternMachine::set_state ( int id )
+bool StatePatternMachine::set_state ( int id )
 {
 	for (int i = 0; i < state.size(); i++)
 		if (state[i]->get_id() == id)
@@ -49,7 +49,7 @@ bool CStatePatternMachine::set_state ( int id )
 	return false;
 }
 
-CState * CStatePatternMachine::get_state ( int id )
+CState * StatePatternMachine::get_state ( int id )
 {
 	for (int i = 0; i < state.size(); i++)
 		if (state[i]->get_id() == id)
@@ -58,12 +58,12 @@ CState * CStatePatternMachine::get_state ( int id )
 	return 0;
 }
 
-CState * CStatePatternMachine::get_curr_state (  )
+CState * StatePatternMachine::get_curr_state (  )
 {
 	return curr_state;
 }
 
-int CStatePatternMachine::update (  )   // retorna o id do estado
+int StatePatternMachine::update (  )   // retorna o id do estado
 {
 	return DEFAULT_STATE_ID;
 }

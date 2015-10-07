@@ -1,11 +1,11 @@
 #include "button.hpp"
 
-void CSimpleButton::set_callback ( void (* c) ( CWidget * b ) )
+void GuiButton::set_callback ( void (* c) ( Widget * b ) )
 {
 	callback = c;
 }
 
-void CSimpleButton::set_dim ( SDL_Rect d )
+void GuiButton::set_dim ( SDL_Rect d )
 {
 	dim = d;
 	pos.x = d.x;
@@ -14,7 +14,7 @@ void CSimpleButton::set_dim ( SDL_Rect d )
 	if (!label)
 		return;
 
-	SVect p;
+	Vect p;
 	SDL_Rect dst;
 	dst = label->get_dim();
 	// posição do label relativo ao botão
@@ -23,7 +23,7 @@ void CSimpleButton::set_dim ( SDL_Rect d )
 	label->set_rel_pos(p);
 }
 
-void CSimpleButton::set_label ( CLabel * l )
+void GuiButton::set_label ( GuiLabel * l )
 {
 	if (!l)
 		return;
@@ -38,7 +38,7 @@ void CSimpleButton::set_label ( CLabel * l )
 	label = l;
 	add_child(label);
 
-	SVect p;
+	Vect p;
 	SDL_Rect d;
 	int w, h;
 	d = label->get_dim();
@@ -51,9 +51,9 @@ void CSimpleButton::set_label ( CLabel * l )
 	label->set_rel_pos(p);
 }
 
-void CSimpleButton::input ( SDL_Event & event )
+void GuiButton::input ( SDL_Event & event )
 {
-	SVect p;
+	Vect p;
 	switch (event.type)
 	{
 		case SDL_MOUSEBUTTONDOWN:
@@ -92,7 +92,7 @@ void CSimpleButton::input ( SDL_Event & event )
 	}
 }
 
-int CSimpleButton::update (  )
+int GuiButton::update (  )
 {
 	switch (get_state())
 	{
@@ -108,7 +108,7 @@ int CSimpleButton::update (  )
 				callback(this);
 
 			int x, y;
-			SVect p;
+			Vect p;
 			SDL_GetMouseState(&x, &y);
 			p.x = x, p.y = y;
 
@@ -124,7 +124,7 @@ int CSimpleButton::update (  )
 	return get_state();
 }
 
-void CSimpleButton::draw ( SDL_Renderer * renderer )
+void GuiButton::draw ( SDL_Renderer * renderer )
 {
 	SDL_Rect d = dim;
 	switch (get_state())

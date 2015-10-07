@@ -29,68 +29,68 @@
 #define TO_RADIANS(a) ((a) * M_PI) / 180.0f
 #define TO_DEGREES(a) ((a) * 180.0f) / M_PI
 
-struct SVect
+struct Vect
 {
 	float x;
 	float y;
 
-	SVect ( )
+	Vect ( )
 	{
 		x = y = 0;
 	}
 
-	SVect ( float _x, float _y )
+	Vect ( float _x, float _y )
 	{
 		x = _x;
 		y = _y;
 	}
 
-	SVect operator + ( const SVect & b )
+	Vect operator + ( const Vect & b )
 	{
-		return SVect(x + b.x, y + b.y);
+		return Vect(x + b.x, y + b.y);
 	}
 
-	SVect operator - (  )
+	Vect operator - (  )
 	{
-		return SVect(-x, -y);
+		return Vect(-x, -y);
 	}
 
-	SVect operator - ( const SVect & b )
+	Vect operator - ( const Vect & b )
 	{
-		return SVect(x - b.x, y - b.y);
+		return Vect(x - b.x, y - b.y);
 	}
 
 	/*
 	// seria um vetor perpedicular no eixo Z
-	SVect operator * ( const SVect & b )
+	Vect operator * ( const Vect & b )
 	{
-		return SVect(x * b.x, y * b.y);
+		return Vect(x * b.x, y * b.y);
 	}
 	*/
 
-	float operator * ( const SVect & b )
+	float operator * ( const Vect & b )
 	{
 		return x * b.x + y * b.y;
 	}
 
-	SVect operator * ( float s )
+	Vect operator * ( float s )
 	{
-		return SVect(x * s, y * s);
+		return Vect(x * s, y * s);
 	}
 
-	SVect operator / ( float s )
+	Vect operator / ( float s )
 	{
-		return SVect(x / s, y / s);
+		return Vect(x / s, y / s);
 	}
 
-	SVect& operator += ( const SVect & b)
+	Vect& operator += ( const Vect & b)
 	{
 		x += b.x;
 		y += b.y;
 		return *this;
 	}
 
-	SVect operator -= ( const SVect & b )
+	Vect operator -= ( const Vect & b )
 	{
 		x -= b.x;
 		y -= b.y;
@@ -99,7 +99,7 @@ struct SVect
 
 	/*
 	// seria um vetor perpedicular no eixo Z
-	SVect& operator *= ( const SVect & b )
+	Vect& operator *= ( const Vect & b )
 	{
 		x *= b.x;
 		y *= b.y;
@@ -107,19 +107,19 @@ struct SVect
 	}
 	*/
 
-	SVect& operator *= ( float s )
+	Vect& operator *= ( float s )
 	{
 		x *= s;
 		y *= s;
 		return *this;
 	}
 
-	float operator *= ( const SVect & b )
+	float operator *= ( const Vect & b )
 	{
 		return x * b.x + y * b.y;
 	}
 
-	SVect& operator /= ( float s )
+	Vect& operator /= ( float s )
 	{
 		x /= s;
 		y /= s;
@@ -131,13 +131,13 @@ struct SVect
 		return sqrt(x * x + y * y);
 	}
 
-	SVect normal (  )
+	Vect normal (  )
 	{
 		float h = sqrt(x * x + y * y);
-		return SVect(x / h, y / h);
+		return Vect(x / h, y / h);
 	}
 
-	SVect& normalize (  )
+	Vect& normalize (  )
 	{
 		float h = sqrt(x * x + y * y);
 		x /= h;
@@ -147,7 +147,7 @@ struct SVect
 	/*
 	float angle (  )
 	{
-		SVect a(x, y);
+		Vect a(x, y);
 
 		a.normalize();
 
@@ -155,7 +155,7 @@ struct SVect
 	}
 	*/
 
-	SVect& rotate ( float angle )
+	Vect& rotate ( float angle )
 	{
 		float c = cos(angle);
 		float s = sin(angle);
@@ -169,7 +169,7 @@ struct SVect
 		return *this;
 	}
 
-	float cos_theta ( SVect & b )
+	float cos_theta ( Vect & b )
 	{
 		float d = (b.length() * (this)->length());
 		float c = ((*this) * b) / d;
@@ -184,7 +184,7 @@ struct SVect
 		return c;
 	}
 
-	SVect& project ( SVect & b )
+	Vect& project ( Vect & b )
 	{
 		float s = cos_theta(b);
 
@@ -194,20 +194,20 @@ struct SVect
 		return *this;
 	}
 
-	SVect& to_int (  )
+	Vect& to_int (  )
 	{
 		x = int(x);
 		y = int(y);
 		return *this;
 	}
 
-	SVect& zero (  )
+	Vect& zero (  )
 	{
 		x = y = 0.0f;
 		return *this;
 	}
 
-	SVect& set ( float _x, float _y )
+	Vect& set ( float _x, float _y )
 	{
 		x = _x;
 		y = _y;

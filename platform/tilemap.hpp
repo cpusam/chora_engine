@@ -35,7 +35,7 @@
 #include "../camera.hpp"
 #include "../animation.hpp"
 
-class CTileMap
+class TileMap
 {
 	protected:
 		int width; // largura do std::mapa
@@ -46,14 +46,14 @@ class CTileMap
 		std::vector <int> tiles;
 
 	public:
-		CTileMap ( int ts )
+		TileMap ( int ts )
 		{
 			width = height = 1;
 			tilesize = ts;
 			dimension = (SDL_Rect){0,0,tilesize,tilesize};
 		}
 
-		CTileMap ( int ts, int w, int h )
+		TileMap ( int ts, int w, int h )
 		{
 			width = w;
 			height = h;

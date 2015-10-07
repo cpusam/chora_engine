@@ -1,7 +1,7 @@
 #include "camera.hpp"
+#include "collision.hpp"
 
-
-void CCamera::lookat ( SVect p )
+void Camera::lookat ( Vect p )
 {
 	position.x = p.x - focus.x;
 	position.y = p.y - focus.y;
@@ -15,35 +15,49 @@ void CCamera::lookat ( SVect p )
 		position.y = limit.y;
 	else if (position.y + dimension.h > limit.x + limit.h)
 		position.y = limit.h - dimension.h;
+	
+	SDL_Rect d = action_area;
+	if (d.w > dimension.w)
+		d.x = position.x - ((d.w/2) - (dimension.w/2));
+	else if (d.w < dimension.w)
+		d.x = position.x - ((dimension.w/2) - (d.w/2));
+	
+	if (d.h > dimension.h)
+		d.y = position.y - ((d.h/2) - (dimension.h/2));
+	else if (d.h < dimension.h)
+		d.y = position.y - ((dimension.h/2) - (d.h/2));
+	
+	setActionArea(d);
 }
 
-SVect CCamera::get_position (  )
+Vect Camera::get_position (  )
 {
 	return position;
 }
 
-SVect CCamera::get_focus (  )
+Vect Camera::get_focus (  )
 {
 	return focus;
 }
 
-void CCamera::set_focus ( SVect f )
+int Camera::set_focus ( Vect f )
 {
 	if (f.x < 0 || f.y < 0)
-		return;
+		return -1;
 
 	if (f.x > dimension.w || f.y > dimension.h)
-		return;
+		return -2;
 
 	focus = f;
+	return 0;
 }
 
-SDL_Rect CCamera::get_view (  )
+SDL_Rect Camera::get_view (  )
 {
 	return (SDL_Rect){int(position.x), int(position.y), dimension.w,dimension.h};
 }
 
-void CCamera::set_position ( SVect p )
+void Camera::set_position ( Vect p )
 {
 	position = p;
 
@@ -56,26 +70,47 @@ void CCamera::set_position ( SVect p )
 		position.y = limit.y;
 	else if (position.y + dimension.h > limit.x + limit.h)
 		position.y = limit.h - dimension.h;
+	
 }
 
-SDL_Rect CCamera::get_dimension (  )
+SDL_Rect Camera::get_dimension (  )
 {
 	return dimension;
 }
 
-SDL_Rect CCamera::get_limit (  )
+SDL_Rect Camera::get_limit (  )
 {
 	return limit;
 }
 
-void CCamera::setScreenPos ( int x, int y )
+void Camera::setScreenPos ( int x, int y )
 {
 	dimension.x = x;
 	dimension.y = y;
 }
 
-void CCamera::set_limit ( SDL_Rect l )
+void Camera::set_limit ( SDL_Rect l )
 {
 	limit = l;
+}
+
+bool Camera::inAction ( Vect p )
+{
+	return pointbox(p, action_area);
+}
+
+bool Camera::inAction ( SDL_Rect d )
+{
+	return boundingbox(d, action_area);
+}
+
+void Camera::setActionArea ( SDL_Rect d )
+{
+	action_area = d;
+}
+
+SDL_Rect Camera::getActionArea (  )
+{
+	return action_area;
 }
 

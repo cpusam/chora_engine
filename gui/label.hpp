@@ -29,7 +29,7 @@
 
 #include <sstream>
 
-class CLabel: public CWidget
+class GuiLabel: public Widget
 {
 	private:
 		SDL_Color color;
@@ -39,7 +39,7 @@ class CLabel: public CWidget
 		std::string str;
 
 	protected:
-		CLabel (  )
+		GuiLabel (  )
 		{
 			color = (SDL_Color)
 			{
@@ -49,7 +49,7 @@ class CLabel: public CWidget
 		}
 
 	public:
-		CLabel ( std::string s, SDL_Color c )
+		GuiLabel ( std::string s, SDL_Color c )
 		{
 			color = c;
 
@@ -66,7 +66,7 @@ class CLabel: public CWidget
 			set_str(s);
 		}
 
-		~CLabel (  )
+		~GuiLabel (  )
 		{
 			if (texture)
 				SDL_DestroyTexture(texture);
@@ -96,16 +96,16 @@ class CLabel: public CWidget
 /*
 	NOTA: por enquanto apenas números inteiros
 */
-class CLabelNumber: public CLabel
+class GuiLabelNumber: public GuiLabel
 {
 	protected:
 		float value;
 		float left_zero; // número máximo de zeros a esquerda
 	protected:
-		using CLabel::set_str;
+		using GuiLabel::set_str;
 
 	public:
-		CLabelNumber ( float v, SDL_Color c, int lz=0 )
+		GuiLabelNumber ( float v, SDL_Color c, int lz=0 )
 		{
 			set_color(c);
 			value = -1;
@@ -123,13 +123,13 @@ class CLabelNumber: public CLabel
 };
 
 /*
-	CTextInput usada para escrever o que o usuário digitar
+	GuiTextInput usada para escrever o que o usuário digitar
 	O "cursor" é sempre posicionado no final da std::string
 	-colocar para setar a posição do cursor com as setas direita e esquerda
 	-colocar para setar a posição do cursor com o mouse
 	-colocar os caracteres que precisão de shift para ser usados
 */
-class CTextInput: public CLabel
+class GuiTextInput: public GuiLabel
 {
 	private:
 		bool caps_lock;
@@ -142,17 +142,17 @@ class CTextInput: public CLabel
 		Uint32 cursor_color;
 
 	protected:
-		using CWidget::set_pos;
-		using CWidget::set_rel_pos;
+		using Widget::set_pos;
+		using Widget::set_rel_pos;
 
 	public:
-		CTextInput ( int fontsize, SDL_Color c, int ss=10 ): CLabel("", c)
+		GuiTextInput ( int fontsize, SDL_Color c, int ss=10 ): GuiLabel("", c)
 		{
 			if (fontsize < 1)
-				throw "CTextInput: tamanho do texto inválido\n";
+				throw "GuiTextInput: tamanho do texto inválido\n";
 
 			if (ss < 1)
-				throw "CTextInput: tamanho da std::string inválido\n";
+				throw "GuiTextInput: tamanho da std::string inválido\n";
 
 			caps_lock = false;
 			shift_key = false;
@@ -175,9 +175,9 @@ class CTextInput: public CLabel
 		*/
 		void set_cursor_size ( int w, int h );
 
-		void set_pos ( SVect p );
+		void set_pos ( Vect p );
 
-		void set_rel_pos ( SVect p );
+		void set_rel_pos ( Vect p );
 
 		void input ( SDL_Event & event );
 

@@ -11,7 +11,7 @@ bool boundingbox ( SDL_Rect a, SDL_Rect b )
 	return true;
 }
 
-bool pointbox ( SVect p, SDL_Rect b )
+bool pointbox ( Vect p, SDL_Rect b )
 {
 	if (p.x > b.x + b.w - 1)	return false;
 	if (p.x < b.x)			return false;
@@ -34,7 +34,7 @@ bool rect_inside ( SDL_Rect a, SDL_Rect b )
 	return true;
 }
 
-bool pointtile ( CTileMap & map, std::vector <int> & coll_tile, SVect &  pos )
+bool pointtile ( TileMap & map, std::vector <int> & coll_tile, Vect &  pos )
 {
 	int tile = map.get_tile(pos.x, pos.y);
 	for (unsigned int i = 0, s = coll_tile.size(); i < s; i++)
@@ -53,16 +53,16 @@ bool has_coll_tile ( std::vector <int> coll_tile, int tile )
 	return false;
 }
 
-ECollisionTileSide tile_collision ( CTileMap & map, std::vector <int> coll_tile, SVect & pos, std::vector <SVect> c_point, SVect & vel, ECollisionMove move )
+ECollisionTileSide tile_collision ( TileMap & map, std::vector <int> coll_tile, Vect & pos, std::vector <Vect> c_point, Vect & vel, ECollisionMove move )
 {
 	ECollisionTileSide ret = NO_COLLISION;
 	float p;
-	SVect cp;
+	Vect cp;
 	SDL_Rect d = map.get_dimension();
 
 	for (unsigned int i = 0, s = c_point.size(); i < s; i++)
 	{
-		printf("%s %d observe não é para eixo Y somente para X\n", __FILE__, __LINE__);
+		//printf("%s %d observe não é para eixo Y somente para X\n", __FILE__, __LINE__);
 		cp.x = pos.x + c_point[i].x + vel.x;
 		cp.y = pos.y + c_point[i].y;
 
@@ -118,11 +118,11 @@ ECollisionTileSide tile_collision ( CTileMap & map, std::vector <int> coll_tile,
 	return ret;
 }
 
-int collision_hor ( CTileMap & map, std::vector <int> coll_tile, SVect & pos, std::vector <SVect> c_point, SVect & vel )
+int collision_hor ( TileMap & map, std::vector <int> coll_tile, Vect & pos, std::vector <Vect> c_point, Vect & vel )
 {
 	int ret = 0;
 	float p;
-	SVect cp;
+	Vect cp;
 	SDL_Rect d = map.get_dimension();
 	
 	if (vel.x == 0)
@@ -166,11 +166,11 @@ int collision_hor ( CTileMap & map, std::vector <int> coll_tile, SVect & pos, st
 	return ret;
 }
 
-int collision_ver ( CTileMap & map, std::vector <int> coll_tile, SVect & pos, std::vector <SVect> c_point, SVect & vel )
+int collision_ver ( TileMap & map, std::vector <int> coll_tile, Vect & pos, std::vector <Vect> c_point, Vect & vel )
 {
 	int ret = 0;
 	float p;
-	SVect cp;
+	Vect cp;
 	SDL_Rect d = map.get_dimension();
 
 	if (vel.y == 0)

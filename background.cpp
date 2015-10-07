@@ -1,11 +1,11 @@
 #include "background.hpp"
 
-SDL_Texture * CBackground::get_texture (  )
+SDL_Texture * Background::get_texture (  )
 {
 	return texture;
 }
 
-bool CBackground::set_texture ( SDL_Texture * t )
+bool Background::set_texture ( SDL_Texture * t )
 {
 	if (texture && texture != t)
 		SDL_DestroyTexture(texture);
@@ -19,16 +19,16 @@ bool CBackground::set_texture ( SDL_Texture * t )
 	scrolling nos eixos x e y mas limitado pelas bordas da surface
 */
 
-void CBackground::draw ( CCamera * cam, SDL_Renderer * renderer )
+void Background::draw ( Camera * cam, SDL_Renderer * renderer )
 {
-	SVect p;
+	Vect p;
 	SDL_Rect d, src;
 	int w, h;
 
 	if (!texture)
 		return;
 
-	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+	SDL_QueryTexture(texture, 0, 0, &w, &h);
 
 	if (cam)
 	{
@@ -71,16 +71,16 @@ void CBackground::draw ( CCamera * cam, SDL_Renderer * renderer )
 	SDL_RenderCopy(renderer, texture, &src, &d);
 }
 // apenas um scrolling horizontal
-void CBackground::draw_hor ( CCamera * cam, SDL_Renderer * renderer )
+void Background::draw_hor ( Camera * cam, SDL_Renderer * renderer )
 {
-	SVect p;
+	Vect p;
 	SDL_Rect d, dim, src;
 	int w, h;
 
 	if (!texture)
 		return;
 
-	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+	SDL_QueryTexture(texture, 0, 0, &w, &h);
 
 	p = cam->get_position() + pos;
 	d = dim = cam->get_dimension();
@@ -98,7 +98,7 @@ void CBackground::draw_hor ( CCamera * cam, SDL_Renderer * renderer )
 		return;
 		*/
 
-		SVect cp = cam->get_position();
+		Vect cp = cam->get_position();
 
 		if (cp.x < pos.x)
 		{
@@ -230,16 +230,16 @@ void CBackground::draw_hor ( CCamera * cam, SDL_Renderer * renderer )
 
 // NOTE: falta testar, precisa refazer
 // apenas um scrolling vertical
-void CBackground::draw_ver ( CCamera * cam, SDL_Renderer * renderer )
+void Background::draw_ver ( Camera * cam, SDL_Renderer * renderer )
 {
-	SVect p;
+	Vect p;
 	SDL_Rect d, dim, src;
 	int w, h;
 
 	if (!texture)
 		return;
 
-	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+	SDL_QueryTexture(texture, 0, 0, &w, &h);
 
 	p = cam->get_position() + pos;
 	d = dim = cam->get_dimension();
@@ -297,14 +297,14 @@ void CBackground::draw_ver ( CCamera * cam, SDL_Renderer * renderer )
 
 /////////////////////////////////////////////////////////////
 
-void CAnimatedBackground::add_frame ( SDL_Texture *t, SDL_Rect f, int d )
+void AnimatedBackground::add_frame ( SDL_Texture *t, SDL_Rect f, int d )
 {
 	anim[0].add_frame(t, f, d);
 	anim[1].add_frame(t, f, d);
 }
 
 
-int CAnimatedBackground::update (  )
+int AnimatedBackground::update (  )
 {
 	int ret = DEFAULT_STATE;
 	switch (get_state())
@@ -320,16 +320,16 @@ int CAnimatedBackground::update (  )
 	return ret;
 }
 
-void CAnimatedBackground::draw ( CCamera * cam, SDL_Renderer * renderer )
+void AnimatedBackground::draw ( Camera * cam, SDL_Renderer * renderer )
 {
-	SVect p;
+	Vect p;
 	SDL_Rect d, src;
 	int w, h;
 
 	if (!anim[0].get_texture(0))
 		return;
 
-	SDL_QueryTexture(anim[0].get_texture(0), NULL, NULL, &w, &h);
+	SDL_QueryTexture(anim[0].get_texture(0), 0, 0, &w, &h);
 
 	p = cam->get_position();
 	d = cam->get_dimension();
@@ -359,9 +359,9 @@ void CAnimatedBackground::draw ( CCamera * cam, SDL_Renderer * renderer )
 	SDL_RenderCopy(renderer, anim[0].get_texture(0), &src, &d);
 }
 
-void CAnimatedBackground::draw_hor ( CCamera * cam, SDL_Renderer * renderer )
+void AnimatedBackground::draw_hor ( Camera * cam, SDL_Renderer * renderer )
 {
-	SVect p;
+	Vect p;
 	SDL_Rect d, dim, src, surf;
 
 	if (!anim[0].get_texture(0))

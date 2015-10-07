@@ -1,4 +1,4 @@
-#include "../../src/Chora.hpp"
+#include "Chora.hpp"
 #include <iostream>
 #include <vector>
 #include <iterator>
@@ -18,21 +18,21 @@ enum EPlayerDir
 	RIGHT_DIR,
 };
 
-class CPlayer: public CStateMachine, public CMovable {
-		vector <CAnimation *> anim;
-		CAnimation * curr_anim;
+class Tux: public StateMachine, public Movable {
+		vector <Animation *> anim;
+		Animation * curr_anim;
 		bool key_right, key_left, key_up;
 		int dir;
-		CTileMap * map;
-		vector <SVect> point_up;
-		vector <SVect> point_down;
-		vector <SVect> point_left;
-		vector <SVect> point_right;
+		TileMap * map;
+		vector <Vect> point_up;
+		vector <Vect> point_down;
+		vector <Vect> point_left;
+		vector <Vect> point_right;
 		vector <int> coll_tiles;
 		float gravity;
 
 public:
-		CPlayer ( SDL_Renderer * renderer, CTileMap * m )
+		Tux ( SDL_Renderer * renderer, TileMap * m )
 		{
 			SDL_Surface * aux = NULL;
 			SDL_Texture *texture = NULL;
@@ -48,14 +48,14 @@ public:
 			SDL_FreeSurface(aux);
 			aux = NULL;
 			// animações de direita
-			anim.push_back(new CAnimation());
+			anim.push_back(new Animation());
 			anim[0]->add_frame(texture,(SDL_Rect){144,0,48,43}, 60);
-			anim.push_back(new CAnimation());
+			anim.push_back(new Animation());
 			anim[1]->add_frame(texture, (SDL_Rect){0 ,0,48,43}, 3);
 			anim[1]->add_frame(texture, (SDL_Rect){48,0,48,43}, 3);
 			anim[1]->add_frame(texture, (SDL_Rect){96,0,48,43}, 3);
 			anim[1]->add_frame(texture, (SDL_Rect){48,0,48,43}, 3);
-			anim.push_back(new CAnimation());
+			anim.push_back(new Animation());
 			anim[2]->add_frame(texture, (SDL_Rect){192,0,48,43}, 3);
 
 			aux = IMG_Load(buf2);
@@ -67,14 +67,14 @@ public:
 			SDL_FreeSurface(aux);
 			aux = NULL;
 			// animações de esquerda
-			anim.push_back(new CAnimation());
+			anim.push_back(new Animation());
 			anim[3]->add_frame(texture,(SDL_Rect){144,0,48,43}, 60);
-			anim.push_back(new CAnimation());
+			anim.push_back(new Animation());
 			anim[4]->add_frame(texture, (SDL_Rect){0 ,0,48,43}, 3);
 			anim[4]->add_frame(texture, (SDL_Rect){48,0,48,43}, 3);
 			anim[4]->add_frame(texture, (SDL_Rect){96,0,48,43}, 3);
 			anim[4]->add_frame(texture, (SDL_Rect){48,0,48,43}, 3);
-			anim.push_back(new CAnimation());
+			anim.push_back(new Animation());
 			anim[5]->add_frame(texture, (SDL_Rect){192,0,48,43}, 3);
 			
 			
@@ -85,24 +85,24 @@ public:
 			key_right = key_left = key_up = false;
 
 			// colisão a direita
-			point_right.push_back(SVect(31,6));
-			point_right.push_back(SVect(31,21));
-			point_right.push_back(SVect(31,42));
+			point_right.push_back(Vect(31,6));
+			point_right.push_back(Vect(31,21));
+			point_right.push_back(Vect(31,42));
 			// colisão a esquerda
-			point_left.push_back(SVect(15,6));
-			point_right.push_back(SVect(15,21));
-			point_left.push_back(SVect(15,42));
+			point_left.push_back(Vect(15,6));
+			point_right.push_back(Vect(15,21));
+			point_left.push_back(Vect(15,42));
 			// colisão abaixo
-			point_down.push_back(SVect(15,42));
-			point_down.push_back(SVect(31,42));
+			point_down.push_back(Vect(15,42));
+			point_down.push_back(Vect(31,42));
 			// colisão acima
-			point_up.push_back(SVect(15,6));
-			point_up.push_back(SVect(31,6));
+			point_up.push_back(Vect(15,6));
+			point_up.push_back(Vect(31,6));
 
 			gravity = 3;
 		}
 
-		~CPlayer (  )
+		~Tux (  )
 		{
 			anim[0]->destroy_textures();
 			anim[2]->destroy_textures();
@@ -339,10 +339,10 @@ public:
 		return get_state();
 	}
 
-	void draw(CCamera *cam,SDL_Renderer *renderer)
+	void draw(Camera *cam,SDL_Renderer *renderer)
 	{
 		if (curr_anim)
-			curr_anim->draw(pos.x, pos.y, cam, renderer);
+			curr_anim->draw(renderer, cam, pos.x, pos.y);
 	}
 };
 
@@ -354,28 +354,28 @@ int main (  )
 		SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 		SDL_Event event;
 
-		CTileMapView map(32);
+		TileMapView map(32);
 		//char buf1[] = {"map.txt"};
 		//char buf2[] = {"tiles.png"};
 		//char buf3[] = {"back.jpg"};
 		map.read("map.txt");
 		
-		CPlayer player(renderer, &map);
+		Tux player(renderer, &map);
 
 		map.texture = IMG_LoadTexture(renderer,"tiles.png");
 		map.remove_tile('.');
 		map.set_source('a', (SDL_Rect){32,0,32,32});
 
-		CBackground background;
+		Background background;
 		
 		background.set_texture(IMG_LoadTexture(renderer, "back.jpg"));
-		CCamera cam((SDL_Rect){0,0,20*32,15*32}, map.get_dimension());
+		Camera cam((SDL_Rect){0,0,20*32,15*32}, map.get_dimension());
 		
-		CTextureManager::instance()->add_texture(renderer, "background.png");
+		Texturer::instance()->add_texture(renderer, "background.png");
 		
 
 		int done = 0;
-		player.set_pos(SVect(0, cam.get_dimension().h/2));
+		player.set_pos(Vect(0, cam.get_dimension().h/2));
 
 		while (!done)
 		{
@@ -395,7 +395,7 @@ int main (  )
 		
 		background.draw(&cam,renderer);
 		map.draw(&cam,renderer);
-		player.draw(&cam,renderer);
+		player.draw(renderer, &cam);
 		SDL_RenderPresent(renderer);
 		SDL_Delay(60);
 	}

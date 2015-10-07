@@ -1,14 +1,14 @@
 #include "tilemap.hpp"
 
-void CTileMap::set_tilesize ( int ts )
+void TileMap::set_tilesize ( int ts )
 {
 	tilesize = ts;
 }
 
-bool CTileMap::set_tile ( int x, int y, int t )
+bool TileMap::set_tile ( int x, int y, int t )
 {
 	if (x < 0 || y < 0)
-		throw "CTileMap: get_tile posições negativas!\n";
+		throw "TileMap: get_tile posições negativas!\n";
 
 	x = x / tilesize;
 	y = y / tilesize;
@@ -22,7 +22,7 @@ bool CTileMap::set_tile ( int x, int y, int t )
 	return true;
 }
 
-void CTileMap::set_tile ( int i, int t )
+void TileMap::set_tile ( int i, int t )
 {
 	if (i > -1 && i < int(tileset.size()))
 	{
@@ -32,12 +32,12 @@ void CTileMap::set_tile ( int i, int t )
 	}
 }
 
-int CTileMap::get_tile ( int x, int y )
+int TileMap::get_tile ( int x, int y )
 {
 	if (x < 0 || y < 0)
 	{
 		printf("CTilaMap: get_tile posições negativas x = %d, y = %d\n", x, y);
-		//throw "CTileMap: get_tile posições negativas!\n";
+		//throw "TileMap: get_tile posições negativas!\n";
 		return -1;
 	}
 
@@ -53,7 +53,7 @@ int CTileMap::get_tile ( int x, int y )
 	return -1;
 }
 
-int CTileMap::get_tile ( int i )
+int TileMap::get_tile ( int i )
 {
 	if (i > -1 && i < int(tileset.size()))
 		return tileset.at(i);
@@ -61,7 +61,7 @@ int CTileMap::get_tile ( int i )
 	return -1;
 }
 
-int CTileMap::find_first_pos ( int t )
+int TileMap::find_first_pos ( int t )
 {
 	for (unsigned int i = 0, end = tileset.size(); i < end; i++)
 		if (t == tileset[i])
@@ -70,27 +70,27 @@ int CTileMap::find_first_pos ( int t )
 	return -1; // sem posição ou não encontrado
 }
 
-int CTileMap::get_tilesize (  )
+int TileMap::get_tilesize (  )
 {
 	return tilesize;
 }
 
-int CTileMap::get_width (  )
+int TileMap::get_width (  )
 {
 	return width;
 }
 
-int CTileMap::get_height (  )
+int TileMap::get_height (  )
 {
 	return height;
 }
 
-SDL_Rect CTileMap::get_dimension (  )
+SDL_Rect TileMap::get_dimension (  )
 {
 	return dimension;
 }
 
-bool CTileMap::has_tile ( int t )
+bool TileMap::has_tile ( int t )
 {
 	for (unsigned int i = 0, end = tiles.size(); i < end; i++)
 		if (t == tiles[i])
@@ -99,7 +99,7 @@ bool CTileMap::has_tile ( int t )
 	return false;
 }
 
-bool CTileMap::add_tile ( int t )
+bool TileMap::add_tile ( int t )
 {
 	if (has_tile(t))
 		return false;
@@ -108,7 +108,7 @@ bool CTileMap::add_tile ( int t )
 	return true;
 }
 
-void CTileMap::remove_tile ( int t )
+void TileMap::remove_tile ( int t )
 {
 	for (std::vector <int>::iterator it = tiles.begin(), end = tiles.end(); it != end; it++)
 		if (t == *it)
@@ -121,7 +121,7 @@ void CTileMap::remove_tile ( int t )
 /*
 	Lẽ todo o vetor e se encontra um -1 soma uma linha
 */
-int CTileMap::read ( std::vector <int> & t )
+int TileMap::read ( std::vector <int> & t )
 {
 	tileset.clear();
 	width = height = 0;
@@ -152,7 +152,7 @@ int CTileMap::read ( std::vector <int> & t )
 	cada linha de tileset está dividida com -1, ou seja,
 	a cada tile sendo -1 é uma linha.
 */
-int CTileMap::read ( int * t, int size )
+int TileMap::read ( int * t, int size )
 {
 	tileset.clear();
 	width = height = 0;
@@ -182,7 +182,7 @@ int CTileMap::read ( int * t, int size )
 /*
 	Procurar ler um mapa melhor que isso.
 */
-int CTileMap::read ( std::string filename )
+int TileMap::read ( std::string filename )
 {
 	std::ifstream file(filename.c_str(), std::ifstream::in | std::ifstream::binary);
 	if (!file)

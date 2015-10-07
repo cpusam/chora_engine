@@ -29,37 +29,48 @@
 #include "sdl.hpp"
 #include "vect.hpp"
 
-class CCamera
+class Camera
 {
 	protected:
-		SVect position; // posição dentro do jogo
-		SVect focus;
+		Vect position; // posição dentro do jogo
+		Vect focus;
 		SDL_Rect dimension;
 		SDL_Rect limit;
+		SDL_Rect action_area;
 
 	public:
-		CCamera ( SDL_Rect d, SDL_Rect l )
+		Camera ( SDL_Rect d, SDL_Rect l )
 		{
 			dimension = d;
 			limit = l;
 			// focus padrão no meio da camera
 			focus.x = d.w / 2.0f;
 			focus.y = d.h / 2.0f;
-			//lookat(SVect(0,0));
+			//lookat(Vect(0,0));
 			if (limit.w < dimension.w || limit.h < dimension.h)
-				std::cout << "CCamera: atenção limit W ou H menor que dimension W ou H\n";
+				std::cout << "Camera: atenção limit W ou H menor que dimension W ou H\n";
+			
+			action_area = (SDL_Rect){0,0,d.w,d.h};
 		}
 
-		void lookat ( SVect p );
-		SVect get_position (  );
-		SVect get_focus (  );
+		void lookat ( Vect p );
+		Vect get_position (  );
+		Vect get_focus (  );
 		SDL_Rect get_view (  );
-		void set_position ( SVect p );
-		void set_focus ( SVect f );
+		void set_position ( Vect p );
+		int set_focus ( Vect f );
 		SDL_Rect get_dimension (  );
 		SDL_Rect get_limit (  );
 		void setScreenPos ( int x, int y );
 		void set_limit ( SDL_Rect l );
+		
+		// se está dentro da área de ação
+		bool inAction ( Vect p );
+		bool inAction ( SDL_Rect d );
+		
+		void setActionArea ( SDL_Rect d );
+		SDL_Rect getActionArea (  );
+		
 };
 
 #endif

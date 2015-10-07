@@ -31,11 +31,11 @@
 /*
 	Botão simples de 4 estados, normal, selecionado, pressionado e solto depois de press
 */
-class CSimpleButton: public CWidget
+class GuiButton: public Widget
 {
 	protected:
-		void (* callback) ( CWidget * b );
-		CLabel * label;
+		void (* callback) ( Widget * b );
+		GuiLabel * label;
 
 	public:
 		Uint32 color1; // cor normal
@@ -43,7 +43,7 @@ class CSimpleButton: public CWidget
 		Uint32 color3; // cor de pressionado
 
 	public:
-		CSimpleButton ( SDL_Rect d )
+		GuiButton ( SDL_Rect d )
 		{
 			label = 0;
 			callback = 0;
@@ -56,7 +56,7 @@ class CSimpleButton: public CWidget
 			set_state(1);
 		}
 
-		CSimpleButton ( SDL_Rect d, std::string str )
+		GuiButton ( SDL_Rect d, std::string str )
 		{
 			label = 0;
 			callback = 0;
@@ -66,24 +66,24 @@ class CSimpleButton: public CWidget
 			pos.x = d.x, pos.y = d.y;
 			// dimensão padrão
 			dim = d;
-			set_label(new CLabel(str, (SDL_Color)
+			set_label(new GuiLabel(str, (SDL_Color)
 			{
 				0,0,0,0
 			})); // por padrão na cor preta
 			set_state(1);
 		}
 
-		~CSimpleButton (  )
+		~GuiButton (  )
 		{
 			if (label)
 				delete label;
 		}
 
-		virtual void set_callback ( void (* c) ( CWidget * b ) );
+		virtual void set_callback ( void (* c) ( Widget * b ) );
 
 		virtual void set_dim ( SDL_Rect d );
 
-		virtual void set_label ( CLabel * l );
+		virtual void set_label ( GuiLabel * l );
 
 		virtual void input ( SDL_Event & event );
 

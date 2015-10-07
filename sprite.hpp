@@ -42,20 +42,20 @@ struct SCollisionRect
 		int get_type (  );
 
 		// pega o retangulo em releção a posição p no mundo
-		SDL_Rect get_world_rect ( SVect p );
+		SDL_Rect get_world_rect ( Vect p );
 };
 
-class CCollisionFrame: public CAnimationFrame
+class CollisionFrame: public AnimationFrame
 {
 	protected:
 		std::vector <SCollisionRect> rects; // retangulos de colisão
 
 	public:
-		CCollisionFrame (  )
+		CollisionFrame (  )
 		{
 		}
 
-		CCollisionFrame ( int d, SDL_Rect src, std::vector <SCollisionRect> r ): CAnimationFrame(d, src)
+		CollisionFrame ( int d, SDL_Rect src, std::vector <SCollisionRect> r ): AnimationFrame(d, src)
 		{
 			rects = r;
 		}
@@ -70,24 +70,24 @@ class CCollisionFrame: public CAnimationFrame
 		std::vector <SCollisionRect> get_rects_type ( int t );
 };
 
-class CSprite: public CAnimation
+class Sprite: public Animation
 {
 	protected:
-		std::vector <CCollisionFrame> coll_frames;
+		std::vector <CollisionFrame> coll_frames;
 
 	protected:
-		using CAnimation::add_frame;
+		using Animation::add_frame;
 
 	public:
-		CSprite (  )
+		Sprite (  )
 		{
 		}
 
 
-		void set_coll_frames ( SDL_Texture *t, std::vector <CCollisionFrame> c_f );
-		void add_frame ( SDL_Texture * t, CCollisionFrame c );
-		CCollisionFrame get_coll_frame ( int i );
-		std::vector <CCollisionFrame> get_coll_frames (  );
+		void set_coll_frames ( SDL_Texture *t, std::vector <CollisionFrame> c_f );
+		void add_frame ( SDL_Texture * t, CollisionFrame c );
+		CollisionFrame get_coll_frame ( int i );
+		std::vector <CollisionFrame> get_coll_frames (  );
 };
 
 #endif

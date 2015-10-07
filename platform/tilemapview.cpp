@@ -1,10 +1,10 @@
 #include "tilemapview.hpp"
 
 ////////////////////////////////////////////////////////////////////
-void CTileMapView::add_animation ( CAnimatedTile a, int t )
+void TileMapView::add_animation ( CAnimatedTile a, int t )
 {
 	if (!texture)
-		throw "CTileMapView: texture nula";
+		throw "TileMapView: texture nula";
 	a.set_texture(texture);
 
 	a.set_tile(t);
@@ -12,12 +12,12 @@ void CTileMapView::add_animation ( CAnimatedTile a, int t )
 	animation[t] = a;
 }
 
-bool CTileMapView::is_animated (	int t )
+bool TileMapView::is_animated (	int t )
 {
 	return (animation.count(t) > 0);
 }
 
-void CTileMapView::update_animation (  )
+void TileMapView::update_animation (  )
 {
 	for (std::vector <int>::iterator i = tiles.begin(); i != tiles.end(); i++)
 	{
@@ -28,10 +28,10 @@ void CTileMapView::update_animation (  )
 
 
 
-void CTileMapView::draw ( CCamera * cam, SDL_Renderer * renderer )
+void TileMapView::draw ( Camera * cam, SDL_Renderer * renderer )
 {
 	int i, j, t;
-	SVect pos = cam->get_position(), p = cam->get_position();
+	Vect pos = cam->get_position(), p = cam->get_position();
 	SDL_Rect dest = {0,0,tilesize,tilesize};
 	SDL_Rect src = {0,0,0,0};
 	SDL_Rect dim = cam->get_dimension();
@@ -106,11 +106,11 @@ void CTileMapView::draw ( CCamera * cam, SDL_Renderer * renderer )
 		}
 }
 
-void CTileMapView::draw ( int x, int y, SDL_Rect cam, SDL_Renderer * renderer )
+void TileMapView::draw ( int x, int y, SDL_Rect cam, SDL_Renderer * renderer )
 {
 	int i, j, t;
-	CCamera *test = new CCamera(cam, cam);
-	SVect pos = SVect(cam.x, cam.y), p = SVect(cam.x, cam.y);
+	Camera *test = new Camera(cam, cam);
+	Vect pos = Vect(cam.x, cam.y), p = Vect(cam.x, cam.y);
 	SDL_Rect dest = {0,0,tilesize,tilesize};
 	SDL_Rect src = {0,0,0,0};
 	SDL_Rect dim = {0,0, cam.w, cam.h};
@@ -208,10 +208,10 @@ void CTileMapView::draw ( int x, int y, SDL_Rect cam, SDL_Renderer * renderer )
 		}
 }
 
-void CTileMapView::draw ( int x, int y, SDL_Renderer * renderer )
+void TileMapView::draw ( int x, int y, SDL_Renderer * renderer )
 {
 	int i, j, t;
-	SVect pos, p;
+	Vect pos, p;
 	SDL_Rect dest = {0,0,tilesize,tilesize};
 	SDL_Rect src = {0,0,0,0};
 	SDL_Rect dim = {0,0, width, height};

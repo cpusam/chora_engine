@@ -1,48 +1,53 @@
 #include "textureid.hpp"
 
-STextureID::STextureID(){
+TextureID::TextureID(){
 	path = "";
 	name = "";
-	texture = NULL;
+	texture = 0;
 }
 
-STextureID::STextureID(SDL_Texture *tex, std::string n){
+TextureID::TextureID(SDL_Texture *tex, std::string n){
 	path = "";
 	name = n;
 	texture = tex;
 	
-	if (tex == NULL)
+	if (tex == 0)
 	{
 		throw "Erro: ao setar textura NULA";
 	}
 }
 
-STextureID::STextureID(std::string path, SDL_Renderer *renderer){
+TextureID::TextureID(std::string path, SDL_Renderer *renderer){
 	this->path = path;
 
-	unsigned int begin = this->path.find_last_of("/");
+	std::size_t begin = this->path.find_last_of("/");
 	if(begin == std::string::npos)
 		this->name = this->path; // aqui é sem '/'
-	else
+	else if (begin <= path.length())
 		this->name = this->path.substr(begin); // aqui é com barra
-
+	else
+	{
+		std::string ret = "TextureID: erro ao ler path da textura" + std::string(SDL_GetError());
+		throw ret.c_str();
+	}
+	
 	texture = IMG_LoadTexture(renderer,path.c_str());
 	
-	if(texture == NULL){
-		std::string ret = "[Texture ID] Erro Criando Textura : " + std::string(SDL_GetError());
+	if(texture == 0){
+		std::string ret = "[Texture ID] Erro ao carregar Textura: " + std::string(SDL_GetError());
 		
 		throw ret.c_str();
 	}
 }
 
-STextureID::~STextureID(){
+TextureID::~TextureID(){
 	destroy();
 }
 
-void STextureID::destroy(){
-	if(texture != NULL)
+void TextureID::destroy(){
+	if(texture != 0)
 		SDL_DestroyTexture(texture);
-	texture = NULL;
+	texture = 0;
 	path = "";
 	name = "";
 }

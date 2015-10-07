@@ -1,45 +1,44 @@
 #include "texturer.hpp"
 
-CTexturer * CTexturer::singleton = NULL;
+Texturer * Texturer::singleton = 0;
 
-CTexturer::CTexturer(){}
+Texturer::Texturer(){}
 
+Texturer::~Texturer(){}
 
-CTexturer::~CTexturer(){}
-
-CTexturer* CTexturer::instance(){
-	if( singleton == NULL ){
-		singleton = new CTexturer();
+Texturer* Texturer::instance(){
+	if( singleton == 0 ){
+		singleton = new Texturer();
 	}
 	return singleton;
 }
 
-void CTexturer::add (SDL_Renderer * renderer, std::string path){
+void Texturer::add (SDL_Renderer * renderer, std::string path){
 	for (unsigned int i = 0, end = textureID.size(); i < end; i++){
 		if(textureID[i]->path == path){
 			rem(textureID[i]->name);
-			textureID.push_back(new STextureID(path,renderer));
+			textureID.push_back(new TextureID(path,renderer));
 			return;
 		}
 	}
 
-	textureID.push_back(new STextureID(path,renderer));
+	textureID.push_back(new TextureID(path,renderer));
 }
 
-void CTexturer::add (SDL_Texture *tex, std::string name){
+void Texturer::add (SDL_Texture *tex, std::string name){
 	for(unsigned int i = 0;i<textureID.size();i++){
 		if(textureID[i]->texture == tex){
 			
 			rem(textureID[i]->name);
-			textureID.push_back(new STextureID(tex, name));
+			textureID.push_back(new TextureID(tex, name));
 			return;
 		}
 	}
 	
-	textureID.push_back(new STextureID(tex, name));
+	textureID.push_back(new TextureID(tex, name));
 }
 
-void CTexturer::rem (std::string name){
+void Texturer::rem (std::string name){
 	for (unsigned int i = 0, end = textureID.size(); i < end; i++){
 		if(textureID[i]->name == name){
 			textureID[i]->destroy();
@@ -49,7 +48,7 @@ void CTexturer::rem (std::string name){
 	}
 }
 
-SDL_Texture *CTexturer::get_texture(std::string name) {
+SDL_Texture *Texturer::get_texture(std::string name) {
 	//std::cout << name << "\n";
 	for (unsigned int i = 0, end = textureID.size(); i < end; i++){
 		if(textureID[i]->name == name){
@@ -58,11 +57,11 @@ SDL_Texture *CTexturer::get_texture(std::string name) {
 
 	}
 
-	std::cout << "[Texture Manager] Error : Texture " << name << " not found !" << std::endl;
+	std::cout << "[Texture Manager] Error : Texture \"" << name << "\" não encontrado!\n" << std::endl;
 	throw "[TextureManager] Error : Texture not found!";
 }
 
-void CTexturer::destroy() {
+void Texturer::destroy() {
 	for (unsigned int i = 0, end = textureID.size(); i < end; i++)
 		delete textureID[i];
 

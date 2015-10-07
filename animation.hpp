@@ -38,70 +38,70 @@ struct STimer
 	int state;
 	float time;
 	float step;
+	private:
+		Uint32 lastUpdate;
 
-	STimer (  )
-	{
-		time = 0;
-		step = 1;
-	}
+	public:
+		STimer (  )
+		{
+			time = 0;
+			step = 1;
+			lastUpdate = 0;
+		}
 
-	void start (  )
-	{
-		state = 1;
-	}
-	void pause (  )
-	{
-		state = 0;
-	}
+		void start (  )
+		{
+			state = 1;
+		}
+		void pause (  )
+		{
+			state = 0;
+		}
 
-	void reset (  )
-	{
-		time = 0;
-	}
+		void reset (  )
+		{
+			time = 0;
+		}
 
-	int steps (  )
-	{
-		return int(time/step);
-	}
+		int steps (  )
+		{
+			return int(time);
+		}
 
-	void update (  )
-	{
-		if (state)
-			time += step;
-	}
+		void update (  )
+		{
+			if (state)
+			{
+				Uint32 tick = SDL_GetTicks();
+				step = (float)tick - lastUpdate;
+				
+				time += step;
+			}
+		}
 };
 
-enum EAnimationState
-{
-	START_ANIM, // começou a animação
-	CHANGE_FRAME_ANIM, // trocou de frame
-	RUNNING_ANIM, // rodando a animação
-	FINISHED_ANIM, // terminou a animação e vai começar a repetir os frames
-	STOPED_ANIM, // terminou a animação e parou
-	PAUSE_ANIM, // animação parada de trocar frames
-};
 
 /*
-	CAnimationFrame contém uma cópia da surface em src quando usando SDL1.2 e um ponteiro para a
+	AnimationFrame contém uma cópia da surface em src quando usando SDL1.2 e um ponteiro para a
 	textura quando usando SDL2.
 	Para usar rotação de surfaces na animação é preciso setar para false o use_rot da animação
 	antes de adicionar qualquer frame da animação. Por padrão as animações não tem rotação.
 	Isso é preciso para economizar memória, apenas válido para SDL1.2.
 */
-class CAnimationFrame
+class AnimationFrame
 {
 	protected:
 		int delay;
 		SDL_Rect source;
 		float angle; // em radianos
-		SVect orientation;
+		Vect orientation;
 		SDL_Texture * texture;
 		SDL_RendererFlip flip;
 	public:
 		int x, y; // posições relativas ao destino
 
 	public:
-		CAnimationFrame (  )
+		AnimationFrame (  )
 		{
 			x = y = 0;
 			delay = 0;
@@ -115,7 +115,7 @@ class CAnimationFrame
 			orientation.set(1,0);
 		}
 
-		CAnimationFrame ( int d, SDL_Rect s )
+		AnimationFrame ( int d, SDL_Rect s )
 		{
 			x = y = 0;
 			set_delay(d);
@@ -134,7 +134,7 @@ class CAnimationFrame
 
 		SDL_Rect get_source (  );
 
-		SVect get_orientation (  );
+		Vect get_orientation (  );
 
 		float get_angle (  );
 
@@ -152,7 +152,7 @@ class CAnimationFrame
 	Setar use_center faz com que a posição no blit da animação use o centro do frame
 	como a posição do blit.
 */
-class CAnimation: public CStateMachine
+class Animation: public StateMachine
 {
 	protected:
 		STimer timer;
@@ -162,15 +162,26 @@ class CAnimation: public CStateMachine
 		bool use_center; // usar centro do frame como posição do blit
 		bool repeat;
 		float angle; // em radianos
-		SVect orientation;
-		std::vector <CAnimationFrame> frames;
+		Vect orientation;
+		std::vector <AnimationFrame> frames;
+	
+	public:
+		enum EAnimationState
+		{
+			ANIM_START, // começou a animação
+			ANIM_CHANGE_FRAME, // trocou de frame
+			ANIM_RUNNING, // rodando a animação
+			ANIM_FINISHED, // terminou a animação e vai começar a repetir os frames
+			ANIM_STOPED, // terminou a animação e parou
+			PAUSE_ANIM, // animação parada de trocar frames
+		};
 
 	protected:
 		std::vector <SDL_Texture *> texture;
 	public:
-		CAnimation (  )
+		Animation (  )
 		{
-			set_state(START_ANIM);
+			set_state(ANIM_START);
 			repeat = true;
 			index = 0;
 			timer.start();
@@ -180,7 +191,7 @@ class CAnimation: public CStateMachine
 			use_center = false;
 		}
 
-		//using CStateMachine::get_state;
+		//using StateMachine::get_state;
 
 		void play (  );
 		void pause (  );
@@ -199,7 +210,7 @@ class CAnimation: public CStateMachine
 
 		void clear_frames ( bool destroy=false );
 
-		SVect get_orientation (  );
+		Vect get_orientation (  );
 
 		float get_angle (  );
 
@@ -217,7 +228,7 @@ class CAnimation: public CStateMachine
 
 
 		virtual void add_frame ( SDL_Texture * t, SDL_Rect src, int d );
-		virtual void add_frame ( SDL_Texture * t, CAnimationFrame f );
+		virtual void add_frame ( SDL_Texture * t, AnimationFrame f );
 
 		SDL_Texture * get_texture ( int i );
 
@@ -229,12 +240,12 @@ class CAnimation: public CStateMachine
 
 		int get_index (  );
 
-		virtual CAnimationFrame get_frame ( int i );
-		virtual CAnimationFrame get_curr_frame (  );
+		virtual AnimationFrame get_frame ( int i );
+		virtual AnimationFrame get_curr_frame (  );
 
-		virtual void draw ( int x, int y, SDL_Renderer * renderer );
+		virtual void draw ( SDL_Renderer * renderer, int x, int y );
 
-		virtual void draw ( int x, int y, CCamera * cam, SDL_Renderer * renderer );
+		virtual void draw ( SDL_Renderer * renderer, Camera * cam, int x, int y );
 
 		virtual int update (  );
 };

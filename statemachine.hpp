@@ -29,18 +29,18 @@
 #define DEFAULT_STATE 0
 #define DEFAULT_STATE_ID -9999
 
-class CStateMachine
+class StateMachine
 {
 	private:
 		int state;
 
 	public:
-		CStateMachine (  )
+		StateMachine (  )
 		{
 			state = DEFAULT_STATE;
 		}
 
-		virtual ~CStateMachine (  )
+		virtual ~StateMachine (  )
 		{
 		}
 
@@ -71,19 +71,19 @@ class CState
 		}
 };
 
-class CStatePatternMachine
+class StatePatternMachine
 {
 	private:
 		CState * curr_state;
 		std::vector <CState *> state;
 
 	public:
-		CStatePatternMachine (  )
+		StatePatternMachine (  )
 		{
 			curr_state = 0; // default
 		}
 
-		virtual ~CStatePatternMachine (  )
+		virtual ~StatePatternMachine (  )
 		{
 		}
 

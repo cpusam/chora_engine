@@ -46,16 +46,16 @@ enum ETextType
 /*
 	classe para escrever linha de texto com a SDL_ttf
 */
-class CWriter
+class Writer
 {
 	private:
 		int size; // tamanho da fonte
 		std::string path; // caminho para a fonte
 		TTF_Font * font;
 		SDL_Renderer * renderer;
-		static CWriter * singleton;
+		static Writer * singleton;
 
-		CWriter (  )
+		Writer (  )
 		{
 			font = 0;
 			size = 0;
@@ -63,11 +63,11 @@ class CWriter
 
 	#ifndef __clang__
 			if (!TTF_WasInit())
-				throw "CWriter: SDL_ttf não inicializada\n";
+				throw "Writer: SDL_ttf não inicializada\n";
 	#endif
 		}
 
-		~CWriter (  )
+		~Writer (  )
 		{
 			if (singleton)
 			{
@@ -77,10 +77,10 @@ class CWriter
 		}
 
 	public:
-		static CWriter * instance (  )
+		static Writer * instance (  )
 		{
 			if (!singleton)
-				singleton = new CWriter();
+				singleton = new Writer();
 
 			return singleton;
 		}

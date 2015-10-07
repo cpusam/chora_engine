@@ -39,18 +39,18 @@ int SCollisionRect::get_type (  )
 }
 
 // pega o retangulo em releção a posição p no mundo
-SDL_Rect SCollisionRect::get_world_rect ( SVect p )
+SDL_Rect SCollisionRect::get_world_rect ( Vect p )
 {
 	return (SDL_Rect){p.x + x, p.y + y, w, h};
 }
 
 //////////////////////////////////////////////////////////
-void CCollisionFrame::add_rect ( SCollisionRect r )
+void CollisionFrame::add_rect ( SCollisionRect r )
 {
 	rects.push_back(r);
 }
 
-bool CCollisionFrame::set_rect ( int i, SCollisionRect r )
+bool CollisionFrame::set_rect ( int i, SCollisionRect r )
 {
 	if (i > -1 && i < rects.size())
 	{
@@ -61,7 +61,7 @@ bool CCollisionFrame::set_rect ( int i, SCollisionRect r )
 	return false;
 }
 
-void CCollisionFrame::clear_rects (  )
+void CollisionFrame::clear_rects (  )
 {
 	source = (SDL_Rect)
 	{
@@ -70,12 +70,12 @@ void CCollisionFrame::clear_rects (  )
 	rects.clear();
 }
 
-std::vector <SCollisionRect> CCollisionFrame::get_rects (  )
+std::vector <SCollisionRect> CollisionFrame::get_rects (  )
 {
 	return rects;
 }
 
-SCollisionRect CCollisionFrame::get_rect ( int i )
+SCollisionRect CollisionFrame::get_rect ( int i )
 {
 	if (i > -1 && i < rects.size())
 		return rects[i];
@@ -83,7 +83,7 @@ SCollisionRect CCollisionFrame::get_rect ( int i )
 	return SCollisionRect();
 }
 
-std::vector <SCollisionRect> CCollisionFrame::get_rects_type ( int t )
+std::vector <SCollisionRect> CollisionFrame::get_rects_type ( int t )
 {
 	std::vector <SCollisionRect> cr;
 
@@ -95,26 +95,26 @@ std::vector <SCollisionRect> CCollisionFrame::get_rects_type ( int t )
 }
 
 //////////////////////////////////////////////////////////////
-void CSprite::set_coll_frames ( SDL_Texture * t, std::vector <CCollisionFrame> c_f )
+void Sprite::set_coll_frames ( SDL_Texture * t, std::vector <CollisionFrame> c_f )
 {
 	coll_frames = c_f;
 
 	for (int i = 0; i < c_f.size(); i++)
-		CAnimation::add_frame(t, c_f[i]);
+		Animation::add_frame(t, c_f[i]);
 }
 
-void CSprite::add_frame ( SDL_Texture * t, CCollisionFrame c )
+void Sprite::add_frame ( SDL_Texture * t, CollisionFrame c )
 {
 	coll_frames.push_back(c);
-	CAnimation::add_frame(t, c);
+	Animation::add_frame(t, c);
 }
 
-CCollisionFrame CSprite::get_coll_frame ( int i )
+CollisionFrame Sprite::get_coll_frame ( int i )
 {
 	return coll_frames.at(i);
 }
 
-std::vector <CCollisionFrame> CSprite::get_coll_frames (  )
+std::vector <CollisionFrame> Sprite::get_coll_frames (  )
 {
 	return coll_frames;
 }

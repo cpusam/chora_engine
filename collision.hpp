@@ -31,13 +31,13 @@ claim that you wrote the original software. If you use this software
 #include <vector>
 
 extern bool boundingbox ( SDL_Rect a, SDL_Rect b );
-extern bool pointbox ( SVect p, SDL_Rect b );
+extern bool pointbox ( Vect p, SDL_Rect b );
 
 // verifica se "a" está completamente dentro de "b", mas não o contrário
 extern bool rect_inside ( SDL_Rect a, SDL_Rect b );
 
 // 
-extern bool pointtile ( CTileMap & map, std::vector <int> & coll_tile, SVect & pos );
+extern bool pointtile ( TileMap & map, std::vector <int> & coll_tile, Vect & pos );
 
 enum ECollisionMove
 {
@@ -57,13 +57,13 @@ enum ECollisionTileSide
 	LEFT_SIDE,
 };
 
-extern ECollisionTileSide tile_collision ( CTileMap & map, std::vector <int> coll_tile, SVect & pos, std::vector <SVect> c_point, SVect & vel, ECollisionMove move );
+extern ECollisionTileSide tile_collision ( TileMap & map, std::vector <int> coll_tile, Vect & pos, std::vector <Vect> c_point, Vect & vel, ECollisionMove move );
 
 // colisão horizontal nos coll_tile, aqui é processada colisão no eixo X
-extern int collision_hor ( CTileMap & map, std::vector <int> coll_tile, SVect & pos, std::vector <SVect> c_point, SVect & vel );
+extern int collision_hor ( TileMap & map, std::vector <int> coll_tile, Vect & pos, std::vector <Vect> c_point, Vect & vel );
 
 // colisão vertical nos coll_tile, aqui é processada colisão no eixo Y
-extern int collision_ver ( CTileMap & map, std::vector <int> coll_tile, SVect & pos, std::vector <SVect> c_point, SVect & vel );
+extern int collision_ver ( TileMap & map, std::vector <int> coll_tile, Vect & pos, std::vector <Vect> c_point, Vect & vel );
 #endif
 
 

@@ -1,8 +1,8 @@
 #include "writer.hpp"
 
-CWriter * CWriter::singleton = 0;
+Writer * Writer::singleton = 0;
 
-int CWriter::set_font ( std::string p, int s )
+int Writer::set_font ( std::string p, int s )
 {
 	if (s > 0 && s == size && p == path)
 		return -1;
@@ -21,7 +21,7 @@ int CWriter::set_font ( std::string p, int s )
 	return 1;
 }
 
-void CWriter::destroy (  )
+void Writer::destroy (  )
 {
 	if (singleton)
 	{
@@ -30,12 +30,12 @@ void CWriter::destroy (  )
 	}
 }
 
-TTF_Font * CWriter::get_font (  )
+TTF_Font * Writer::get_font (  )
 {
 	return font;
 }
 
-bool CWriter::resize_font ( int s )
+bool Writer::resize_font ( int s )
 {
 	if (!font || s <= 0)
 		return false;
@@ -44,33 +44,33 @@ bool CWriter::resize_font ( int s )
 	font = TTF_OpenFont(path.c_str(), s);
 
 	if (!font)
-		throw "CWriter: não conseguiu redimensionar fonte\n";
+		throw "Writer: não conseguiu redimensionar fonte\n";
 
 	return true;
 }
 
 #if USE_SDL2
-void CWriter::set_renderer ( SDL_Renderer * r )
+void Writer::set_renderer ( SDL_Renderer * r )
 {
 	renderer = r;
 }
 
-SDL_Renderer * CWriter::get_renderer (  )
+SDL_Renderer * Writer::get_renderer (  )
 {
 	return renderer;
 }
 
 
-SDL_Texture * CWriter::render_text ( std::string text, SDL_Color c, int type )
+SDL_Texture * Writer::render_text ( std::string text, SDL_Color c, int type )
 {
 	if (text == "")
 	{
 		text = " "; // para evitar textura sem tamanho
-		printf("CWriter: sem texto visível.\n");
+		printf("Writer: sem texto visível.\n");
 	}
 
 	if (renderer == 0)
-		throw "CWriter: nenhum renderer usado\n";
+		throw "Writer: nenhum renderer usado\n";
 
 	SDL_Surface * surface = render_text_surface(text, c, type);
 	SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -79,7 +79,7 @@ SDL_Texture * CWriter::render_text ( std::string text, SDL_Color c, int type )
 	if (!texture)
 	{
 		char * e = new char[256];
-		sprintf(e, "CWriter: erro %s\n", SDL_GetError());
+		sprintf(e, "Writer: erro %s\n", SDL_GetError());
 		throw (char *)e; // c++ é esquisito
 	}
 
@@ -87,10 +87,10 @@ SDL_Texture * CWriter::render_text ( std::string text, SDL_Color c, int type )
 }
 #endif
 
-SDL_Surface * CWriter::render_text_surface ( std::string text, SDL_Color c, int type )
+SDL_Surface * Writer::render_text_surface ( std::string text, SDL_Color c, int type )
 {
 	if (font == 0)
-		throw "CWriter: Nenhuma fonte usada\n";
+		throw "Writer: Nenhuma fonte usada\n";
 
 	if (text == "")
 		text = " "; // para evitar surface sem tamanho
@@ -192,7 +192,7 @@ SDL_Surface * CWriter::render_text_surface ( std::string text, SDL_Color c, int 
 
 	surf = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32,
 								rmask, gmask, bmask, amask);
-	if(surf == NULL)
+	if(surf == 0)
 		throw SDL_GetError();
 
 	for (int i(0); i < tmp.size(); i++)
@@ -202,12 +202,12 @@ SDL_Surface * CWriter::render_text_surface ( std::string text, SDL_Color c, int 
 		d.y = tmp[i]->h * i;
 		d.w = tmp[i]->w;
 		d.h = tmp[i]->h;
-		SDL_BlitSurface(tmp[i], NULL, surf, &d);
+		SDL_BlitSurface(tmp[i], 0, surf, &d);
 		SDL_FreeSurface(tmp[i]);
 	}
 
 	if (!surf)
-		throw "CWriter: surface de retorno nula\n";
+		throw "Writer: surface de retorno nula\n";
 
 	return surf;
 }

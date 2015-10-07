@@ -4,7 +4,7 @@
 #include "../animation.hpp"
 #include "tilemap.hpp"
 
-class CAnimatedTile: public CAnimation
+class CAnimatedTile: public Animation
 {
 	protected:
 		int tile;
@@ -13,7 +13,7 @@ class CAnimatedTile: public CAnimation
 		CAnimatedTile (  )
 		{
 			tile = -1;
-			texture.push_back(NULL);
+			texture.push_back(0);
 		}
 
 		SDL_Texture * get_texture (  )
@@ -40,7 +40,7 @@ class CAnimatedTile: public CAnimation
 		}
 };
 
-class CTileMapView: public CTileMap
+class TileMapView: public TileMap
 {
 	protected:
 		std::map <int, SDL_Rect> source; // par <tile, rect_source>
@@ -49,11 +49,11 @@ class CTileMapView: public CTileMap
 		SDL_Texture * texture;
 
 	public:
-		CTileMapView ( int tilesize, SDL_Texture * t=0 ): CTileMap(tilesize)
+		TileMapView ( int tilesize, SDL_Texture * t=0 ): TileMap(tilesize)
 		{
 			texture = t;
 		}
-		~CTileMapView (  )
+		~TileMapView (  )
 		{
 			if (texture)
 				SDL_DestroyTexture(texture);
@@ -75,7 +75,7 @@ class CTileMapView: public CTileMap
 
 		void update_animation (  );
 
-		void draw ( CCamera * cam, SDL_Renderer * renderer );
+		void draw ( Camera * cam, SDL_Renderer * renderer );
 
 
 		// desenha todo o mapa numa posição

@@ -45,7 +45,7 @@ enum ESoundState
 	PLAYING_SOUND // tocando o som
 };
 
-class CSound: public CStateMachine
+class SoundFX: public StateMachine
 {
 	protected:
 		int type;
@@ -61,7 +61,7 @@ class CSound: public CStateMachine
 		}
 
 	public:
-		CSound (  )
+		SoundFX (  )
 		{
 			type = UNDEF_SOUND;
 			chunk = 0;
@@ -95,28 +95,28 @@ class CSound: public CStateMachine
 		void set_music ( std::string p );
 };
 
-class CSoundPlayer: public CStateMachine
+class SoundPlayer: public StateMachine
 {
 	protected:
-		static CSoundPlayer * singleton;
-		std::vector <CSound> sound;
+		static SoundPlayer * singleton;
+		std::vector <SoundFX> sound;
 
 	protected:
-		CSoundPlayer (  )
+		SoundPlayer (  )
 		{
 			
 		}
 
 	public:
-		~CSoundPlayer (  )
+		~SoundPlayer (  )
 		{
 			free_sounds();
 		}
 
-		static CSoundPlayer * instance (  )
+		static SoundPlayer * instance (  )
 		{
 			if (!singleton)
-				singleton = new CSoundPlayer();
+				singleton = new SoundPlayer();
 
 			return singleton;
 		}
@@ -131,7 +131,7 @@ class CSoundPlayer: public CStateMachine
 
 		bool has_sound ( std::string id );
 
-		bool add_sound ( CSound s );
+		bool add_sound ( SoundFX s );
 
 		bool playing ( std::string id );
 

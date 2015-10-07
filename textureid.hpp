@@ -5,15 +5,15 @@
 #include <iostream>
 #include <string>
 
-struct STextureID{
+struct TextureID{
 	SDL_Texture *texture;
 	std::string path;
 	std::string name;
 
-	STextureID();
-	STextureID(SDL_Texture *tex, std::string n);
-	STextureID(std::string path, SDL_Renderer *renderer);
-	virtual ~STextureID();
+	TextureID();
+	TextureID(SDL_Texture *tex, std::string n);
+	TextureID(std::string path, SDL_Renderer *renderer);
+	virtual ~TextureID();
 	virtual void destroy();
 };
 

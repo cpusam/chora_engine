@@ -94,7 +94,7 @@ int texture_width ( SDL_Texture * t )
 	if (!t)
 		return 0;
 
-	SDL_QueryTexture(t, NULL, NULL, &w, NULL);
+	SDL_QueryTexture(t, 0, 0, &w, 0);
 	return w;
 }
 
@@ -104,11 +104,11 @@ int texture_height ( SDL_Texture * t )
 	if (!t)
 		return 0;
 
-	SDL_QueryTexture(t, NULL, NULL, NULL, &h);
+	SDL_QueryTexture(t, 0, 0, 0, &h);
 	return h;
 }
 
-void fill_rect ( CCamera * cam, SDL_Renderer * renderer, SDL_Color color, SDL_Rect r )
+void fill_rect ( SDL_Renderer * renderer, Camera * cam, SDL_Color color, SDL_Rect r )
 {
 	SDL_Rect d;
 	SDL_Rect dim;
@@ -118,45 +118,59 @@ void fill_rect ( CCamera * cam, SDL_Renderer * renderer, SDL_Color color, SDL_Re
 
 	if (cam)
 	{
+		Vect pos = cam->get_position();
 		dim = cam->get_dimension();
 		d.x = r.x + dim.x;
-		if (d.x < dim.x)
+		d.y = r.y + dim.y;
+
+		if (d.x < dim.x + pos.x)
 		{
-			d.w = r.w - (dim.x - d.x);
-			if (d.w <= 0)
+			if (((dim.x + pos.x) - d.x) < d.w)
+				d.w -= ((dim.x + pos.x) - d.x);
+			else
+				//source.w = 0; // não pode ser zero no emscripten
 				return;
+
 			d.x = dim.x;
 		}
-		else if (d.x + d.w > dim.x + dim.w)
+		else if (d.x + d.w > pos.x + dim.x + dim.w)
 		{
-			d.w = r.w - ((d.x + d.w) - (dim.x + dim.w));
-			if (d.w <= 0)
+			if (d.x + d.w - (pos.x + dim.x + dim.w) < d.w)
+				d.w -= d.x + d.w - (pos.x + dim.x + dim.w);
+			else
+				//source.w = 0; // não pode ser zero no emscripten
 				return;
-			d.x = dim.x + dim.w - d.w;
+
+			d.x = d.x - pos.x;
 		}
 		else
 		{
-			d.w = r.w;
+			d.x = d.x - pos.x;
 		}
 
-		d.y = r.y + dim.y;
-		if (d.y < dim.y)
+		if (d.y < dim.y + pos.y)
 		{
-			d.h = r.h - (dim.y - d.y);
-			if (d.h <= 0)
+			if (((dim.y + pos.y) - d.y) < d.h)
+				d.h -= ((dim.y + pos.y) - d.y);
+			else
+				//source.h = 0; // não pode ser zero no emscripten
 				return;
+
 			d.y = dim.y;
 		}
-		else if (d.y + d.h > dim.y + dim.h)
+		else if (d.y + d.h > pos.y + dim.y + dim.h)
 		{
-			d.h = r.h - ((d.y + d.h) - (dim.y + dim.h));
-			if (d.h <= 0)
+			if (d.y + d.h - (pos.y + dim.y + dim.h) < d.h)
+				d.h -= d.y + d.h - (pos.y + dim.y + dim.h);
+			else
+				//source.h = 0; // não pode ser zero no emscripten
 				return;
-			d.y = dim.y + dim.h - d.h;
+
+			d.y = d.y - pos.y;
 		}
 		else
 		{
-			d.h = r.h;
+			d.y = d.y - pos.y;
 		}
 	}
 	else
@@ -165,13 +179,11 @@ void fill_rect ( CCamera * cam, SDL_Renderer * renderer, SDL_Color color, SDL_Re
 		d.y = r.y;
 	}
 
-	
-
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderFillRect(renderer, &d);
 }
 
-int draw_texture ( SDL_Texture * texture, int x, int y, CCamera * cam, SDL_Renderer * renderer )
+int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, int x, int y )
 {
 	if (!texture || !cam || !renderer)
 	{
@@ -179,7 +191,7 @@ int draw_texture ( SDL_Texture * texture, int x, int y, CCamera * cam, SDL_Rende
 	}
 
 	int w = 0, h = 0;
-	SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+	SDL_QueryTexture(texture, 0, 0, &w, &h);
 	SDL_Rect dest, source;
 
 	source.w = w;
@@ -190,7 +202,7 @@ int draw_texture ( SDL_Texture * texture, int x, int y, CCamera * cam, SDL_Rende
 		return -2;
 	}
 
-	SVect pos = cam->get_position();
+	Vect pos = cam->get_position();
 	SDL_Rect dim = cam->get_dimension();
 
 	dest.x = x + dim.x;
@@ -239,8 +251,8 @@ int draw_texture ( SDL_Texture * texture, int x, int y, CCamera * cam, SDL_Rende
 			source.h -= dest.y + dest.h - (pos.y + dim.y + dim.h);
 		else
 		{
-			source.h -= dest.y + dest.h - (pos.y + dim.y + dim.h);
-			printf("source.h = %d, dest... = %lf w = %d, h = %d\n", source.h,dest.y + dest.h - (pos.y + dim.y + dim.h), w, h);
+			//source.h -= dest.y + dest.h - (pos.y + dim.y + dim.h);
+			printf("UTIL.cpp: source.h = %d, dest... = %lf w = %d, h = %d\n", source.h,dest.y + dest.h - (pos.y + dim.y + dim.h), w, h);
 			//source.h = 0; // não pode ser zero no emscripten
 			return -6;
 		}

@@ -31,20 +31,20 @@
 #include "../statemachine.hpp"
 #include "../vect.hpp"
 
-class CWidget: public CStateMachine
+class Widget: public StateMachine
 {
 	protected:
 		std::string id; // identificação do widget
-		SVect pos; // posição absoluta no screen
-		SVect rel_pos; // posição relativa ao widget pai
+		Vect pos; // posição absoluta no screen
+		Vect rel_pos; // posição relativa ao widget pai
 		SDL_Rect dim; // dimensão, dim.x e dim.y posição no screen
 		bool visible; // só recebe eventos se estiver visível
 	private:
-		CWidget * parent;
-		std::vector <CWidget *> child;
+		Widget * parent;
+		std::vector <Widget *> child;
 
 	public:
-		CWidget ( std::string i="" )
+		Widget ( std::string i="" )
 		{
 			id = i;
 			parent = 0;
@@ -52,7 +52,7 @@ class CWidget: public CStateMachine
 			set_state(1);
 		}
 
-		CWidget ( CWidget & w )
+		Widget ( Widget & w )
 		{
 			id = w.get_id();
 			pos = w.get_pos();
@@ -69,13 +69,13 @@ class CWidget: public CStateMachine
 
 		std::string get_id (  );
 
-		void set_pos ( SVect p );
+		void set_pos ( Vect p );
 
-		SVect get_pos (  );
+		Vect get_pos (  );
 
-		void set_rel_pos ( SVect p );
+		void set_rel_pos ( Vect p );
 
-		SVect get_rel_pos (  );
+		Vect get_rel_pos (  );
 
 		void set_dim ( SDL_Rect d );
 
@@ -85,30 +85,30 @@ class CWidget: public CStateMachine
 
 		bool is_visible (  );
 
-		void set_parent ( CWidget * w );
+		void set_parent ( Widget * w );
 
-		CWidget * get_parent (  );
+		Widget * get_parent (  );
 
-		bool has_child ( CWidget * w );
+		bool has_child ( Widget * w );
 
 		void show_child ( bool s=true );
 
-		bool add_child ( CWidget * w );
+		bool add_child ( Widget * w );
 
 		void clear_child (  );
 
-		bool rem_child ( CWidget * w );
+		bool rem_child ( Widget * w );
 
-		CWidget * get_child ( std::string s_id );
+		Widget * get_child ( std::string s_id );
 
-		CWidget * get_child ( int index );
+		Widget * get_child ( int index );
 
 		int child_size (  );
 
 		/*
 			as funções child_input, child_update e child_draw devem ser chamadas nas
 			respectivas funções input, update e draw isso se a classe derivada
-			de CWidget possuir filhos.
+			de Widget possuir filhos.
 		*/
 		void child_input ( SDL_Event & event );
 

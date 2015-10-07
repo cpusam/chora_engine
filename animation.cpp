@@ -1,12 +1,12 @@
 #include "animation.hpp"
 
-void CAnimationFrame::set_frame ( int d, SDL_Rect src )
+void AnimationFrame::set_frame ( int d, SDL_Rect src )
 {
 	set_source(src);
 	set_delay(d);
 }
 
-bool CAnimationFrame::set_delay ( int d )
+bool AnimationFrame::set_delay ( int d )
 {
 	if (d > -1)
 		delay = d;
@@ -14,38 +14,38 @@ bool CAnimationFrame::set_delay ( int d )
 	return (d > -1);
 }
 
-int CAnimationFrame::get_delay (  )
+int AnimationFrame::get_delay (  )
 {
 	return delay;
 }
 
-void CAnimationFrame::set_source ( SDL_Rect s )
+void AnimationFrame::set_source ( SDL_Rect s )
 {
 	source = s;
 }
 
-SDL_Rect CAnimationFrame::get_source (  )
+SDL_Rect AnimationFrame::get_source (  )
 {
 	return source;
 }
 
-SVect CAnimationFrame::get_orientation (  )
+Vect AnimationFrame::get_orientation (  )
 {
 	return orientation;
 }
 
-float CAnimationFrame::get_angle (  )
+float AnimationFrame::get_angle (  )
 {
 	return angle;
 }
 
-void CAnimationFrame::rotate ( float a )
+void AnimationFrame::rotate ( float a )
 {
 	angle += a;
 	orientation.rotate(a);
 }
 
-void CAnimationFrame::set_flip ( SDL_RendererFlip f )
+void AnimationFrame::set_flip ( SDL_RendererFlip f )
 {
 	if (f < SDL_FLIP_NONE || f > SDL_FLIP_VERTICAL)
 		f = SDL_FLIP_NONE;
@@ -53,22 +53,22 @@ void CAnimationFrame::set_flip ( SDL_RendererFlip f )
 	flip = f;
 }
 
-SDL_RendererFlip CAnimationFrame::get_flip (  )
+SDL_RendererFlip AnimationFrame::get_flip (  )
 {
 	return flip;
 }
 
-void CAnimationFrame::set_texture ( SDL_Texture * t )
+void AnimationFrame::set_texture ( SDL_Texture * t )
 {
 	texture = t;
 }
 
-SDL_Texture * CAnimationFrame::get_texture (  )
+SDL_Texture * AnimationFrame::get_texture (  )
 {
 	return texture;
 }
 
-bool CAnimationFrame::destroy (  )
+bool AnimationFrame::destroy (  )
 {
 	bool ret = false;
 
@@ -84,58 +84,58 @@ bool CAnimationFrame::destroy (  )
 
 //////////////////////////////////////////////////////////////////
 
-void CAnimation::play (  )
+void Animation::play (  )
 {
-	if (get_state() == STOPED_ANIM)
-		set_state(START_ANIM);
+	if (get_state() == ANIM_STOPED)
+		set_state(ANIM_START);
 	else
-		set_state(RUNNING_ANIM);
+		set_state(ANIM_RUNNING);
 
 	timer.start();
 }
 
-void CAnimation::pause (  )
+void Animation::pause (  )
 {
 	set_state(PAUSE_ANIM);
 	timer.pause();
 }
 
-void CAnimation::reset (  )
+void Animation::reset (  )
 {
 	index = 0;
-	set_state(START_ANIM);
+	set_state(ANIM_START);
 	timer.reset();
 }
 
-void CAnimation::set_repeat ( bool r )
+void Animation::set_repeat ( bool r )
 {
 	repeat = r;
 }
 
-STimer CAnimation::get_timer (  )
+STimer Animation::get_timer (  )
 {
 	return timer;
 }
 
-void CAnimation::set_delay ( int f, int d )
+void Animation::set_delay ( int f, int d )
 {
 	if (f >= 0 && f < frames.size())
 		frames[f].set_delay(d);
 }
 
 // seta todos os frames para o mesmo delay
-void CAnimation::set_frames_delay ( int d )
+void Animation::set_frames_delay ( int d )
 {
 	for (int i = 0; i < frames.size(); i++)
 		frames[i].set_delay(d);
 }
 
-int CAnimation::get_frames_size (  )
+int Animation::get_frames_size (  )
 {
 	return frames.size();
 }
 
-void CAnimation::clear_frames ( bool destroy )
+void Animation::clear_frames ( bool destroy )
 {
 	frames.clear();
 	if (destroy)
@@ -143,17 +143,17 @@ void CAnimation::clear_frames ( bool destroy )
 	texture.clear();
 }
 
-SVect CAnimation::get_orientation (  )
+Vect Animation::get_orientation (  )
 {
 	return orientation;
 }
 
-float CAnimation::get_angle (  )
+float Animation::get_angle (  )
 {
 	return angle;
 }
 
-void CAnimation::rotate ( float a )
+void Animation::rotate ( float a )
 {
 	if (use_rot == false)
 		return;
@@ -164,37 +164,37 @@ void CAnimation::rotate ( float a )
 		frames[i].rotate(a);
 }
 
-void CAnimation::set_use_rot ( bool u )
+void Animation::set_use_rot ( bool u )
 {
 	use_rot = true;
 }
 
-bool CAnimation::get_use_rot (  )
+bool Animation::get_use_rot (  )
 {
 	return use_rot;
 }
 
-void CAnimation::set_use_center ( bool u )
+void Animation::set_use_center ( bool u )
 {
 	use_center = true;
 }
 
-bool CAnimation::get_use_center (  )
+bool Animation::get_use_center (  )
 {
 	return use_center;
 }
 
-void CAnimation::flip ( SDL_RendererFlip f )
+void Animation::flip ( SDL_RendererFlip f )
 {
 	for (unsigned int i = 0; i < frames.size(); i++)
 		frames[i].set_flip(f);
 }
 
-void CAnimation::add_frame ( SDL_Texture * t, SDL_Rect src, int d )
+void Animation::add_frame ( SDL_Texture * t, SDL_Rect src, int d )
 {
 	index = 0;
 	texture.push_back(t);
-	CAnimationFrame f;
+	AnimationFrame f;
 
 	f.set_source(src);
 	f.set_delay(d);
@@ -204,7 +204,7 @@ void CAnimation::add_frame ( SDL_Texture * t, SDL_Rect src, int d )
 	frames.push_back(f);
 }
 
-void CAnimation::add_frame ( SDL_Texture * t, CAnimationFrame f )
+void Animation::add_frame ( SDL_Texture * t, AnimationFrame f )
 {
 	index = 0;
 	texture.push_back(t);
@@ -213,15 +213,15 @@ void CAnimation::add_frame ( SDL_Texture * t, CAnimationFrame f )
 	frames.push_back(f);
 }
 
-SDL_Texture * CAnimation::get_texture ( int i )
+SDL_Texture * Animation::get_texture ( int i )
 {
 	if (texture.size() > 0 && i < texture.size())
 		return texture[i];
 
-	return NULL;
+	return 0;
 }
 
-void CAnimation::destroy_textures (  )
+void Animation::destroy_textures (  )
 {
 	std::vector <SDL_Texture *> t;
 
@@ -262,7 +262,7 @@ void CAnimation::destroy_textures (  )
 	t.clear();
 }
 
-bool CAnimation::has_texture ( SDL_Texture * t )
+bool Animation::has_texture ( SDL_Texture * t )
 {
 	if (!t)
 		return false;
@@ -274,7 +274,7 @@ bool CAnimation::has_texture ( SDL_Texture * t )
 	return false;
 }
 
-bool CAnimation::set_index ( int i )
+bool Animation::set_index ( int i )
 {
 	if (i >= 0 && i < frames.size())
 	{
@@ -286,25 +286,25 @@ bool CAnimation::set_index ( int i )
 	return false;
 }
 
-int CAnimation::get_index (  )
+int Animation::get_index (  )
 {
 	return index;
 }
 
-CAnimationFrame CAnimation::get_frame ( int i )
+AnimationFrame Animation::get_frame ( int i )
 {
 	if (i > 0 && i <= frames.size())
 		return frames[i];
 
-	return CAnimationFrame();
+	return AnimationFrame();
 }
 
-CAnimationFrame CAnimation::get_curr_frame (  )
+AnimationFrame Animation::get_curr_frame (  )
 {
 	return frames[index];
 }
 
-void CAnimation::draw ( int x, int y, SDL_Renderer * renderer )
+void Animation::draw ( SDL_Renderer * renderer, int x, int y )
 {
 	SDL_Rect dest, source;
 	dest.x = x + frames.at(index).x;
@@ -324,8 +324,8 @@ void CAnimation::draw ( int x, int y, SDL_Renderer * renderer )
 	{
 		if (use_rot == false)
 		{
-			printf("CAnimation: tem que recortar a textura para o frame\n");
-			SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, 0, NULL, frames[index].get_flip());
+			printf("Animation: tem que recortar a textura para o frame\n");
+			SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, 0, 0, frames[index].get_flip());
 		}
 		else
 		{
@@ -335,12 +335,12 @@ void CAnimation::draw ( int x, int y, SDL_Renderer * renderer )
 	}
 }
 
-void CAnimation::draw ( int x, int y, CCamera * cam, SDL_Renderer * renderer )
+void Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 {
 	SDL_Rect dest, source;
 	source = frames.at(index).get_source();
 
-	SVect pos = cam->get_position();
+	Vect pos = cam->get_position();
 	SDL_Rect dim = cam->get_dimension();
 
 	dest.x = x + dim.x + frames.at(index).x;
@@ -422,7 +422,7 @@ void CAnimation::draw ( int x, int y, CCamera * cam, SDL_Renderer * renderer )
 	if (texture.size() && texture.at(index))
 	{
 		if (use_rot == false)
-			SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, 0, NULL, frames[index].get_flip());
+			SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, 0, 0, frames[index].get_flip());
 		else
 		{
 			SDL_Point center = {frames[index].get_source().w/2, frames[index].get_source().h/2};
@@ -431,16 +431,16 @@ void CAnimation::draw ( int x, int y, CCamera * cam, SDL_Renderer * renderer )
 	}
 }
 
-int CAnimation::update (  )
+int Animation::update (  )
 {
 	switch (get_state())
 	{
-		case START_ANIM:
-		case CHANGE_FRAME_ANIM:
-		case RUNNING_ANIM:
-		case FINISHED_ANIM:
+		case ANIM_START:
+		case ANIM_CHANGE_FRAME:
+		case ANIM_RUNNING:
+		case ANIM_FINISHED:
 			if (frames.size() == 0)
-				throw "CAnimation: animação sem frames\n";
+				throw "Animation: animação sem frames\n";
 
 			timer.update();
 			if (timer.steps() >= frames[index].get_delay())
@@ -452,22 +452,22 @@ int CAnimation::update (  )
 					if (repeat)
 					{
 						index = 0;
-						set_state(FINISHED_ANIM); // termina e repete a animação
+						set_state(ANIM_FINISHED); // termina e repete a animação
 						break;
 					}
 					else
 					{
 						index = int(frames.size() - 1);
-						set_state(STOPED_ANIM); // terminou a animação e fica parado
+						set_state(ANIM_STOPED); // terminou a animação e fica parado
 						break;
 					}
 				}
 
-				set_state(CHANGE_FRAME_ANIM); // novo frame
+				set_state(ANIM_CHANGE_FRAME); // novo frame
 				break;
 			}
 
-			set_state(RUNNING_ANIM); // rodando
+			set_state(ANIM_RUNNING); // rodando
 			break;
 
 		default:

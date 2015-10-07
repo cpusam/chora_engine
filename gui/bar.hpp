@@ -30,7 +30,7 @@
 
 #include "widget.hpp"
 
-class CBar: public CWidget
+class GuiBar: public Widget
 {
 	protected:
 		float size;
@@ -42,7 +42,7 @@ class CBar: public CWidget
 		Uint32 color_bar; // cor da barra
 
 	public:
-		CBar ( float s_max, int w, int h )
+		GuiBar ( float s_max, int w, int h )
 		{
 			size = full_size = s_max;
 			color_bg = 0x000000FF;

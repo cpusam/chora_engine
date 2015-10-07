@@ -34,7 +34,7 @@
 	NOTA: quando a posição é negativa não está havendo movimento do background
 */
 
-class CBackground
+class Background
 {
 	protected:
 		SDL_Texture * texture;
@@ -43,16 +43,16 @@ class CBackground
 
 		// posição do background no mundo
 		// seria como posição inicial quando repeat = true
-		SVect pos;
+		Vect pos;
 
 	public:
-		CBackground ( SDL_Texture * t=0 )
+		Background ( SDL_Texture * t=0 )
 		{
 			texture = t;
 			repeat = true;
 		}
 
-		~CBackground (  )
+		~Background (  )
 		{
 			if (texture)
 				SDL_DestroyTexture(texture);
@@ -68,12 +68,12 @@ class CBackground
 			return repeat;
 		}
 
-		void set_pos ( SVect p )
+		void set_pos ( Vect p )
 		{
 			pos = p;
 		}
 
-		SVect get_pos (  )
+		Vect get_pos (  )
 		{
 			return pos;
 		}
@@ -86,28 +86,28 @@ class CBackground
 			scrolling nos eixos x e y mas limitado pelas bordas da surface
 		*/
 
-		void draw ( CCamera * cam, SDL_Renderer * renderer );
+		void draw ( Camera * cam, SDL_Renderer * renderer );
 
 		// apenas um scrolling horizontal
-		void draw_hor ( CCamera * cam, SDL_Renderer * renderer );
+		void draw_hor ( Camera * cam, SDL_Renderer * renderer );
 
 		// NOTE: falta testar, precisa refazer
 		// apenas um scrolling vertical
-		void draw_ver ( CCamera * cam, SDL_Renderer * renderer );
+		void draw_ver ( Camera * cam, SDL_Renderer * renderer );
 };
 
-class CAnimatedBackground: private CStateMachine
+class AnimatedBackground: private StateMachine
 {
 	protected:
-		CAnimation anim[2];
+		Animation anim[2];
 
 	public:
-		CAnimatedBackground (  )
+		AnimatedBackground (  )
 		{
 			set_state(1);
 		}
 
-		~CAnimatedBackground (  )
+		~AnimatedBackground (  )
 		{
 			anim[0].destroy_textures();
 		}
@@ -117,9 +117,9 @@ class CAnimatedBackground: private CStateMachine
 
 		int update (  );
 
-		void draw ( CCamera * cam, SDL_Renderer * renderer );
+		void draw ( Camera * cam, SDL_Renderer * renderer );
 
-		void draw_hor ( CCamera * cam, SDL_Renderer * renderer );
+		void draw_hor ( Camera * cam, SDL_Renderer * renderer );
 };
 
 #endif

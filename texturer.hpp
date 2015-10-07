@@ -6,16 +6,16 @@
 #include "textureid.hpp"
 
 
-class CTexturer{
+class Texturer{
 
-	std::vector<STextureID *>	 textureID;
-	static CTexturer 		*singleton;
+	std::vector<TextureID *>	 textureID;
+	static Texturer 		*singleton;
 
-	CTexturer();
-	virtual ~CTexturer();
+	Texturer();
+	virtual ~Texturer();
 
 	public:
-		static CTexturer *instance();
+		static Texturer *instance();
 
 		void add (SDL_Renderer *renderer, std::string path);
 		void add (SDL_Texture *tex, std::string name );
