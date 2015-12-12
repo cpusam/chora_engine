@@ -2,10 +2,10 @@
 
 bool boundingbox ( SDL_Rect a, SDL_Rect b )
 {
-	if (a.x > b.x + b.w - 1)	return false;
+	if (a.x > b.x + b.w)	return false;
 	if (a.x + a.w < b.x)	return false;
 
-	if (a.y > b.y + b.h - 1)	return false;
+	if (a.y > b.y + b.h)	return false;
 	if (a.y + a.h < b.y)	return false;
 
 	return true;
@@ -13,10 +13,10 @@ bool boundingbox ( SDL_Rect a, SDL_Rect b )
 
 bool pointbox ( Vect p, SDL_Rect b )
 {
-	if (p.x > b.x + b.w - 1)	return false;
+	if (p.x > b.x + b.w)	return false;
 	if (p.x < b.x)			return false;
 
-	if (p.y > b.y + b.h - 1)	return false;
+	if (p.y > b.y + b.h)	return false;
 	if (p.y < b.y)			return false;
 
 	return true;
@@ -25,13 +25,80 @@ bool pointbox ( Vect p, SDL_Rect b )
 // verifica se "a" está completamente dentro de "b", mas não o contrário
 bool rect_inside ( SDL_Rect a, SDL_Rect b )
 {
-	if (a.x + a.w - 1 > b.x + b.w - 1)	return false;
+	if (a.x + a.w > b.x + b.w)	return false;
 	if (a.x < b.x)	return false;
 
-	if (a.y + a.h - 1 > b.y + b.h - 1)	return false;
+	if (a.y + a.h > b.y + b.h)	return false;
 	if (a.y < b.y)	return false;
 
 	return true;
+}
+
+SDL_Rect rectIntersect ( SDL_Rect a, SDL_Rect b )
+{
+	SDL_Rect rect = {0,0,0,0};
+	
+	if (a.w * a.h < b.w * b.h)
+		return (SDL_Rect){0,0,0,0};
+	
+	if (boundingbox(a,b) == false)
+		return (SDL_Rect){0,0,0,0};
+	
+	if (rect_inside(a,b))
+		return a;
+	
+	if (rect_inside(b,a))
+		return b;
+	
+	if (a.x > b.x && a.x < b.x + b.w)
+	{
+		rect.x = a.x;
+		rect.w = (b.x + b.w) - a.x;
+	
+		if (rect.w < 0)
+			return (SDL_Rect){0,0,0,0};
+	}
+	else if (a.x + a.w > b.x && a.x + a.w < b.x + b.w)
+	{
+		rect.x = b.x;
+		rect.w = (a.x + a.w) - b.x;
+	
+		if (rect.w < 0)
+			return (SDL_Rect){0,0,0,0};
+	}
+	else 
+	{
+		if ((a.x <= b.x) && (b.x + b.w <= a.x + a.w))
+		{
+			rect.x = b.x;
+			rect.w = b.w;
+		}
+	}
+	
+	if (a.y > b.y  && a.y < b.y + b.h)
+	{
+		rect.y = a.y;
+		rect.h = (b.y + b.h) - a.y;
+		if (rect.h < 0)
+			return (SDL_Rect){0,0,0,0};
+	}
+	else if (a.y + a.h > b.y && a.y + a.h < b.y + b.h)
+	{
+		rect.y = b.y;
+		rect.h = (a.y + a.h) - b.y;
+		if (rect.h < 0)
+			return (SDL_Rect){0,0,0,0};
+	}
+	else 
+	{
+		if ((a.y <= b.y) && (b.y + b.h <= a.y + a.h))
+		{
+			rect.y = b.y;
+			rect.h = b.h;
+		}
+	}
+	
+	return rect;
 }
 
 bool pointtile ( TileMap & map, std::vector <int> & coll_tile, Vect &  pos )

@@ -33,12 +33,17 @@ claim that you wrote the original software. If you use this software
 extern bool boundingbox ( SDL_Rect a, SDL_Rect b );
 extern bool pointbox ( Vect p, SDL_Rect b );
 
-// verifica se "a" está completamente dentro de "b", mas não o contrário
+// verifica se "a" está completamente dentro de "b", mas não o contrário.
 extern bool rect_inside ( SDL_Rect a, SDL_Rect b );
+// retorna o retangulo que é a intersecção de a com b, mas não o contrário.
+// se o retorno tiver w e h nulos então não há intersecção
+// Tem um bug não resolvido: quando A > B retorna rect errado.
+extern SDL_Rect rectIntersect ( SDL_Rect a, SDL_Rect b );
 
 // 
 extern bool pointtile ( TileMap & map, std::vector <int> & coll_tile, Vect & pos );
 
+// NOTA: REMOVER ESSAS FUNÇÕES QUE NÃO FUNCIONAM!!!!
 enum ECollisionMove
 {
 	NO_MOVE=0,

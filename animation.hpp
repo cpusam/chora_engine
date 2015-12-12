@@ -27,31 +27,33 @@
 #include <vector>
 
 #include "sdl.hpp"
-#include "SDL_gfx/SDL_rotozoom.hpp"
+//#include "SDL_gfx/SDL_rotozoom.hpp"
+#include "SDL_gfx/SDL_framerate.hpp"
 #include "statemachine.hpp"
 #include "vect.hpp"
 #include "camera.hpp"
 #include "util.hpp"
+
 
 struct STimer
 {
 	int state;
 	float time;
 	float step;
-	private:
-		Uint32 lastUpdate;
+	Uint32 lastTick;
 
 	public:
 		STimer (  )
 		{
 			time = 0;
 			step = 1;
-			lastUpdate = 0;
+			lastTick = SDL_GetTicks();
 		}
 
 		void start (  )
 		{
 			state = 1;
+			lastTick = SDL_GetTicks();
 		}
 		void pause (  )
 		{
@@ -61,6 +63,7 @@ struct STimer
 		void reset (  )
 		{
 			time = 0;
+			lastTick = SDL_GetTicks();
 		}
 
 		int steps (  )
@@ -73,9 +76,12 @@ struct STimer
 			if (state)
 			{
 				Uint32 tick = SDL_GetTicks();
-				step = (float)tick - lastUpdate;
+				#warning "Aqui deveria usar FPSManager::get_delta para tempo gasto"
+				step = FPSManager::instance()->get_delta();//(float)tick - lastTick;
 				
 				time += step;
+				lastTick = tick;
+				
 			}
 		}
 };

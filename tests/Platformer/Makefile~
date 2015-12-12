@@ -1,2 +1,2 @@
-all: ../../libchora.a
-	g++ platformer.cpp -o Platformer -lSDL2 -lSDL2_image -L../../ -lchora -Wall -Wextra -ansi -O -g
+all: ../../libchora.a 
+	g++ platformer.cpp -o platformer ../../libchora.a -lSDL2 -lSDL2_image -lSDL2_ttf -L../../gui -L../../ -I../../    -Wall -Wextra -O -g

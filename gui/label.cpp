@@ -1,4 +1,5 @@
 #include "label.hpp"
+#include "writer.hpp"
 
 void GuiLabel::str_to_surface ( std::string s )
 {

@@ -130,25 +130,25 @@ void GuiButton::draw ( SDL_Renderer * renderer )
 	switch (get_state())
 	{
 		case 1:
-			SDL_SetRenderDrawColor(renderer, (color1 & 0xFF000000) >> 24, (color1 & 0x00FF0000) >> 16, (color1 & 0x0000FF00) >> 8, (color1 & 0x000000FF));
+			SDL_SetRenderDrawColor(renderer, color1.r, color1.g, color1.b, color1.a);
 
 			SDL_RenderFillRect(renderer, &d);
 			break;
 			
 		case 2:
-			SDL_SetRenderDrawColor(renderer, (color2 & 0xFF000000) >> 24, (color2 & 0x00FF0000) >> 16, (color2 & 0x0000FF00) >> 8, (color2 & 0x000000FF));
+			SDL_SetRenderDrawColor(renderer, color2.r, color2.g, color2.b, color2.a);
 
 			SDL_RenderFillRect(renderer, &d);
 			break;
 			
 		case 3:
-			SDL_SetRenderDrawColor(renderer, (color3 & 0xFF000000) >> 24, (color3 & 0x00FF0000) >> 16, (color3 & 0x0000FF00) >> 8, (color3 & 0x000000FF));
+			SDL_SetRenderDrawColor(renderer, color3.r, color3.g, color3.b, color3.a);
 
 			SDL_RenderFillRect(renderer, &d);
 			break;
 			
 		default:
-			SDL_SetRenderDrawColor(renderer, (color1 & 0xFF000000) >> 24, (color1 & 0x00FF0000) >> 16, (color1 & 0x0000FF00) >> 8, (color1 & 0x000000FF));
+			SDL_SetRenderDrawColor(renderer, color1.r, color1.g, color1.b, color1.a);
 
 			SDL_RenderFillRect(renderer, &d);
 			break;

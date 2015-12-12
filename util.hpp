@@ -41,6 +41,8 @@ extern int texture_height ( SDL_Texture * t );
 
 extern void fill_rect ( SDL_Renderer * renderer, Camera * cam, SDL_Color color, SDL_Rect r );
 
+extern void fill_rect ( SDL_Renderer * renderer, SDL_Color color, SDL_Rect r );
+
 extern int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, int x, int y );
 
 #endif

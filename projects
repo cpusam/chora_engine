@@ -22,18 +22,15 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=0
-FILE_NAME_0=526;None;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Fother%2Fchora_TODO.txt;0;2
-FILE_NAME_1=94;Make;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Ftests%2FPlatformer%2FMakefile;0;2
-FILE_NAME_2=3431;C++;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Futil.cpp;0;2
-FILE_NAME_3=1447;C++;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Futil.hpp;0;2
-FILE_NAME_4=2743;C++;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Ftests%2FUtil%2Futil_test.cpp;0;2
-FILE_NAME_5=8582;C++;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Ftests%2FPlatformer%2Fplatformer.cpp;0;2
-FILE_NAME_6=1370;C++;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Fanimation.hpp;0;2
-FILE_NAME_7=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Fanimation.cpp;0;2
-FILE_NAME_8=1642;C++;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Fcollision.cpp;0;2
-FILE_NAME_9=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Fcollision.hpp;0;2
-FILE_NAME_10=1086;None;0;EISO-8859-1;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FDangerousTux%2FDangerousTux_LOG.txt;0;2
+current_page=7
+FILE_NAME_0=3355;C++;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Futil.cpp;0;2
+FILE_NAME_1=1435;C++;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Futil.hpp;0;2
+FILE_NAME_2=934;C++;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Fcollision.cpp;0;2
+FILE_NAME_3=1469;C++;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Fcollision.hpp;0;2
+FILE_NAME_4=925;C++;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Ftests%2FUtil%2Fintersect.cpp;0;2
+FILE_NAME_5=734;C++;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Ftests%2FUtil%2Futil_test.cpp;0;2
+FILE_NAME_6=24;Make;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Ftests%2FUtil%2FMakefile;0;2
+FILE_NAME_7=521;None;0;EUTF-8;1;1;0;%2Fhome%2Fsamuel%2FDesktop%2FEngine%2FChora_Engine%2Fother%2Fchora_TODO.txt;0;2
 
 [VTE]
-last_dir=/home/samuel/Desktop/Engine/Kubyto/KubytoEditor/KubytoSDK
+last_dir=/home/samuel

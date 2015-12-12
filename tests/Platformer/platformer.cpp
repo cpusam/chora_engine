@@ -1,4 +1,9 @@
 #include "Chora.hpp"
+
+#if defined(CHORA_WRITER_HPP)
+	#warning "writer.hpp definido"
+#endif
+
 #include <iostream>
 #include <vector>
 #include <iterator>
@@ -47,16 +52,17 @@ public:
 			texture = SDL_CreateTextureFromSurface(renderer,aux);
 			SDL_FreeSurface(aux);
 			aux = NULL;
+			int fd = 150;
 			// animações de direita
 			anim.push_back(new Animation());
 			anim[0]->add_frame(texture,(SDL_Rect){144,0,48,43}, 60);
 			anim.push_back(new Animation());
-			anim[1]->add_frame(texture, (SDL_Rect){0 ,0,48,43}, 3);
-			anim[1]->add_frame(texture, (SDL_Rect){48,0,48,43}, 3);
-			anim[1]->add_frame(texture, (SDL_Rect){96,0,48,43}, 3);
-			anim[1]->add_frame(texture, (SDL_Rect){48,0,48,43}, 3);
+			anim[1]->add_frame(texture, (SDL_Rect){0 ,0,48,43}, fd);
+			anim[1]->add_frame(texture, (SDL_Rect){48,0,48,43}, fd);
+			anim[1]->add_frame(texture, (SDL_Rect){96,0,48,43}, fd);
+			anim[1]->add_frame(texture, (SDL_Rect){48,0,48,43}, fd);
 			anim.push_back(new Animation());
-			anim[2]->add_frame(texture, (SDL_Rect){192,0,48,43}, 3);
+			anim[2]->add_frame(texture, (SDL_Rect){192,0,48,43}, fd);
 
 			aux = IMG_Load(buf2);
 			if (!aux)
@@ -70,12 +76,12 @@ public:
 			anim.push_back(new Animation());
 			anim[3]->add_frame(texture,(SDL_Rect){144,0,48,43}, 60);
 			anim.push_back(new Animation());
-			anim[4]->add_frame(texture, (SDL_Rect){0 ,0,48,43}, 3);
-			anim[4]->add_frame(texture, (SDL_Rect){48,0,48,43}, 3);
-			anim[4]->add_frame(texture, (SDL_Rect){96,0,48,43}, 3);
-			anim[4]->add_frame(texture, (SDL_Rect){48,0,48,43}, 3);
+			anim[4]->add_frame(texture, (SDL_Rect){0 ,0,48,43}, fd);
+			anim[4]->add_frame(texture, (SDL_Rect){48,0,48,43}, fd);
+			anim[4]->add_frame(texture, (SDL_Rect){96,0,48,43}, fd);
+			anim[4]->add_frame(texture, (SDL_Rect){48,0,48,43}, fd);
 			anim.push_back(new Animation());
-			anim[5]->add_frame(texture, (SDL_Rect){192,0,48,43}, 3);
+			anim[5]->add_frame(texture, (SDL_Rect){192,0,48,43}, fd);
 			
 			
 			coll_tiles.push_back('a');
@@ -110,8 +116,9 @@ public:
 				delete anim[i];
 		}
 
-		void input ( SDL_Event & event )
+		void input ( Widget & widget )
 		{
+			/*
 			switch (event.type)
 			{
 				case SDL_KEYDOWN:
@@ -150,6 +157,22 @@ public:
 					}
 					break;
 			}
+			*/
+			if (widget.get_child("keyLeft")->get_state() == 3) // pressionado
+				key_left = true;
+			else
+				key_left = false;
+			
+			if (widget.get_child("keyRight")->get_state() == 3) // pressionado
+				key_right = true;
+			else
+				key_right = false;
+			
+			if (widget.get_child("keyJump")->get_state() == 3) // pressionado
+				key_up = true;
+			else
+				key_up = false;
+				
 		}
 
 	bool has_coll_tile ( int t )
@@ -339,7 +362,7 @@ public:
 		return get_state();
 	}
 
-	void draw(Camera *cam,SDL_Renderer *renderer)
+	void draw(SDL_Renderer *renderer, Camera *cam)
 	{
 		if (curr_anim)
 			curr_anim->draw(renderer, cam, pos.x, pos.y);
@@ -350,7 +373,14 @@ public:
 int main (  )
 {
 		SDL_Init(SDL_INIT_VIDEO);
-		SDL_Window *window = SDL_CreateWindow("Platformer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,20*32,15*32,0);
+		
+		if (TTF_Init() < 0)
+		{
+			printf("Erro %s\n", SDL_GetError());
+			return 1;
+		}
+		
+		SDL_Window *window = SDL_CreateWindow("Platformer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,20*32,15*32,SDL_WINDOW_FULLSCREEN | SDL_WINDOW_SHOWN);
 		SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 		SDL_Event event;
 
@@ -371,7 +401,32 @@ int main (  )
 		background.set_texture(IMG_LoadTexture(renderer, "back.jpg"));
 		Camera cam((SDL_Rect){0,0,20*32,15*32}, map.get_dimension());
 		
-		Texturer::instance()->add_texture(renderer, "background.png");
+		Texturer::instance()->add(renderer, "background.png");
+		Widget widget;
+		GuiButton * button;
+		try
+		{
+			Writer::instance()->set_renderer(renderer);
+			Writer::instance()->set_font("04B_20__.TTF", 50);
+			
+			button = new GuiButton((SDL_Rect){20,12*32, 64,32}, "<-");
+			button->set_id("keyLeft");
+			widget.add_child(button);
+		
+			button = new GuiButton((SDL_Rect){4*32 + 20,12*32, 64,32}, "->");
+			button->set_id("keyRight");
+			widget.add_child(button);	
+
+			button = new GuiButton((SDL_Rect){18*32,12*32, 64,32}, "^");
+			button->set_id("keyJump");
+			widget.add_child(button);
+			button = 0;
+		} catch (const char * e)
+		{
+			printf("Error %s\n", e);
+		}
+
+		
 		
 
 		int done = 0;
@@ -386,23 +441,31 @@ int main (  )
 				else if (event.type == SDL_KEYDOWN)
 					if (event.key.keysym.sym == SDLK_ESCAPE)
 						done = 1;
-
-				player.input(event);
+				
+				widget.input(event);
 			}
 		
+		player.input(widget);
+		
 		player.update();
+		widget.update();
 		cam.lookat(player.get_pos());
 		
-		background.draw(&cam,renderer);
-		map.draw(&cam,renderer);
-		player.draw(renderer, &cam);
-		SDL_RenderPresent(renderer);
-		SDL_Delay(60);
+		FPSManager::instance()->update();
+		if (FPSManager::instance()->get_delta() > 0)
+		{
+			background.draw(&cam,renderer);
+			map.draw(renderer,&cam);
+			player.draw(renderer, &cam);
+			widget.draw(renderer);
+			SDL_RenderPresent(renderer);
+		}
+		//SDL_Delay(60);
 	}
 	
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
-	CTextureManager::instance()->destroy();
+	Texturer::instance()->destroy();
 	
 	SDL_Quit();
 	

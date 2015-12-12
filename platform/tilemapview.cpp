@@ -28,7 +28,7 @@ void TileMapView::update_animation (  )
 
 
 
-void TileMapView::draw ( Camera * cam, SDL_Renderer * renderer )
+void TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 {
 	int i, j, t;
 	Vect pos = cam->get_position(), p = cam->get_position();
@@ -53,7 +53,7 @@ void TileMapView::draw ( Camera * cam, SDL_Renderer * renderer )
 
 			if (is_animated(t))
 			{
-				animation[t].draw(i * tilesize, j * tilesize, cam, renderer);
+				animation[t].draw(renderer, cam, i * tilesize, j * tilesize);
 				continue;
 			}
 
@@ -106,7 +106,7 @@ void TileMapView::draw ( Camera * cam, SDL_Renderer * renderer )
 		}
 }
 
-void TileMapView::draw ( int x, int y, SDL_Rect cam, SDL_Renderer * renderer )
+void TileMapView::draw ( SDL_Renderer * renderer, SDL_Rect cam, int x, int y )
 {
 	int i, j, t;
 	Camera *test = new Camera(cam, cam);
@@ -153,7 +153,7 @@ void TileMapView::draw ( int x, int y, SDL_Rect cam, SDL_Renderer * renderer )
 
 			if (is_animated(t))
 			{
-				animation[t].draw(i * tilesize, j * tilesize, test, renderer);
+				animation[t].draw(renderer,test,i * tilesize, j * tilesize);
 			}
 
 			src = source[t];
@@ -208,7 +208,7 @@ void TileMapView::draw ( int x, int y, SDL_Rect cam, SDL_Renderer * renderer )
 		}
 }
 
-void TileMapView::draw ( int x, int y, SDL_Renderer * renderer )
+void TileMapView::draw ( SDL_Renderer * renderer, int x, int y )
 {
 	int i, j, t;
 	Vect pos, p;
@@ -230,7 +230,7 @@ void TileMapView::draw ( int x, int y, SDL_Renderer * renderer )
 
 			if (is_animated(t))
 			{
-				animation[t].draw(i * tilesize, j * tilesize, renderer);
+				animation[t].draw(renderer, i * tilesize, j * tilesize);
 			}
 
 			src = source[t];

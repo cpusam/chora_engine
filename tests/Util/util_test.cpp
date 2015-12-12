@@ -35,7 +35,7 @@ int main ( int argc, char **argv )
 	SDL_Texture * image = Texturer::instance()->get_texture("image.png");
 	Animation anim;
 	
-	anim.
+	//anim.
 
 	
 	Camera cam((SDL_Rect){40,40,200,200}, (SDL_Rect){0,0,2000,200});

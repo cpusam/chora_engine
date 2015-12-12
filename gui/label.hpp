@@ -25,7 +25,7 @@
 #define CHORA_LABEL_HPP
 
 #include "widget.hpp"
-#include "writer.hpp"
+
 
 #include <sstream>
 

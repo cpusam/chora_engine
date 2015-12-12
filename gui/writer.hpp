@@ -69,11 +69,8 @@ class Writer
 
 		~Writer (  )
 		{
-			if (singleton)
-			{
-				if (font)
-					TTF_CloseFont(font);
-			}
+			if (font)
+				TTF_CloseFont(font);
 		}
 
 	public:

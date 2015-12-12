@@ -40,10 +40,7 @@ void Background::draw ( Camera * cam, SDL_Renderer * renderer )
 	{
 		int rw, rh;
 		SDL_RenderGetLogicalSize(renderer, &rw, &rh);
-		d = (SDL_Rect)
-		{
-			0,0,rw,rh
-		};
+		d = (SDL_Rect){0,0,rw,rh};
 		src = d;
 	}
 

@@ -2,10 +2,24 @@
 	[21/05/15] Removido SDL 1.2!
 	NOTA: quando compilar um programa com a engine adicionar o linker dela 
 	      no inicio do linha de comando
+Observações:
+	-Agora tem uma área de ação na camera, use-a para ativar/desativar a movimentação de personagens
+	 enfim, é para ativar/desativar ações. Geralmente a area de ação é igual ao viewport da camera.
+	 
+	 
 Tarefas:
+	-Fazer o botão ter um tamanho pré-definido e não deixar ser redimensionado. 
+	 Usar textures como as imagens dos estados do botão.
+	-Fazer o blit do mapa não depender das dimensões da cam e nem dos limites dela.
+	-Adicionar um objeto de nó de cena um scene graph:
+	 Veja aqui: 
+	 http://archive.gamedev.net/archive/reference/programming/features/scenegraph/page2.html
+	-Ao invés de criar um Entity em todo game, poderia criar uma classe base 
+	 chamada Actor que derivaria de SceneNode
+	-mudar a ordem de usar/passar SDL_Renderer, agora será algo como foo(renderer, cam, ...)
+	-testar se a action area de Camera está centralizada com a viewport.
 	-colocar para usar milissegundos nas animações e não atualizações.
-	-adotar o novo padrão de nomear variaveis e classes, não usar mais CClasse ou SStruct
-	 e sem _ nas funções/métodos.
+	
 	-refazer texture manager para usar ponteiros de texturas
 	-usar texture manager nas animações e para gui
 	-consertar o bug das funções de desenho de util.hpp
@@ -24,6 +38,8 @@ Tarefas:
 	 que não funcionou]
 
 RESOLVIDOS:
+	-[RESOLVIDO]adotar o novo padrão de nomear variaveis e classes, não usar mais CClasse ou 
+	 SStruct e nem _ nas funções/métodos. [já mudei o nome das classes e structs, falta funções]
 	-[RESOLVIDO]acho que é bem melhor eu me atualizar e passar a usar o SDL2, o 1.2 tá muito 
 	 bugado e causa muita raiva [ATUALIZADO PARA SDL 2.0]
 	-usar milisegundos para as animações ao invés de ticks. Isso deixaria

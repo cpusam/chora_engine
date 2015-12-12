@@ -75,6 +75,8 @@ obj/button.o: gui/button.hpp gui/button.cpp
 obj/bar.o: gui/bar.hpp gui/bar.cpp
 	$(CXX) -c gui/bar.cpp -o $@ $(CXXFLAGS)
 
+
+
 clean: clean_objs
 	rm -f libchora.a
 	

@@ -183,6 +183,12 @@ void fill_rect ( SDL_Renderer * renderer, Camera * cam, SDL_Color color, SDL_Rec
 	SDL_RenderFillRect(renderer, &d);
 }
 
+void fill_rect ( SDL_Renderer * renderer, SDL_Color color, SDL_Rect r )
+{
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+	SDL_RenderFillRect(renderer, &r);
+}
+
 int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, int x, int y )
 {
 	if (!texture || !cam || !renderer)
