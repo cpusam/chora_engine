@@ -36,7 +36,7 @@
 #include "background.hpp"
 #include "texturer.hpp"
 #include "SDL_gfx/SDL_framerate.hpp"
-#include "SDL_gfx/SDL_rotozoom.hpp"
+//#include "SDL_gfx/SDL_rotozoom.hpp"
 
 // módulo de tiles
 #include "platform/tilemap.hpp"

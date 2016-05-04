@@ -56,7 +56,7 @@ class Camera
 		void lookat ( Vect p );
 		Vect get_position (  );
 		Vect get_focus (  );
-		SDL_Rect get_view (  );
+		SDL_Rect get_view (  ); // retorna posição da camera junto com suas dimensões
 		void set_position ( Vect p );
 		int set_focus ( Vect f );
 		SDL_Rect get_dimension (  );

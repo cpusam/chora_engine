@@ -9,6 +9,13 @@
 #include <string>
 #include "SDL_SavePNG/savepng.h"
 
+void writeJsonToFile(FILE *file, char c, int x, int y, int w, int h, bool comma){
+	if(comma)
+		fprintf(file, "\n\t\"%c\" : [ {\"x\":%d,\"y\":%d,\"w\":%d,\"h\":%d} ],", (c == '\"')? '\'' : c, x, y, w, h);
+	else
+		fprintf(file, "\n\t\"%c\" : [ {\"x\":%d,\"y\":%d,\"w\":%d,\"h\":%d} ]", (c == '\"')? '\'' : c, x, y, w, h);
+}
+
 int main ( int argc, char ** argv )
 {
 	if (argc < 5)
@@ -169,6 +176,7 @@ int main ( int argc, char ** argv )
 		return 1;
 	}
 	
+	fprintf(file, "{");
 	
 	SDL_Rect d = {0,0,0,0};
 	for (int i = 0, w = 0, h = 0; i < chars.size(); i++)
@@ -203,8 +211,9 @@ int main ( int argc, char ** argv )
 		}
 		
 		SDL_BlitSurface(chars[i], NULL, surf, &d);
-		fprintf(file, "%c %d %d %d %d\n", text[i], d.x, d.y, d.w, d.h);
+		writeJsonToFile(file, text[i], d.x, d.y, d.w, d.h, true);
 	}
+	fprintf(file, "\n}\n");
 	fclose(file);
 	
 	sprintf(font, "font%d.png", size);

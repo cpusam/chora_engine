@@ -75,13 +75,12 @@ class TileMapView: public TileMap
 
 		void update_animation (  );
 
+		// desenha o mapa na posição 0,0
 		void draw ( SDL_Renderer * renderer, Camera * cam );
-
-
 		// desenha todo o mapa numa posição
 		void draw ( SDL_Renderer * renderer, int x, int y );
-		// desenha o mapa numa posição e usando o rect como camera
-		void draw ( SDL_Renderer * renderer, SDL_Rect cam, int x, int y );
+		// desenha o mapa numa posição e usando uma camera
+		void draw ( SDL_Renderer * renderer, Camera * cam, int x, int y );
 };
 
 #endif

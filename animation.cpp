@@ -29,6 +29,17 @@ SDL_Rect AnimationFrame::get_source (  )
 	return source;
 }
 
+void AnimationFrame::set_destiny ( SDL_Rect d )
+{
+	destiny = d;
+}
+
+SDL_Rect AnimationFrame::get_destiny (  )
+{
+	return destiny;
+}
+
+
 Vect AnimationFrame::get_orientation (  )
 {
 	return orientation;
@@ -45,10 +56,23 @@ void AnimationFrame::rotate ( float a )
 	orientation.rotate(a);
 }
 
-void AnimationFrame::set_flip ( SDL_RendererFlip f )
+void AnimationFrame::set_flip ( bool hor, bool ver )
 {
-	if (f < SDL_FLIP_NONE || f > SDL_FLIP_VERTICAL)
-		f = SDL_FLIP_NONE;
+	SDL_RendererFlip f = SDL_FLIP_NONE;
+	
+	if (hor == true)
+	{
+		f = SDL_FLIP_HORIZONTAL;
+		if (ver == true)
+			f = static_cast<SDL_RendererFlip>(static_cast<int>(f) | static_cast<int>(SDL_FLIP_VERTICAL));
+	}
+	
+	if (ver == true)
+	{
+		f = SDL_FLIP_VERTICAL;
+		if (hor == true)
+			f = static_cast<SDL_RendererFlip>(static_cast<int>(f) | static_cast<int>(SDL_FLIP_HORIZONTAL));
+	}
 
 	flip = f;
 }
@@ -119,14 +143,14 @@ STimer Animation::get_timer (  )
 
 void Animation::set_delay ( int f, int d )
 {
-	if (f >= 0 && f < frames.size())
+	if (f >= 0 && f < int(frames.size()))
 		frames[f].set_delay(d);
 }
 
 // seta todos os frames para o mesmo delay
 void Animation::set_frames_delay ( int d )
 {
-	for (int i = 0; i < frames.size(); i++)
+	for (unsigned i = 0; i < frames.size(); i++)
 		frames[i].set_delay(d);
 }
 
@@ -160,7 +184,7 @@ void Animation::rotate ( float a )
 
 	angle += a;
 	orientation.rotate(a);
-	for (int i = 0; i < frames.size(); i++)
+	for (unsigned i = 0; i < frames.size(); i++)
 		frames[i].rotate(a);
 }
 
@@ -184,10 +208,10 @@ bool Animation::get_use_center (  )
 	return use_center;
 }
 
-void Animation::flip ( SDL_RendererFlip f )
+void Animation::flip ( bool hor, bool ver )
 {
-	for (unsigned int i = 0; i < frames.size(); i++)
-		frames[i].set_flip(f);
+	for (unsigned i = 0; i < frames.size(); i++)
+		frames[i].set_flip(hor, ver);
 }
 
 void Animation::add_frame ( SDL_Texture * t, SDL_Rect src, int d )
@@ -197,6 +221,22 @@ void Animation::add_frame ( SDL_Texture * t, SDL_Rect src, int d )
 	AnimationFrame f;
 
 	f.set_source(src);
+	f.set_destiny((SDL_Rect){0,0,src.w,src.h});
+	f.set_delay(d);
+	if (t)
+		f.set_texture(t);
+
+	frames.push_back(f);
+}
+
+void Animation::add_frame ( SDL_Texture * t, SDL_Rect src, SDL_Rect dst, int d )
+{
+	index = 0;
+	texture.push_back(t);
+	AnimationFrame f;
+
+	f.set_source(src);
+	f.set_destiny(dst);
 	f.set_delay(d);
 	if (t)
 		f.set_texture(t);
@@ -307,8 +347,9 @@ AnimationFrame Animation::get_curr_frame (  )
 void Animation::draw ( SDL_Renderer * renderer, int x, int y )
 {
 	SDL_Rect dest, source;
-	dest.x = x + frames.at(index).x;
-	dest.y = y + frames.at(index).y;
+	dest = frames.at(index).get_destiny();
+	dest.x += x;
+	dest.y += y;
 	source = frames.at(index).get_source();
 
 	if (use_center)
@@ -316,9 +357,6 @@ void Animation::draw ( SDL_Renderer * renderer, int x, int y )
 		dest.x = dest.x - source.w / 2;
 		dest.y = dest.y - source.h / 2;
 	}
-
-	dest.w = source.w;
-	dest.h = source.h;
 
 	if (texture.size() && texture.at(index))
 	{
@@ -338,31 +376,22 @@ void Animation::draw ( SDL_Renderer * renderer, int x, int y )
 void Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 {
 	SDL_Rect dest, source;
+	dest = frames.at(index).get_destiny();
 	source = frames.at(index).get_source();
 
 	Vect pos = cam->get_position();
 	SDL_Rect dim = cam->get_dimension();
 
-	dest.x = x + dim.x + frames.at(index).x;
-	dest.y = y + dim.y + frames.at(index).y;
-	/*
-	#ifndef USE_SDL2
-		if (source.w == 0 && source.h == 0 && surface.size())
-		{
-			source.w = surface[index]->w;
-			source.h = surface[index]->h;
-		}
-	#endif
-	*/
+	dest.x += x + dim.x;
+	dest.y += y + dim.y;
 
 	if (use_center)
 	{
 		dest.x = dest.x - source.w / 2;
 		dest.y = dest.y - source.h / 2;
 	}
-
-	dest.w = source.w;
-	dest.h = source.h;
+	
+	#warning "Falta susbtituir essa parte pela função collision.hpp::rectIntersect\n"
 
 	if (dest.x < dim.x + pos.x)
 	{
@@ -415,9 +444,6 @@ void Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 	{
 		dest.y = dest.y - pos.y;
 	}
-
-	dest.w = source.w;
-	dest.h = source.h;
 
 	if (texture.size() && texture.at(index))
 	{

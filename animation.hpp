@@ -76,7 +76,7 @@ struct STimer
 			if (state)
 			{
 				Uint32 tick = SDL_GetTicks();
-				#warning "Aqui deveria usar FPSManager::get_delta para tempo gasto"
+				//#warning "Aqui deveria usar FPSManager::get_delta para tempo gasto"
 				step = FPSManager::instance()->get_delta();//(float)tick - lastTick;
 				
 				time += step;
@@ -98,7 +98,7 @@ class AnimationFrame
 {
 	protected:
 		int delay;
-		SDL_Rect source;
+		SDL_Rect source, destiny;
 		float angle; // em radianos
 		Vect orientation;
 		SDL_Texture * texture;
@@ -130,6 +130,17 @@ class AnimationFrame
 			angle = 0;
 			orientation.set(1,0);
 		}
+		
+		AnimationFrame ( int d, SDL_Rect s, SDL_Rect dst )
+		{
+			x = y = 0;
+			set_delay(d);
+			set_source(s);
+			set_destiny(dst);
+			texture = 0;
+			angle = 0;
+			orientation.set(1,0);
+		}
 
 		void set_frame ( int d, SDL_Rect src );
 
@@ -140,13 +151,17 @@ class AnimationFrame
 
 		SDL_Rect get_source (  );
 
+		void set_destiny ( SDL_Rect d );
+
+		SDL_Rect get_destiny (  );
+
 		Vect get_orientation (  );
 
 		float get_angle (  );
 
 		// rotaciona a imagem em 'a' radianos
 		void rotate ( float a );
-		void set_flip ( SDL_RendererFlip f );
+		void set_flip ( bool hor, bool ver );
 		SDL_RendererFlip get_flip (  );
 		void set_texture ( SDL_Texture * t );
 		SDL_Texture * get_texture (  );
@@ -230,11 +245,12 @@ class Animation: public StateMachine
 
 		bool get_use_center (  );
 
-		void flip ( SDL_RendererFlip f );
+		void flip ( bool hor, bool ver );
 
-
-		virtual void add_frame ( SDL_Texture * t, SDL_Rect src, int d );
 		virtual void add_frame ( SDL_Texture * t, AnimationFrame f );
+		virtual void add_frame ( SDL_Texture * t, SDL_Rect src, int d );
+		// remover esse destiny e adicionar um w,h no draw como na libgdx
+		virtual void add_frame ( SDL_Texture * t, SDL_Rect src, SDL_Rect dst, int d );
 
 		SDL_Texture * get_texture ( int i );
 
