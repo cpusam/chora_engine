@@ -25,6 +25,7 @@
 #define CHORA_STATEMACHINE_HPP
 
 #include <vector>
+#include "sdl.hpp"
 
 #define DEFAULT_STATE 0
 #define DEFAULT_STATE_ID -9999
@@ -46,6 +47,7 @@ class StateMachine
 
 		virtual void set_state ( int s );
 		virtual int get_state (  );
+		virtual void input ( SDL_Event & event );
 		virtual int update (  );
 };
 

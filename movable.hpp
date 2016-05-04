@@ -30,6 +30,7 @@
 class Movable
 {
 	protected:
+		int dir;
 		Vect pos; // posição
 		Vect vel; // velocidade
 		Vect acc; // aceleração
@@ -38,15 +39,24 @@ class Movable
 	public:
 		Movable (  )
 		{
+			dir = 0;
 			dim = (SDL_Rect)
 			{
 				0,0,1,1
 			};
 		}
+		
+		virtual void set_dir ( int d );
 
+		virtual int get_dir (  );
+
+		// remover esses dois
 		virtual void set_pos ( Vect p );
-
 		virtual Vect get_pos (  );
+		
+		virtual void setPosition ( Vect p );
+
+		virtual Vect getPosition (  );
 
 		virtual void set_vel ( Vect v );
 

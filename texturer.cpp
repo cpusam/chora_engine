@@ -13,19 +13,20 @@ Texturer* Texturer::instance(){
 	return singleton;
 }
 
-void Texturer::add (SDL_Renderer * renderer, std::string path){
+SDL_Texture * Texturer::addTexture (SDL_Renderer * renderer, std::string path){
 	for (unsigned int i = 0, end = textureID.size(); i < end; i++){
 		if(textureID[i]->path == path){
 			rem(textureID[i]->name);
 			textureID.push_back(new TextureID(path,renderer));
-			return;
+			return textureID.back()->texture;
 		}
 	}
 
 	textureID.push_back(new TextureID(path,renderer));
+	return textureID.back()->texture;
 }
 
-void Texturer::add (SDL_Texture *tex, std::string name){
+void Texturer::addTexture (SDL_Texture *tex, std::string name){
 	for(unsigned int i = 0;i<textureID.size();i++){
 		if(textureID[i]->texture == tex){
 			
@@ -38,7 +39,7 @@ void Texturer::add (SDL_Texture *tex, std::string name){
 	textureID.push_back(new TextureID(tex, name));
 }
 
-void Texturer::rem (std::string name){
+void Texturer::remTexture (std::string name){
 	for (unsigned int i = 0, end = textureID.size(); i < end; i++){
 		if(textureID[i]->name == name){
 			textureID[i]->destroy();
@@ -48,7 +49,7 @@ void Texturer::rem (std::string name){
 	}
 }
 
-SDL_Texture *Texturer::get_texture(std::string name) {
+SDL_Texture *Texturer::getTexture(std::string name) {
 	//std::cout << name << "\n";
 	for (unsigned int i = 0, end = textureID.size(); i < end; i++){
 		if(textureID[i]->name == name){
@@ -61,10 +62,34 @@ SDL_Texture *Texturer::get_texture(std::string name) {
 	throw "[TextureManager] Error : Texture not found!";
 }
 
-void Texturer::destroy() {
+void Texturer::destroyAll() {
 	for (unsigned int i = 0, end = textureID.size(); i < end; i++)
 		delete textureID[i];
 
 	textureID.clear();
+}
+
+SDL_Texture * Texturer::add (SDL_Renderer * renderer, std::string path)
+{
+	return instance()->addTexture(renderer, path);
+}
+
+void Texturer::add (SDL_Texture *tex, std::string name )
+{
+	instance()->addTexture(tex,name);
+}
+
+void Texturer::rem ( std::string name )
+{
+	instance()->remTexture(name);
+}
+
+SDL_Texture* Texturer::get ( std::string name )
+{
+	return instance()->getTexture(name);
+}
+
+void Texturer::destroy() {
+	instance()->destroyAll();
 }
 

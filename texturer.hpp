@@ -7,21 +7,26 @@
 
 
 class Texturer{
-
 	std::vector<TextureID *>	 textureID;
 	static Texturer 		*singleton;
 
 	Texturer();
 	virtual ~Texturer();
-
+	
+	void destroyAll (  );
+	void addTexture ( SDL_Texture *tex, std::string name );
+	SDL_Texture * addTexture (SDL_Renderer *renderer, std::string path);
+	void remTexture ( std::string name );
+	SDL_Texture* getTexture ( std::string name );
+	
 	public:
 		static Texturer *instance();
-
-		void add (SDL_Renderer *renderer, std::string path);
-		void add (SDL_Texture *tex, std::string name );
-		void rem (std::string name);
-		SDL_Texture* get_texture(std::string name);
-		void destroy();
+		
+		static SDL_Texture * add (SDL_Renderer * renderer, std::string path);
+		static void add (SDL_Texture *tex, std::string name );
+		static void rem ( std::string name );
+		static SDL_Texture* get ( std::string name );
+		static void destroy();
 };
 
 #endif // CHORA_TEXTUREMANAGER_H

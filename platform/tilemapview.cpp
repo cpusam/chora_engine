@@ -106,14 +106,13 @@ void TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 		}
 }
 
-void TileMapView::draw ( SDL_Renderer * renderer, SDL_Rect cam, int x, int y )
+void TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 {
 	int i, j, t;
-	Camera *test = new Camera(cam, cam);
-	Vect pos = Vect(cam.x, cam.y), p = Vect(cam.x, cam.y);
+	Vect pos = Vect(cam->get_position().x, cam->get_position().y), p = Vect(cam->get_position().x, cam->get_position().y);
 	SDL_Rect dest = {0,0,tilesize,tilesize};
 	SDL_Rect src = {0,0,0,0};
-	SDL_Rect dim = {0,0, cam.w, cam.h};
+	SDL_Rect dim = {0,0, cam->get_dimension().w, cam->get_dimension().h};
 
 
 	// limita o movimento da camera
@@ -153,7 +152,7 @@ void TileMapView::draw ( SDL_Renderer * renderer, SDL_Rect cam, int x, int y )
 
 			if (is_animated(t))
 			{
-				animation[t].draw(renderer,test,i * tilesize, j * tilesize);
+				animation[t].draw(renderer,cam,i * tilesize, j * tilesize);
 			}
 
 			src = source[t];

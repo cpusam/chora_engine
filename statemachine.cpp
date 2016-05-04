@@ -10,6 +10,10 @@ int StateMachine::get_state (  )
 	return state;
 }
 
+void StateMachine::input ( SDL_Event & event )
+{
+}
+
 int StateMachine::update (  )
 {
 	return get_state();
