@@ -1,10 +1,7 @@
 CXX = g++
 LDXXFLAGS = -I../ -L../ -lSDL2 -lSDL2_ttf ../libchora.a ./SDL_SavePNG/savepng.c -lpng
 
-all: fonter fonterJSON
-
-fonter: fonter.cpp
+all: fonter.cpp
 	$(CXX) -o fonter fonter.cpp $(LDXXFLAGS)
 
-fonterJSON: fonterJSON.cpp
-	$(CXX) -o fonterJSON fonterJSON.cpp $(LDXXFLAGS)
+

@@ -30,8 +30,9 @@ TextureID::TextureID(std::string path, SDL_Renderer *renderer){
 		std::string ret = "TextureID: erro ao ler path da textura" + std::string(SDL_GetError());
 		throw ret.c_str();
 	}
-
-	texture = IMG_LoadTexture(renderer,static_cast<const char *>(path.c_str()));
+	
+	texture = IMG_LoadTexture(renderer,path.c_str());
+	
 	if(texture == 0){
 		std::string ret = "[Texture ID] Erro ao carregar Textura: " + std::string(SDL_GetError());
 		

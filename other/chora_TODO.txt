@@ -8,9 +8,6 @@ Observações:
 	 
 	 
 Tarefas:
-	-[ABANDONADO]remover o dst do Animation::add_frame e adicionar w,h como destino no Animation::draw
-	-Adicionar métodos estáticos para acessar funções das classes singleton, pois é muito ruim 
-	 acessar com instance(), como Writer::instance().fazAlgumaCoisa();
 	-Consertar o bug da função rectIntersect() que retorna errado quando rectA < rectB, 
 	 por enquanto ela retorna RectNULL quando área de A < B
 	-Fazer o botão ter um tamanho pré-definido e não deixar ser redimensionado. 

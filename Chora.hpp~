@@ -43,11 +43,11 @@
 #include "platform/tilemapview.hpp"
 
 // módulo de gui
+#include "gui/writer.hpp"
 #include "gui/widget.hpp"
 #include "gui/label.hpp"
 #include "gui/button.hpp"
 #include "gui/bar.hpp"
-#include "gui/writer.hpp"
 
 // módulo de som
 #include "sound/soundplayer.hpp"
