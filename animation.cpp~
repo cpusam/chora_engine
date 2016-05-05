@@ -31,8 +31,6 @@ SDL_Rect AnimationFrame::get_source (  )
 
 void AnimationFrame::set_destiny ( SDL_Rect d )
 {
-	x = d.x;
-	y = d.y;
 	destiny = d;
 }
 
