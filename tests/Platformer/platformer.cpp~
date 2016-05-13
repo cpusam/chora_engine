@@ -12,6 +12,7 @@ using namespace std;
 
 enum EPlayerState
 {
+	FLYING,
 	STANDING,
 	WALKING,
 	JUMPING,
@@ -23,10 +24,20 @@ enum EPlayerDir
 	RIGHT_DIR,
 };
 
+float toAcc ( float p )
+{
+	float vel = (FPSManager::instance()->get_delta() / 1000.f);
+	
+	if (vel == 0)
+		vel = 1;
+	
+	return p / vel;
+}
+
 class Tux: public StateMachine, public Movable {
 		vector <Animation *> anim;
 		Animation * curr_anim;
-		bool key_right, key_left, key_up;
+		bool key_right, key_left, key_up, key_down;
 		int dir;
 		TileMap * map;
 		vector <Vect> point_up;
@@ -35,6 +46,7 @@ class Tux: public StateMachine, public Movable {
 		vector <Vect> point_right;
 		vector <int> coll_tiles;
 		float gravity;
+		float velStartJump;
 
 public:
 		Tux ( SDL_Renderer * renderer, TileMap * m )
@@ -105,7 +117,11 @@ public:
 			point_up.push_back(Vect(15,6));
 			point_up.push_back(Vect(31,6));
 
-			gravity = 3;
+			gravity = (900);
+			acc.x = (1000);
+			acc.y = (1000);
+			velStartJump = (200);
+			set_state(STANDING);
 		}
 
 		~Tux (  )
@@ -116,9 +132,9 @@ public:
 				delete anim[i];
 		}
 
-		void input ( Widget & widget )
+		void input ( SDL_Event & event )
 		{
-			/*
+			
 			switch (event.type)
 			{
 				case SDL_KEYDOWN:
@@ -133,7 +149,11 @@ public:
 						case SDLK_UP:
 								key_up = true;
 								break;
-
+						
+						case SDLK_DOWN:
+								key_down = true;
+								break;
+						
 						default:
 								break;
 					}
@@ -151,13 +171,20 @@ public:
 						case SDLK_UP:
 								key_up = false;
 								break;
+						case SDLK_DOWN:
+								key_down = false;
+								break;
 
 						default:
 								break;
 					}
 					break;
 			}
-			*/
+		}
+
+		void input ( Widget & widget )
+		{
+			
 			if (widget.get_child("keyLeft")->get_state() == 3) // pressionado
 				key_left = true;
 			else
@@ -172,7 +199,6 @@ public:
 				key_up = true;
 			else
 				key_up = false;
-				
 		}
 
 	bool has_coll_tile ( int t )
@@ -193,10 +219,41 @@ public:
 	{
 		switch (get_state())
 		{
+			case FLYING:
+				if (key_left)
+				{
+					vel.x = -2;
+				}
+				else if (key_right)
+				{
+					vel.x = 2;
+				}
+				else
+				{
+					vel.x = 0;
+				}
+				
+				if (key_up)
+				{
+					vel.y = -2;
+				}
+				else if (key_down)
+				{
+					vel.y = 2;
+				}
+				else
+				{
+					vel.y = 0;
+				}
+				pos += vel;
+				curr_anim = anim[1];
+				curr_anim->update();
+				break;
+				
 			case STANDING:
 				if (key_left)
 				{
-					vel.x = -10;
+					vel.x = -acc.x;
 					dir = LEFT_DIR;
 					curr_anim = anim[4];
 					curr_anim->reset();
@@ -206,7 +263,7 @@ public:
 				
 				if (key_right)
 				{
-					vel.x = 10;
+					vel.x = acc.x;
 					dir = RIGHT_DIR;
 					curr_anim = anim[1];
 					curr_anim->reset();
@@ -216,8 +273,8 @@ public:
 				
 				if (ground() && key_up)
 				{
-					vel.y = -20;
-					pos.y += vel.y;
+					vel.y = -velStartJump;
+					pos.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
 					collision_ver(*map, coll_tiles, pos, point_up, vel);
 					
 					if (dir == LEFT_DIR)
@@ -231,9 +288,9 @@ public:
 				}
 				
 				vel.y += gravity;
-				if (vel.y > 20)
-					vel.y = 20;
-				pos.y += vel.y;
+				if (vel.y > velStartJump)
+					vel.y = velStartJump;
+				pos.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
 				collision_ver(*map, coll_tiles, pos, point_down, vel);
 				
 				curr_anim->update();
@@ -256,13 +313,13 @@ public:
 					{
 						if (key_right)
 						{
-							vel.x = 10;
+							vel.x = acc.x;
 							dir = RIGHT_DIR;
 							curr_anim = anim[1];
 						}
 						else if (key_left)
 						{
-							vel.x = -10;
+							vel.x = -acc.x;
 							dir = LEFT_DIR;
 							curr_anim = anim[4];
 						}
@@ -281,8 +338,8 @@ public:
 
 						if (key_up)
 						{
-							vel.y = -20;
-							pos.y += vel.y;
+							vel.y = -velStartJump;
+							pos.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
 							collision_ver(*map, coll_tiles, pos, point_up, vel);
 				
 							if (dir == LEFT_DIR)
@@ -296,7 +353,7 @@ public:
 						}
 					}
 					
-					pos.x += vel.x;
+					pos.x += vel.x * FPSManager::instance()->get_delta()/1000.f;
 					
 					tile_collision(*map, coll_tiles, pos, point_right, vel, MOVE_TO_LEFT);
 					tile_collision(*map, coll_tiles, pos, point_left, vel, MOVE_TO_RIGHT);
@@ -309,13 +366,13 @@ public:
 			case JUMPING:
 					if (key_right)
 					{
-						vel.x = 10;
+						vel.x = acc.x;
 						dir = RIGHT_DIR;
 						curr_anim = anim[2];
 					}
 					else if (key_left)
 					{
-						vel.x = -10;
+						vel.x = -acc.x;
 						dir = LEFT_DIR;
 						curr_anim = anim[5];
 					}
@@ -339,14 +396,14 @@ public:
 						break;
 					}
 					
-					pos.x += vel.x;
+					pos.x += vel.x * FPSManager::instance()->get_delta()/1000.f;
 					collision_hor(*map, coll_tiles, pos, point_right, vel);
 					collision_hor(*map, coll_tiles, pos, point_left, vel);
 					
 					vel.y += gravity;
-					if (vel.y > 20)
-						vel.y = 20;
-					pos.y += vel.y;
+					if (vel.y > velStartJump)
+						vel.y = velStartJump;
+					pos.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
 					
 					collision_ver(*map, coll_tiles, pos, point_up, vel);
 					collision_ver(*map, coll_tiles, pos, point_down, vel);
@@ -380,7 +437,7 @@ int main (  )
 			return 1;
 		}
 		
-		SDL_Window *window = SDL_CreateWindow("Platformer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,20*32,15*32,SDL_WINDOW_FULLSCREEN | SDL_WINDOW_SHOWN);
+		SDL_Window *window = SDL_CreateWindow("Platformer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,20*32,15*32,SDL_WINDOW_SHOWN);
 		SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 		SDL_Event event;
 
@@ -399,7 +456,7 @@ int main (  )
 		Background background;
 		
 		background.set_texture(IMG_LoadTexture(renderer, "back.jpg"));
-		Camera cam((SDL_Rect){0,0,20*32,15*32}, map.get_dimension());
+		Camera cam((SDL_Rect){100,100,15*32,10*32}, map.get_dimension());
 		
 		Texturer::instance()->add(renderer, "background.png");
 		Widget widget;
@@ -443,9 +500,10 @@ int main (  )
 						done = 1;
 				
 				widget.input(event);
+				player.input(event);
 			}
 		
-		player.input(widget);
+		//player.input(widget);
 		
 		player.update();
 		widget.update();

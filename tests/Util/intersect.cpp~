@@ -71,6 +71,7 @@ int main ( int argc, char **argv )
 		fill_rect(renderer, colorB, B);
 		// intersecção A com B
 		SDL_Rect inter = rectIntersect(A,B);
+		inter.w = 10;
 		fill_rect(renderer, colorIntersect, inter);
 		
 		SDL_RenderPresent(renderer);

@@ -1,8 +1,10 @@
 #include "animation.hpp"
+#include "collision.hpp"
 
 void AnimationFrame::set_frame ( int d, SDL_Rect src )
 {
 	set_source(src);
+	set_destiny((SDL_Rect){0,0,src.w,src.h});
 	set_delay(d);
 }
 
@@ -217,10 +219,9 @@ void Animation::add_frame ( SDL_Texture * t, SDL_Rect src, int d )
 	f.set_source(src);
 	f.set_destiny((SDL_Rect){0,0,src.w,src.h});
 	f.set_delay(d);
-	if (t)
-		f.set_texture(t);
+	f.set_texture(t);
 
-	frames.push_back(f);
+	frames.push_back(static_cast<AnimationFrame>(f));
 }
 
 void Animation::add_frame ( SDL_Texture * t, SDL_Rect src, SDL_Rect dst, int d )
@@ -232,8 +233,7 @@ void Animation::add_frame ( SDL_Texture * t, SDL_Rect src, SDL_Rect dst, int d )
 	f.set_source(src);
 	f.set_destiny(dst);
 	f.set_delay(d);
-	if (t)
-		f.set_texture(t);
+	f.set_texture(t);
 
 	frames.push_back(f);
 }
@@ -242,8 +242,7 @@ void Animation::add_frame ( SDL_Texture * t, AnimationFrame f )
 {
 	index = 0;
 	texture.push_back(t);
-	if (t)
-		f.set_texture(t);
+	f.set_texture(t);
 	frames.push_back(f);
 }
 
@@ -338,8 +337,9 @@ AnimationFrame Animation::get_curr_frame (  )
 	return frames[index];
 }
 
-void Animation::draw ( SDL_Renderer * renderer, int x, int y )
+int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 {
+	int ret = 0;
 	SDL_Rect dest, source;
 	dest = frames.at(index).get_destiny();
 	dest.x += x;
@@ -356,19 +356,21 @@ void Animation::draw ( SDL_Renderer * renderer, int x, int y )
 	{
 		if (use_rot == false)
 		{
-			printf("Animation: tem que recortar a textura para o frame\n");
-			SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, 0, 0, frames[index].get_flip());
+			ret = SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, 0, 0, frames[index].get_flip());
 		}
 		else
 		{
 			SDL_Point center = {frames[index].get_source().w/2, frames[index].get_source().h/2};
-			SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
+			ret = SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
 		}
 	}
+	
+	return ret;
 }
 
-void Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
+int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 {
+	int ret = 0;
 	SDL_Rect dest, source;
 	dest = frames.at(index).get_destiny();
 	source = frames.at(index).get_source();
@@ -376,79 +378,76 @@ void Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 	Vect pos = cam->get_position();
 	SDL_Rect dim = cam->get_dimension();
 
-	dest.x += x + dim.x;
-	dest.y += y + dim.y;
+	dest.x += x;
+	dest.y += y;
 
 	if (use_center)
 	{
-		dest.x = dest.x - source.w / 2;
-		dest.y = dest.y - source.h / 2;
+		dest.x = dest.x - dest.w / 2;
+		dest.y = dest.y - dest.h / 2;
 	}
 	
 	#warning "Falta susbtituir essa parte pela função collision.hpp::rectIntersect\n"
 
-	if (dest.x < dim.x + pos.x)
+	SDL_Rect rect = rectIntersect(dest, cam->get_view());
+	dest = rect;
+	
+	dest.x = (dest.x - pos.x) + dim.x;
+	dest.y = (dest.y - pos.y) + dim.y;
+	
+	float s = 1;
+	
+	if (dest.w < frames.at(index).get_destiny().w)
 	{
-		source.x += (dim.x + pos.x) - dest.x;
-		if (((dim.x + pos.x) - dest.x) < source.w)
-			source.w -= ((dim.x + pos.x) - dest.x);
-		else
-			//source.w = 0; // não pode ser 0 no emscriten
-			return;
-
-		dest.x = dim.x;
-	}
-	else if (dest.x + dest.w > pos.x + dim.x + dim.w)
-	{
-		if (dest.x + dest.w - (pos.x + dim.x + dim.w) < source.w)
-			source.w -= dest.x + dest.w - (pos.x + dim.x + dim.w);
-		else
-			//source.w = 0; // não pode ser 0 no emscriten
-			return;
-
-		dest.x = dest.x - pos.x;
-	}
-	else
-	{
-		dest.x = dest.x - pos.x;
-	}
-
-	if (dest.y < dim.y + pos.y)
-	{
-		source.y += (dim.y + pos.y) - dest.y;
-		if (((dim.y + pos.y) - dest.y) < source.h)
-			source.h -= ((dim.y + pos.y) - dest.y);
-		else
-			//source.h = 0; // não pode ser 0 no emscriten
-			return;
-
-		dest.y = dim.y;
-	}
-	else if (dest.y + dest.h > pos.y + dim.y + dim.h)
-	{
-		if (dest.y + dest.h - (pos.y + dim.y + dim.h) < source.h)
-			source.h -= dest.y + dest.h - (pos.y + dim.y + dim.h);
-		else
-			//source.h = 0;  // não pode ser 0 no emscriten
-			return;
-
-		dest.y = dest.y - pos.y;
-	}
-	else
-	{
-		dest.y = dest.y - pos.y;
-	}
-
-	if (texture.size() && texture.at(index))
-	{
-		if (use_rot == false)
-			SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, 0, 0, frames[index].get_flip());
-		else
+		if (frames.at(index).get_destiny().w != 0)
+			s = static_cast<float>(dest.w)/frames.at(index).get_destiny().w;
+		
+		if (s < 1)
 		{
-			SDL_Point center = {frames[index].get_source().w/2, frames[index].get_source().h/2};
-			SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
+			float w = source.w;
+			
+			source.w = static_cast<int>(w * s);
+			if (source.w <= 0)
+				return 0;
+					
+			if (dest.x <= dim.x)
+				source.x += (w - source.w);
+			//else if (dest.x + frames.at(index).get_destiny().w >= dim.x + dim.w)
+				//source.x = source.x + (w - source.w);
 		}
 	}
+	
+	if (dest.h < frames.at(index).get_destiny().h)
+	{
+		if (frames.at(index).get_destiny().h != 0)
+			s = static_cast<float>(dest.h)/frames.at(index).get_destiny().h;
+		
+		if (s < 1)
+		{
+			float h = source.h;
+			source.h = static_cast<int>(h * s);
+			if (source.h <= 0)
+				return 0;
+			
+			if (dest.y <= dim.y)
+				source.y += (h - source.h);
+			//else if (dest.y + frames.at(index).get_destiny().h >= dim.y + dim.h)
+				//source.y = source.y + (h - source.h);
+		}
+	}
+
+	if (frames.at(index).get_texture())
+	{
+		if (use_rot == false)
+			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, 0, 0, frames[index].get_flip());
+		else
+		{
+			SDL_Point center = {dest.w/2, dest.h/2};
+			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
+		}
+	}
+	
+	return ret;
 }
 
 int Animation::update (  )

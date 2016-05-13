@@ -1,14 +1,5 @@
 #include "movable.hpp"
-
-void Movable::set_dir ( int d )
-{
-	dir = d;
-}
-
-int Movable::get_dir (  )
-{
-	return dir;
-}
+#include "SDL_gfx/SDL_framerate.hpp"
 
 void Movable::set_pos ( Vect p )
 {
@@ -58,6 +49,18 @@ void Movable::set_dim ( SDL_Rect d )
 SDL_Rect Movable::get_dim (  )
 {
 	return dim;
+}
+
+void Movable::moveX (  )
+{
+	vel.x = acc.x * FPSManager::instance()->get_delta() / 1000.0f;
+	pos.x += vel.x;
+}
+
+void Movable::moveY (  )
+{
+	vel.y = acc.y * FPSManager::instance()->get_delta() / 1000.0f;
+	pos.y += vel.y;
 }
 
 

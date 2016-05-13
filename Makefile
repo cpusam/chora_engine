@@ -9,7 +9,7 @@ GFX = obj/SDL_framerate.o
 DEPS = $(BASE) $(GUI) $(GFX)
 
 all: libchora.a
-
+	
 libchora.a: $(DEPS) Chora.hpp sdl.hpp
 	$(AR) rc $@ $(DEPS)
 	$(RANLIB) $@
@@ -81,5 +81,5 @@ clean: clean_objs
 	rm -f libchora.a
 	
 clean_objs:
-	rm -f  obj/*.o
+	rm -f obj/*.o
 	rm -f *~ platform/*~ gui/*~ SDL_gfx/*~ sound/*~

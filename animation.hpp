@@ -129,17 +129,33 @@ class AnimationFrame
 			texture = 0;
 			angle = 0;
 			orientation.set(1,0);
+			flip = SDL_FLIP_NONE;
 		}
 		
-		AnimationFrame ( int d, SDL_Rect s, SDL_Rect dst )
+		AnimationFrame ( SDL_Texture * t, int d, SDL_Rect s, SDL_Rect dst )
 		{
-			x = y = 0;
+			x = dst.x;
+			y = dst.y;
 			set_delay(d);
 			set_source(s);
 			set_destiny(dst);
-			texture = 0;
+			texture = t;
 			angle = 0;
 			orientation.set(1,0);
+			flip = SDL_FLIP_NONE;
+		}
+		
+		AnimationFrame ( const AnimationFrame & frame )
+		{
+			x = frame.destiny.x;
+			y = frame.destiny.y;
+			set_delay(frame.delay);
+			set_source(frame.source);
+			set_destiny(frame.destiny);
+			texture = frame.texture;
+			angle = frame.angle;
+			orientation = frame.orientation;
+			flip = frame.flip;
 		}
 
 		void set_frame ( int d, SDL_Rect src );
@@ -265,9 +281,9 @@ class Animation: public StateMachine
 		virtual AnimationFrame get_frame ( int i );
 		virtual AnimationFrame get_curr_frame (  );
 
-		virtual void draw ( SDL_Renderer * renderer, int x, int y );
+		virtual int draw ( SDL_Renderer * renderer, int x, int y );
 
-		virtual void draw ( SDL_Renderer * renderer, Camera * cam, int x, int y );
+		virtual int draw ( SDL_Renderer * renderer, Camera * cam, int x, int y );
 
 		virtual int update (  );
 };

@@ -16,8 +16,8 @@ Texturer* Texturer::instance(){
 SDL_Texture * Texturer::addTexture (SDL_Renderer * renderer, std::string path){
 	for (unsigned int i = 0, end = textureID.size(); i < end; i++){
 		if(textureID[i]->path == path){
-			rem(textureID[i]->name);
-			textureID.push_back(new TextureID(path,renderer));
+			//rem(textureID[i]->name);
+			//textureID.push_back(new TextureID(path,renderer));
 			return textureID.back()->texture;
 		}
 	}
@@ -30,8 +30,8 @@ void Texturer::addTexture (SDL_Texture *tex, std::string name){
 	for(unsigned int i = 0;i<textureID.size();i++){
 		if(textureID[i]->texture == tex){
 			
-			rem(textureID[i]->name);
-			textureID.push_back(new TextureID(tex, name));
+			//rem(textureID[i]->name);
+			//textureID.push_back(new TextureID(tex, name));
 			return;
 		}
 	}

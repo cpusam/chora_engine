@@ -16,7 +16,7 @@ void Camera::lookat ( Vect p )
 	if (position.y < limit.y)
 		position.y = limit.y;
 	else if (position.y + dimension.h > limit.x + limit.h)
-		position.y = (limit.y - limit.h) - dimension.h;
+		position.y = (limit.y + limit.h) - dimension.h;
 	
 	SDL_Rect d = action_area;
 	if (d.w > dimension.w)
