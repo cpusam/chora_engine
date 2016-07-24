@@ -21,9 +21,9 @@ class CAnimatedTile: public Animation
 			return texture[0];
 		}
 
-		void set_texture ( SDL_Texture * t )
+		void set_texture ( SDL_Texture * t, bool destroy=false )
 		{
-			if (texture[0] && texture[0] != t)
+			if (destroy && texture[0] && texture[0] != t)
 				SDL_DestroyTexture(texture[0]);
 
 			texture[0] = t;
@@ -76,11 +76,11 @@ class TileMapView: public TileMap
 		void update_animation (  );
 
 		// desenha o mapa na posição 0,0
-		void draw ( SDL_Renderer * renderer, Camera * cam );
-		// desenha todo o mapa numa posição
-		void draw ( SDL_Renderer * renderer, int x, int y );
+		int draw ( SDL_Renderer * renderer, Camera * cam );
 		// desenha o mapa numa posição e usando uma camera
-		void draw ( SDL_Renderer * renderer, Camera * cam, int x, int y );
+		int draw ( SDL_Renderer * renderer, Camera * cam, int x, int y );
+		// desenha todo o mapa numa posição
+		int draw ( SDL_Renderer * renderer, int x, int y );
 };
 
 #endif

@@ -28,9 +28,9 @@ void TileMapView::update_animation (  )
 
 
 
-void TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
+int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 {
-	int i, j, t;
+	int i, j, t, ret = -1;
 	Vect pos = cam->get_position(), p = cam->get_position();
 	SDL_Rect dest = {0,0,tilesize,tilesize};
 	SDL_Rect src = {0,0,0,0};
@@ -59,60 +59,24 @@ void TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 
 			src = source[t];
 
-			if (i == pos.x)
-			{
-				src.x += mod_x;
-				src.w = tilesize - mod_x;
-				dest.x = dim.x;
-			}
-			else if (i == pos.x + dim.w)
-			{
-				if (mod_x == 0)
-					continue;
-
-				src.w = mod_x;
-				dest.x = dim.x + dim.w * tilesize - src.w;
-			}
-			else
-			{
-				dest.x = dim.x + (i - pos.x) * tilesize - (mod_x);
-			}
-
-			if (j == pos.y)
-			{
-				src.y += mod_y;
-				src.h = tilesize - mod_y;
-				dest.y = dim.y;
-			}
-			else if (j == pos.y + dim.h)
-			{
-				if (mod_y == 0)
-					continue;
-
-				src.h = mod_y;
-				dest.y = dim.y + dim.h * tilesize - src.h;
-			}
-			else
-			{
-				dest.y = dim.y + (j - pos.y) * tilesize - (mod_y);
-			}
-
 			if (texture)
 			{
-				//src = source[t];
-				//dest.w = tilesize;
-				//dest.h = tilesize;
-				
-				dest.w = src.w;
-				dest.h = src.h;
-				SDL_RenderCopy(renderer, texture, &src, &dest);
+				src = source[t];
+				dest.w = tilesize;
+				dest.h = tilesize;
+				ret = SDL_RenderCopy(renderer, texture, &src, &dest);
 			}
+			
+			if (ret < 0)
+				break;
 		}
+	
+	return ret;
 }
 
-void TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
+int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 {
-	int i, j, t;
+	int i, j, t, ret = -1;
 	Vect pos = Vect(cam->get_position().x, cam->get_position().y), p = Vect(cam->get_position().x, cam->get_position().y);
 	SDL_Rect dest = {0,0,tilesize,tilesize};
 	SDL_Rect src = {0,0,0,0};
@@ -159,61 +123,26 @@ void TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 				animation[t].draw(renderer,cam,i * tilesize, j * tilesize);
 			}
 
-			src = source[t];
-
-			if (i == pos.x)
-			{
-				src.x += mod_x;
-				src.w = tilesize - mod_x;
-				dest.x = dim.x;
-			}
-			else if (i == pos.x + dim.w)
-			{
-				if (mod_x == 0)
-					continue;
-
-				src.w = mod_x;
-				dest.x = dim.x + dim.w * tilesize - src.w;
-			}
-			else
-			{
-				dest.x = dim.x + (i - pos.x) * tilesize - (mod_x);
-			}
-
-			if (j == pos.y)
-			{
-				src.y += mod_y;
-				src.h = tilesize - mod_y;
-				dest.y = dim.y;
-			}
-			else if (j == pos.y + dim.h)
-			{
-				if (mod_y == 0)
-					continue;
-
-				src.h = mod_y;
-				dest.y = dim.y + dim.h * tilesize - src.h;
-			}
-			else
-			{
-				dest.y = dim.y + (j - pos.y) * tilesize - (mod_y);
-			}
-
 			if (texture)
 			{
-
-				dest.x += x;
-				dest.y += y;
-				dest.w = src.w;
-				dest.h = src.h;
-				SDL_RenderCopy(renderer, texture, &src, &dest);
+				src = source[t];
+				dest.x = i * tilesize + dim.x + x;
+				dest.y = j * tilesize + dim.y + y;
+				dest.w = tilesize;
+				dest.h = tilesize;
+				ret = SDL_RenderCopy(renderer, texture, &src, &dest);
 			}
+			
+			if (ret < 0)
+				break;
 		}
+	
+	return ret;
 }
 
-void TileMapView::draw ( SDL_Renderer * renderer, int x, int y )
+int TileMapView::draw ( SDL_Renderer * renderer, int x, int y )
 {
-	int i, j, t;
+	int i, j, t, ret = -1;
 	Vect pos, p;
 	SDL_Rect dest = {0,0,tilesize,tilesize};
 	SDL_Rect src = {0,0,0,0};
@@ -236,17 +165,21 @@ void TileMapView::draw ( SDL_Renderer * renderer, int x, int y )
 				animation[t].draw(renderer, i * tilesize, j * tilesize);
 			}
 
-			src = source[t];
-
 			if (texture)
 			{
+				src = source[t];
 				dest.x += x;
 				dest.y += y;
 				dest.w = tilesize;
 				dest.h = tilesize;
-				SDL_RenderCopy(renderer, texture, &src, &dest);
+				ret = SDL_RenderCopy(renderer, texture, &src, &dest);
 			}
+			
+			if (ret < 0)
+				break;
 		}
+	
+	return ret;
 }
 
 
