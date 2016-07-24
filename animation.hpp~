@@ -258,9 +258,7 @@ class Animation: public StateMachine
 		void set_use_center ( bool u );
 
 		bool get_use_center (  );
-		
-		SDL_RendererFlip get_flip (  );
-		
+
 		void flip ( bool hor, bool ver );
 
 		virtual void add_frame ( SDL_Texture * t, AnimationFrame f );

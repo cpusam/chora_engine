@@ -1,14 +1,27 @@
 [iniciado em 22/09/2014 mas a engine é de setembro de 2013]
 	[21/05/15] Removido SDL 1.2!
 	NOTA: quando compilar um programa com a engine adicionar o linker dela 
-	      no inicio do linha de comando
+	      no inicio do linha de comando antes do link do SDL2
+
+Só lembrando que o objetivo da engine é ser uma engine para jogos de plataforma.
+E talvez, faça um editor da engine onde basta apenas montar o código sem programar diretamente, para isso preciso estudar o scratch e outros.
+
 Observações:
-	-Agora tem uma área de ação na camera, use-a para ativar/desativar a movimentação de personagens
-	 enfim, é para ativar/desativar ações. Geralmente a area de ação é igual ao viewport da camera.
-	 
-	 
+	-Agora tem uma área de ação na camera, use-a para ativar/desativar a movimentação de
+	 personagens enfim, é para ativar/desativar ações. Geralmente a area de ação é igual 
+	 ao viewport da camera.
+	-Usando o viewport na camera deve-se atualizar com Camera::updateViewport(), antes de 
+	 desenhar na tela assim todo desenho irá para aquela viewport, além disso, 
+	 não pode usar uma textura como alvo do renderer, pois pode ser que a camera fique 
+	 diminuida na textura renderizada.
+
+Observações para o GameEditor:
+	-agora entendo por que no scratch usa uma seta indicando a orientação do sprite, é porque assim pode-se padronizar o movimento do sprite.
+
 Tarefas:
-	-remover o dst do Animation::add_frame e adicionar w,h como destino no Animation::draw
+	-adicionar Megaman/src/Entity.cpp.hpp ao código da engine
+	-[ABANDONADO]remover o dst do Animation::add_frame e adicionar w,h como destino no
+	 Animation::draw
 	-Adicionar métodos estáticos para acessar funções das classes singleton, pois é muito ruim 
 	 acessar com instance(), como Writer::instance().fazAlgumaCoisa();
 	-Consertar o bug da função rectIntersect() que retorna errado quando rectA < rectB, 

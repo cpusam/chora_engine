@@ -292,7 +292,7 @@ int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture
 	}
 
 	// atualiza o viewport para desenhar nele
-	cam->updateViewport(renderer);
+		cam->updateViewport(renderer);
 
 	Vect pos = cam->get_position();
 	SDL_Rect dim = cam->get_dimension();

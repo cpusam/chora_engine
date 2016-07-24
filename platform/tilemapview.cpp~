@@ -99,12 +99,12 @@ void TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 
 			if (texture)
 			{
-				//src = source[t];
-				//dest.w = tilesize;
-				//dest.h = tilesize;
-				
-				dest.w = src.w;
-				dest.h = src.h;
+				src = source[t];
+				dest.w = tilesize;
+				dest.h = tilesize;
+				static int c = 0;
+				if (++c % 100000 == 0)
+					printf("%u tilesize = %d, src.w=%d\n",SDL_GetTicks(),tilesize,src.w);
 				SDL_RenderCopy(renderer, texture, &src, &dest);
 			}
 		}

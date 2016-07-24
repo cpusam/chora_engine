@@ -65,10 +65,14 @@ void AnimationFrame::set_flip ( bool hor, bool ver )
 	unsigned int f = static_cast<unsigned int>(flip);
 	
 	if (hor == true)
-		f = f ^ static_cast<unsigned int>(SDL_FLIP_HORIZONTAL);
+		f = f | SDL_FLIP_HORIZONTAL;
+	else
+		f = f ^ SDL_FLIP_HORIZONTAL;
 	
 	if (ver == true)
-		f = f ^ static_cast<unsigned int>(SDL_FLIP_VERTICAL);
+		f = f | SDL_FLIP_VERTICAL;
+	//else
+		
 
 	flip = static_cast<SDL_RendererFlip>(f);
 }

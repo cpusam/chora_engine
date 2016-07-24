@@ -1,0 +1,123 @@
+
+#include "Chora.hpp"
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
+
+int main ( int argc, char **argv )
+{
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	{
+		printf("Erro ao iniciar SDL\n");
+		return 1;
+	}
+	
+	SDL_Window * window;
+	SDL_Renderer * renderer;
+	SDL_Event event;
+	
+	
+	window = SDL_CreateWindow("Util test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
+	if (!window)
+	{
+		printf("Erro ao criar janela\n");
+		return 1;
+	}
+	
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	if (!renderer)
+	{
+		printf("Erro ao criar renderer\n");
+		return 1;
+	}
+	
+	SDL_Color colorA = {255,255,0,255};
+	SDL_Color colorB = {0,255,255,255};
+	
+	Vect pos;
+	Vect vel;
+	
+	Camera camera((SDL_Rect){0,0,300,200}, level->get_dimension());
+	Animation anim;
+	SDL_Texturer texture = Texturer.add(renderer,"image.png");
+	
+	anim.add();
+	
+	int done = 0;
+	while (!done)
+	{
+		while (SDL_PollEvent(&event))
+		{
+			if (event.type == SDL_QUIT)
+				done = 1;
+			
+			if (event.type == SDL_MOUSEMOTION)
+			{
+				pos.x = event.motion.x - B.w/2;
+				pos.y = event.motion.y - B.h/2;
+			}
+			
+			if (event.type == SDL_KEYDOWN)
+			{
+				switch (event.key.keysym.sym)
+				{
+					case SDLK_UP:
+						vel.y = -5;
+						break;
+					case SDLK_DOWN:
+						vel.y = 5;
+						break;
+					case SDLK_RIGHT:
+						vel.x = 5;
+						break;
+					case SDLK_LEFT:
+						vel.x = -5;
+						break;
+					default:
+						break;
+				}
+			}
+			else if (event.type == SDL_KEYUP)
+			{
+				switch (event.key.keysym.sym)
+				{
+					case SDLK_UP:
+						vel.y = 0;
+						break;
+					case SDLK_DOWN:
+						vel.y = 0;
+						break;
+					case SDLK_RIGHT:
+						vel.x = 0;
+						break;
+					case SDLK_LEFT:
+						vel.x = 0;
+						break;
+					default:
+						break;
+				}
+			}
+			
+		}
+		
+		pos.x += vel.x;
+		pos.y += vel.y;
+		
+		SDL_SetRenderDrawColor(renderer, 0,0,0,0);
+		SDL_RenderClear(renderer);
+
+		SDL_Rect camRect = camera.get_dimension();
+		fill_rect(renderer, colorA, camRect);
+		
+		SDL_RenderPresent(renderer);
+		SDL_Delay(60);
+	}
+	
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	SDL_Quit();
+	
+	return 0;
+}
+
+

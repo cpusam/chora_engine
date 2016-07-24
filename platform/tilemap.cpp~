@@ -39,7 +39,7 @@ int TileMap::get_tile ( int x, int y )
 		static int p = 0;
 		if (p % 10 == 0)
 			printf("CTilaMap: get_tile posições negativas x = %d, y = %d\n", x, y);
-		p++;
+		p = 1;
 		//throw "TileMap: get_tile posições negativas!\n";
 		return -1;
 	}
