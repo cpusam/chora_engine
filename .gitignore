@@ -1,0 +1,13 @@
+#objs
+obj/*.*
+
+#arquivos backup do gedit
+*~ 
+other/*~
+platform/*~ 
+gui/*~ 
+SDL_gfx/*~ 
+sound/*~
+
+
+

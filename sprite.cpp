@@ -41,10 +41,17 @@ int SCollisionRect::get_type (  )
 // pega o retangulo em releção a posição p no mundo
 SDL_Rect SCollisionRect::get_world_rect ( Vect p )
 {
-	return (SDL_Rect){p.x + x, p.y + y, w, h};
+	return (SDL_Rect){int(p.x + x), int(p.y + y), w, h};
 }
 
 //////////////////////////////////////////////////////////
+void CollisionFrame::set_source ( SDL_Rect src )
+{
+	AnimationFrame::set_source(src);
+	src.x = src.y = 0;
+	AnimationFrame::set_destiny(src);
+}
+
 void CollisionFrame::add_rect ( SCollisionRect r )
 {
 	rects.push_back(r);
@@ -52,7 +59,7 @@ void CollisionFrame::add_rect ( SCollisionRect r )
 
 bool CollisionFrame::set_rect ( int i, SCollisionRect r )
 {
-	if (i > -1 && i < rects.size())
+	if (i > -1 && i < (int)rects.size())
 	{
 		rects[i] = r;
 		return true;
@@ -77,7 +84,7 @@ std::vector <SCollisionRect> CollisionFrame::get_rects (  )
 
 SCollisionRect CollisionFrame::get_rect ( int i )
 {
-	if (i > -1 && i < rects.size())
+	if (i > -1 && i < (int)rects.size())
 		return rects[i];
 
 	return SCollisionRect();
@@ -87,7 +94,7 @@ std::vector <SCollisionRect> CollisionFrame::get_rects_type ( int t )
 {
 	std::vector <SCollisionRect> cr;
 
-	for (int i(0); i < rects.size(); i++)
+	for (unsigned int i(0); i < rects.size(); i++)
 		if (t == rects[i].get_type())
 			cr.push_back(rects[i]);
 
@@ -99,7 +106,7 @@ void Sprite::set_coll_frames ( SDL_Texture * t, std::vector <CollisionFrame> c_f
 {
 	coll_frames = c_f;
 
-	for (int i = 0; i < c_f.size(); i++)
+	for (unsigned int i = 0; i < c_f.size(); i++)
 		Animation::add_frame(t, c_f[i]);
 }
 

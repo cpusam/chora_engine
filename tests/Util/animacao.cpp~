@@ -32,15 +32,18 @@ int main ( int argc, char **argv )
 	}
 	
 	SDL_Color colorA = {255,255,0,255};
-	SDL_Color colorB = {0,255,255,255};
+	//SDL_Color colorB = {0,255,255,255};
 	
 	Vect pos;
 	Vect vel;
-	
-	Camera camera((SDL_Rect){0,0,300,200}, level->get_dimension());
+	SDL_Rect limit = {0,0,640,480}, rectB = {0,0,200,200};
+	Camera camera((SDL_Rect){0,0,300,200}, limit);
 	Animation anim;
-	SDL_Texturer texture = Texturer.add(renderer,"image.png");
-	anim.add
+	SDL_Texture * texture = Texturer::add(renderer,"image.png");
+	int w, h;
+	w = texture_width(texture);
+	h = texture_height(texture);
+	anim.add_frame(texture, (SDL_Rect){0,0,});
 	
 	int done = 0;
 	while (!done)
@@ -52,8 +55,8 @@ int main ( int argc, char **argv )
 			
 			if (event.type == SDL_MOUSEMOTION)
 			{
-				pos.x = event.motion.x - B.w/2;
-				pos.y = event.motion.y - B.h/2;
+				pos.x = event.motion.x - rectB.w/2;
+				pos.y = event.motion.y - rectB.h/2;
 			}
 			
 			if (event.type == SDL_KEYDOWN)
@@ -111,6 +114,8 @@ int main ( int argc, char **argv )
 		SDL_RenderPresent(renderer);
 		SDL_Delay(60);
 	}
+	
+	Texturer::destroy();
 	
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);

@@ -21,8 +21,8 @@
 	distribution.
 */
 
-#ifndef CHORA_ANIMATION_HPP
-#define CHORA_ANIMATION_HPP
+#ifndef CHORAATION_HPP
+#define CHORAATION_HPP
 
 #include <vector>
 
@@ -205,12 +205,12 @@ class Animation: public StateMachine
 	public:
 		enum EAnimationState
 		{
-			ANIM_START, // começou a animação
-			ANIM_CHANGE_FRAME, // trocou de frame
-			ANIM_RUNNING, // rodando a animação
-			ANIM_FINISHED, // terminou a animação e vai começar a repetir os frames
-			ANIM_STOPED, // terminou a animação e parou
-			PAUSE_ANIM, // animação parada de trocar frames
+			START, // começou a animação
+			CHANGE_FRAME, // trocou de frame
+			RUNNING, // rodando a animação
+			FINISHED, // terminou a animação e vai começar a repetir os frames
+			STOPED, // terminou a animação e parou
+			PAUSED, // animação parada de trocar frames
 		};
 
 	protected:
@@ -218,7 +218,7 @@ class Animation: public StateMachine
 	public:
 		Animation (  )
 		{
-			set_state(ANIM_START);
+			set_state(START);
 			repeat = true;
 			index = 0;
 			timer.start();
@@ -261,6 +261,7 @@ class Animation: public StateMachine
 		
 		SDL_RendererFlip get_flip (  );
 		
+		void flip ( SDL_RendererFlip f );
 		void flip ( bool hor, bool ver );
 
 		virtual void add_frame ( SDL_Texture * t, AnimationFrame f );

@@ -16,9 +16,11 @@ Observações:
 	 diminuida na textura renderizada.
 
 Observações para o GameEditor:
-	-agora entendo por que no scratch usa uma seta indicando a orientação do sprite, é porque assim pode-se padronizar o movimento do sprite.
+	-agora entendo por que no scratch usa uma seta indicando a orientação do sprite, é porque 
+	 assim pode-se padronizar o movimento do sprite.
 
 Tarefas:
+	-adicionar uma posição x/y ao TileMap
 	-adicionar Megaman/src/Entity.cpp.hpp ao código da engine
 	-[ABANDONADO]remover o dst do Animation::add_frame e adicionar w,h como destino no
 	 Animation::draw

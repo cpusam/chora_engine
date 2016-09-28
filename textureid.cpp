@@ -19,7 +19,8 @@ TextureID::TextureID(SDL_Texture *tex, std::string n){
 
 TextureID::TextureID(std::string path, SDL_Renderer *renderer){
 	this->path = path;
-
+	this->name = path;
+	/*
 	std::size_t begin = this->path.find_last_of("/");
 	if(begin == std::string::npos)
 		this->name = this->path; // aqui é sem '/'
@@ -30,6 +31,7 @@ TextureID::TextureID(std::string path, SDL_Renderer *renderer){
 		std::string ret = "TextureID: erro ao ler path da textura" + std::string(SDL_GetError());
 		throw ret.c_str();
 	}
+	*/
 
 	texture = IMG_LoadTexture(renderer,static_cast<const char *>(path.c_str()));
 	if(texture == 0){

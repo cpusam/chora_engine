@@ -30,8 +30,8 @@ void TileMapView::update_animation (  )
 
 int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 {
-	int i, j, t, ret = -1;
-	Vect pos = cam->get_position(), p = cam->get_position();
+	int i, j, t, ret = 0;
+	Vect pos = cam->get_position() - this->pos, p = cam->get_position() - this->pos;
 	SDL_Rect dest = {0,0,tilesize,tilesize};
 	SDL_Rect src = {0,0,0,0};
 	SDL_Rect dim = cam->get_dimension();
@@ -57,11 +57,11 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 				continue;
 			}
 
-			src = source[t];
-
 			if (texture)
 			{
 				src = source[t];
+				dest.x = (i - pos.x) * tilesize + dim.x - mod_x;
+				dest.y = (j - pos.y) * tilesize + dim.y - mod_y; 
 				dest.w = tilesize;
 				dest.h = tilesize;
 				ret = SDL_RenderCopy(renderer, texture, &src, &dest);
@@ -76,8 +76,9 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 
 int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 {
-	int i, j, t, ret = -1;
-	Vect pos = Vect(cam->get_position().x, cam->get_position().y), p = Vect(cam->get_position().x, cam->get_position().y);
+	int i, j, t, ret = 0;
+	Vect pos = cam->get_position() - this->pos;
+	Vect p = cam->get_position() - this->pos;
 	SDL_Rect dest = {0,0,tilesize,tilesize};
 	SDL_Rect src = {0,0,0,0};
 	SDL_Rect dim = {0,0, cam->get_dimension().w, cam->get_dimension().h};
@@ -126,8 +127,8 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 			if (texture)
 			{
 				src = source[t];
-				dest.x = i * tilesize + dim.x + x;
-				dest.y = j * tilesize + dim.y + y;
+				dest.x = (i - pos.x) * tilesize + dim.x + x - mod_x;
+				dest.y = (j - pos.y) * tilesize + dim.y + y - mod_y;
 				dest.w = tilesize;
 				dest.h = tilesize;
 				ret = SDL_RenderCopy(renderer, texture, &src, &dest);
@@ -142,7 +143,7 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 
 int TileMapView::draw ( SDL_Renderer * renderer, int x, int y )
 {
-	int i, j, t, ret = -1;
+	int i, j, t, ret = 0;
 	Vect pos, p;
 	SDL_Rect dest = {0,0,tilesize,tilesize};
 	SDL_Rect src = {0,0,0,0};

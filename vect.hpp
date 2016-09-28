@@ -174,11 +174,7 @@ struct Vect
 		float d = (b.length() * (this)->length());
 		float c = ((*this) * b) / d;
 
-#if _WIN32 || _WIN64
 		if (d == 0 || std::isnan(c))
-#else
-		if (d == 0 || isnan(c))
-#endif
 			return 1.0f;
 
 		return c;
@@ -211,6 +207,13 @@ struct Vect
 	{
 		x = _x;
 		y = _y;
+		return *this;
+	}
+	
+	Vect& set ( Vect& v )
+	{
+		x = v.x;
+		y = v.y;
 		return *this;
 	}
 };

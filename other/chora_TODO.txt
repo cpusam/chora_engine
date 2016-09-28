@@ -20,6 +20,8 @@ Observações para o GameEditor:
 	 assim pode-se padronizar o movimento do sprite.
 
 Tarefas:
+	-atualizar os exemplos pois mudei muito a engine.
+	-adicionar uma posição x/y ao TileMap
 	-adicionar Megaman/src/Entity.cpp.hpp ao código da engine
 	-[ABANDONADO]remover o dst do Animation::add_frame e adicionar w,h como destino no
 	 Animation::draw

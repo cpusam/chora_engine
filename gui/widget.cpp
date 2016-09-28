@@ -94,7 +94,7 @@ Widget * Widget::get_parent (  )
 
 bool Widget::has_child ( Widget * w )
 {
-	for (int i(0); i < child.size(); i++)
+	for (unsigned int i(0); i < child.size(); i++)
 		if (w == child[i] && w)
 			return true;
 
@@ -154,7 +154,7 @@ Widget * Widget::get_child ( std::string s_id )
 
 Widget * Widget::get_child ( int index )
 {
-	if (index > -1 && index < child.size())
+	if (index > -1 && index < (int)child.size())
 		return child.at(index);
 
 	return 0;

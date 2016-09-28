@@ -41,6 +41,7 @@ class TileMap
 		int width; // largura do std::mapa
 		int height;
 		int tilesize;
+		Vect pos;
 		SDL_Rect dimension;
 		std::vector <int> tileset;
 		std::vector <int> tiles;
@@ -62,6 +63,10 @@ class TileMap
 		}
 
 		void set_tilesize ( int ts );
+
+		void set_pos ( Vect p );
+		
+		Vect get_pos (  );
 
 		bool set_tile ( int x, int y, int t );
 

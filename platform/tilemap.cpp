@@ -5,13 +5,23 @@ void TileMap::set_tilesize ( int ts )
 	tilesize = ts;
 }
 
+void TileMap::set_pos ( Vect p )
+{
+	pos = p;
+}
+
+Vect TileMap::get_pos (  )
+{
+	return pos;
+}
+
 bool TileMap::set_tile ( int x, int y, int t )
 {
 	if (x < 0 || y < 0)
 		throw "TileMap: get_tile posições negativas!\n";
 
-	x = x / tilesize;
-	y = y / tilesize;
+	x = (x) / tilesize;
+	y = (y) / tilesize;
 
 	int p = y*width + x;
 	if (p >= int(tileset.size()))
@@ -34,6 +44,9 @@ void TileMap::set_tile ( int i, int t )
 
 int TileMap::get_tile ( int x, int y )
 {
+	x = int((x - pos.x) / tilesize);
+	y = int((y - pos.y) / tilesize);
+	
 	if (x < 0 || y < 0)
 	{
 		static int p = 0;
@@ -43,9 +56,6 @@ int TileMap::get_tile ( int x, int y )
 		//throw "TileMap: get_tile posições negativas!\n";
 		return -1;
 	}
-
-	x = int(x / tilesize);
-	y = int(y / tilesize);
 
 	if (y * width + x < int(tileset.size()))
 	{

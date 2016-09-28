@@ -26,6 +26,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "../sdl.hpp"
 #include "../util.hpp"
@@ -43,6 +44,20 @@ enum ETextType
 	UNICODE_TEXT
 };
 
+struct Font
+{
+	int size;
+	std::string path;
+	std::string name;
+	TTF_Font * font;
+	
+	Font (  )
+	{
+		size = 0;
+		font = 0;
+	}
+};
+
 /*
 	classe para escrever linha de texto com a SDL_ttf
 */
@@ -51,13 +66,13 @@ class Writer
 	private:
 		int size; // tamanho da fonte
 		std::string path; // caminho para a fonte
-		TTF_Font * font;
+		std::map<std::string, Font> fonts;
 		SDL_Renderer * renderer;
 		static Writer * singleton;
 
 		Writer (  )
 		{
-			font = 0;
+			//font = 0;
 			size = 0;
 			renderer = 0;
 
@@ -65,12 +80,6 @@ class Writer
 			if (!TTF_WasInit())
 				throw "Writer: SDL_ttf não inicializada\n";
 	#endif
-		}
-
-		~Writer (  )
-		{
-			if (font)
-				TTF_CloseFont(font);
 		}
 
 	public:
@@ -81,25 +90,26 @@ class Writer
 
 			return singleton;
 		}
+		
+		~Writer (  );
 
-
-
-		int set_font ( std::string p, int s );
+		
+		int load_font ( std::string path, std::string name, int s );
 
 		static void destroy (  );
 
-		TTF_Font * get_font (  );
+		TTF_Font * get_font ( std::string name );
 
-		bool resize_font ( int s );
+		bool resize_font ( std::string name, int s );
 
 		void set_renderer ( SDL_Renderer * r );
 
 		SDL_Renderer * get_renderer (  );
 
 
-		SDL_Texture * render_text ( std::string text, SDL_Color c, int type=SOLID_TEXT );
+		SDL_Texture * render_text ( std::string name, std::string text, SDL_Color c, int type=SOLID_TEXT );
 
-		SDL_Surface * render_text_surface ( std::string text, SDL_Color c, int type=SOLID_TEXT );
+		SDL_Surface * render_text_surface ( std::string name, std::string text, SDL_Color c, int type=SOLID_TEXT );
 
 		/*
 			Para colorir um texto basta usar as tags <color=R,G,B> TEXTO AQUI </color>

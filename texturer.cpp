@@ -18,7 +18,7 @@ SDL_Texture * Texturer::addTexture (SDL_Renderer * renderer, std::string path){
 		if(textureID[i]->path == path){
 			//rem(textureID[i]->name);
 			//textureID.push_back(new TextureID(path,renderer));
-			return textureID.back()->texture;
+			return textureID.at(i)->texture;
 		}
 	}
 

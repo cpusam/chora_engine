@@ -106,24 +106,24 @@ bool AnimationFrame::destroy (  )
 
 void Animation::play (  )
 {
-	if (get_state() == ANIM_STOPED)
-		set_state(ANIM_START);
+	if (get_state() == STOPED)
+		set_state(START);
 	else
-		set_state(ANIM_RUNNING);
+		set_state(RUNNING);
 
 	timer.start();
 }
 
 void Animation::pause (  )
 {
-	set_state(PAUSE_ANIM);
+	set_state(PAUSED);
 	timer.pause();
 }
 
 void Animation::reset (  )
 {
 	index = 0;
-	set_state(ANIM_START);
+	set_state(START);
 	timer.reset();
 }
 
@@ -199,6 +199,17 @@ bool Animation::get_use_center (  )
 	return use_center;
 }
 
+void Animation::flip ( SDL_RendererFlip f )
+{
+	bool hor, ver;
+	
+	hor = f & SDL_FLIP_HORIZONTAL;
+	ver = f & SDL_FLIP_VERTICAL;
+	
+	for (unsigned i = 0; i < frames.size(); i++)
+		frames[i].set_flip(hor, ver);
+}
+
 void Animation::flip ( bool hor, bool ver )
 {
 	for (unsigned i = 0; i < frames.size(); i++)
@@ -248,7 +259,7 @@ void Animation::add_frame ( SDL_Texture * t, AnimationFrame f )
 
 SDL_Texture * Animation::get_texture ( int i )
 {
-	if (texture.size() > 0 && i < texture.size())
+	if (texture.size() > 0 && i < int(texture.size()))
 		return texture[i];
 
 	return 0;
@@ -256,13 +267,14 @@ SDL_Texture * Animation::get_texture ( int i )
 
 void Animation::destroy_textures (  )
 {
+	
 	std::vector <SDL_Texture *> t;
 
-	for (int i(0); i < texture.size(); i++)
+	for (unsigned int i(0); i < texture.size(); i++)
 	{
 		SDL_Texture * aux = texture[i];
 		int count = 0;
-		for (int j(0); j < texture.size(); j++)
+		for (unsigned int j(0); j < texture.size(); j++)
 			if (j != i && aux == texture[j])
 				count++;
 
@@ -274,7 +286,7 @@ void Animation::destroy_textures (  )
 		else
 		{
 			count = 0;
-			for (int j(0); j < t.size(); j++)
+			for (unsigned int j(0); j < t.size(); j++)
 				if (t.at(j) == aux)
 					count++;
 
@@ -284,15 +296,15 @@ void Animation::destroy_textures (  )
 		}
 	}
 
-	for (int i(0); i < t.size(); i++)
+	for (unsigned int i(0); i < t.size(); i++)
 		if (t.at(i))
 			SDL_DestroyTexture(t.at(i));
 
-	for (int i = 0; i < frames.size(); i++)
+	for (unsigned int i = 0; i < frames.size(); i++)
 		frames[i].destroy();
-
+	
 	texture.clear();
-	t.clear();
+	//t.clear();
 }
 
 bool Animation::has_texture ( SDL_Texture * t )
@@ -300,7 +312,7 @@ bool Animation::has_texture ( SDL_Texture * t )
 	if (!t)
 		return false;
 
-	for (int i(0); i < texture.size(); i++)
+	for (int i(0); i < int(texture.size()); i++)
 		if (t == texture.at(i))
 			return true;
 
@@ -309,7 +321,7 @@ bool Animation::has_texture ( SDL_Texture * t )
 
 bool Animation::set_index ( int i )
 {
-	if (i >= 0 && i < frames.size())
+	if (i >= 0 && i < int(frames.size()))
 	{
 		index = i;
 		timer.reset();
@@ -336,7 +348,7 @@ STimer Animation::get_timer (  )
 
 AnimationFrame Animation::get_frame ( int i )
 {
-	if (i > 0 && i <= frames.size())
+	if (i > 0 && i <= int(frames.size()))
 		return frames[i];
 
 	return AnimationFrame();
@@ -377,7 +389,8 @@ int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 	
 	return ret;
 }
-/*
+
+
 int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 {
 	int ret = 0;
@@ -387,7 +400,7 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 
 	Vect pos = cam->get_position();
 	SDL_Rect dim = cam->get_dimension();
-	SDL_Rect view = cam->get_view();
+	//SDL_Rect view = cam->get_view();
 
 	dest.x += x;
 	dest.y += y;
@@ -401,17 +414,18 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 	
 	dest.x = (dest.x - pos.x) + dim.x;
 	dest.y = (dest.y - pos.y) + dim.y;
-		
+	
+	/*
 	SDL_Rect rect = rectIntersect(dest,dim);
-
 	dest = rect;
+	*/
 
-	if (frames.at(index).get_texture())
+	if (texture.size() && texture.at(index))
 	{
 		//SDL_Color color = {255,255,0,128};
 		//fill_rect(renderer, color, rect);
 		// atualiza o viewport para desenhar nele
-		cam->updateViewport(renderer);
+		//cam->updateViewport(renderer);
 		if (use_rot == false)
 			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, 0, 0, frames[index].get_flip());
 		else
@@ -424,16 +438,15 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 	
 	return ret;
 }
-*/
 
 int Animation::update (  )
 {
 	switch (get_state())
 	{
-		case ANIM_START:
-		case ANIM_CHANGE_FRAME:
-		case ANIM_RUNNING:
-		case ANIM_FINISHED:
+		case START:
+		case CHANGE_FRAME:
+		case RUNNING:
+		case FINISHED:
 			if (frames.size() == 0)
 			{
 				printf("Animation: animação sem frames\n");
@@ -444,27 +457,27 @@ int Animation::update (  )
 			{
 				timer.reset();
 				index++;
-				if (index >= frames.size())
+				if (index >= int(frames.size()))
 				{
 					if (repeat)
 					{
 						index = 0;
-						set_state(ANIM_FINISHED); // termina e repete a animação
+						set_state(FINISHED); // termina e repete a animação
 						break;
 					}
 					else
 					{
 						index = int(frames.size() - 1);
-						set_state(ANIM_STOPED); // terminou a animação e fica parado
+						set_state(STOPED); // terminou a animação e fica parado
 						break;
 					}
 				}
 
-				set_state(ANIM_CHANGE_FRAME); // novo frame
+				set_state(CHANGE_FRAME); // novo frame
 				break;
 			}
 
-			set_state(ANIM_RUNNING); // rodando
+			set_state(RUNNING); // rodando
 			break;
 
 		default:
@@ -474,7 +487,7 @@ int Animation::update (  )
 	return get_state();
 }
 
-
+/*
 int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 {
 	int ret = 0;
@@ -484,7 +497,7 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 
 	Vect pos = cam->get_position();
 	SDL_Rect dim = cam->get_dimension();
-	SDL_Rect view = cam->get_view();
+	//SDL_Rect view = cam->get_view();
 
 	dest.x += x;
 	dest.y += y;
@@ -571,6 +584,6 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 	
 	return ret;
 }
-
+*/
 
 

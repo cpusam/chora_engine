@@ -2,21 +2,32 @@
 
 Writer * Writer::singleton = 0;
 
-int Writer::set_font ( std::string p, int s )
+Writer::~Writer (  )
 {
-	if (s > 0 && s == size && p == path)
-		return -1;
+	for (std::map<std::string, Font>::iterator it = fonts.begin(); it != fonts.end(); it++)
+		if (it->second.font)
+		{
+			TTF_CloseFont(it->second.font);
+		}
+	fonts.clear();
+}
 
-	if (font)
-		TTF_CloseFont(font);
+int Writer::load_font ( std::string path, std::string name, int s )
+{
+	Font font;
+	if (fonts[name].font)
+		TTF_CloseFont(fonts[name].font);
 
-	size = s;
-	path = p;
-	font = TTF_OpenFont(static_cast<const char *>(p.c_str()), s);
-	if (!font)
+	font.size = s;
+	font.path = path;
+	font.name = name;
+	font.font = TTF_OpenFont(static_cast<const char *>(path.c_str()), s);
+	if (!font.font)
 	{
 		return 0;
 	}
+	
+	fonts.insert(std::pair<std::string,Font>(name, font));
 
 	return 1;
 }
@@ -30,21 +41,31 @@ void Writer::destroy (  )
 	}
 }
 
-TTF_Font * Writer::get_font (  )
+TTF_Font * Writer::get_font ( std::string name )
 {
-	return font;
+	if (name == "default")
+		return fonts.begin()->second.font;//primeira fonte é a default
+	
+	return fonts[name].font;
 }
 
-bool Writer::resize_font ( int s )
+bool Writer::resize_font ( std::string name, int s )
 {
-	if (!font || s <= 0)
+	if (name == "default")
+		name = fonts.begin()->second.name;//primeira fonte é a default
+	
+	Font font = fonts[name];
+	if (font.font == 0 || s <= 0)
 		return false;
 
-	TTF_CloseFont(font);
-	font = TTF_OpenFont(path.c_str(), s);
-
-	if (!font)
+	TTF_CloseFont(font.font);
+	font.font = TTF_OpenFont(font.path.c_str(), s);
+	font.size = s;
+	
+	if (!font.font)
 		throw "Writer: não conseguiu redimensionar fonte\n";
+
+	fonts[name] = font;
 
 	return true;
 }
@@ -60,8 +81,11 @@ SDL_Renderer * Writer::get_renderer (  )
 }
 
 
-SDL_Texture * Writer::render_text ( std::string text, SDL_Color c, int type )
+SDL_Texture * Writer::render_text ( std::string name, std::string text, SDL_Color c, int type )
 {
+	if (name == "default")
+		name = fonts.begin()->second.name;//primeira fonte é a default
+	
 	if (text == "")
 	{
 		text = " "; // para evitar textura sem tamanho
@@ -71,7 +95,7 @@ SDL_Texture * Writer::render_text ( std::string text, SDL_Color c, int type )
 	if (renderer == 0)
 		throw "Writer: nenhum renderer usado\n";
 
-	SDL_Surface * surface = render_text_surface(text, c, type);
+	SDL_Surface * surface = render_text_surface(name, text, c, type);
 	SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface);
 
@@ -85,8 +109,12 @@ SDL_Texture * Writer::render_text ( std::string text, SDL_Color c, int type )
 	return texture;
 }
 
-SDL_Surface * Writer::render_text_surface ( std::string text, SDL_Color c, int type )
+SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, SDL_Color c, int type )
 {
+	if (name == "default")
+		name = fonts.begin()->second.name;//primeira fonte é a default
+	
+	TTF_Font * font = fonts[name].font;
 	if (font == 0)
 		throw "Writer: Nenhuma fonte usada\n";
 
@@ -98,7 +126,7 @@ SDL_Surface * Writer::render_text_surface ( std::string text, SDL_Color c, int t
 	SDL_Surface * surf = 0;
 	int line = 0;
 
-	for (int i(0); i < text.size(); i++)
+	for (unsigned int i(0); i < text.size(); i++)
 	{
 		if (text[i] == '\n' || i + 1 == text.size())
 		{
@@ -121,7 +149,7 @@ SDL_Surface * Writer::render_text_surface ( std::string text, SDL_Color c, int t
 				case UNICODE_TEXT:
 				{
 					Uint16 * s = (Uint16 *)malloc(sizeof(Uint16) * (str.length() + 1));
-					for (int i(0); i < str.length(); i++)
+					for (unsigned int i(0); i < str.length(); i++)
 						s[i] = str[i];
 					s[str.length()] = 0x0;
 					tmp.push_back(TTF_RenderUNICODE_Solid(font, s, c));
@@ -153,7 +181,7 @@ SDL_Surface * Writer::render_text_surface ( std::string text, SDL_Color c, int t
 			case UNICODE_TEXT:
 			{
 				Uint16 * s = (Uint16 *)malloc(sizeof(Uint16) * (str.length() + 1));
-				for (int i(0); i < str.length(); i++)
+				for (unsigned int i(0); i < str.length(); i++)
 					s[i] = str[i];
 				s[str.length()] = '\0';
 				SDL_Surface * srf = TTF_RenderUNICODE_Solid(font, s, c);
@@ -168,7 +196,7 @@ SDL_Surface * Writer::render_text_surface ( std::string text, SDL_Color c, int t
 	}
 
 	int h = 0, w = 0;
-	for (int i(0); i < tmp.size(); i++)
+	for (unsigned int i(0); i < tmp.size(); i++)
 	{
 		h += tmp[i]->h;
 		if (tmp[i]->w > w)
@@ -193,7 +221,7 @@ SDL_Surface * Writer::render_text_surface ( std::string text, SDL_Color c, int t
 	if(surf == 0)
 		throw SDL_GetError();
 
-	for (int i(0); i < tmp.size(); i++)
+	for (unsigned int i(0); i < tmp.size(); i++)
 	{
 		SDL_Rect d;
 		d.x = 0;

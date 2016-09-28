@@ -8,7 +8,7 @@ void GuiLabel::str_to_surface ( std::string s )
 		SDL_DestroyTexture(texture);
 
 	if (s != "")
-		texture = Writer::instance()->render_text(s, color, UTF8_TEXT);
+		texture = Writer::instance()->render_text("default",s, color, UTF8_TEXT);
 	else
 	{
 		texture = 0;
@@ -215,7 +215,7 @@ void GuiTextInput::input ( SDL_Event & event )
 		}
 		else	 // if (event.key.keysym.sym >= SDLK_SPACE && event.key.keysym.sym <= SDLK_z)
 		{
-			if (str.size() < strsize)
+			if (str.size() < (unsigned int)strsize)
 			{
 				std::stringstream s;
 				s << str;

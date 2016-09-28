@@ -60,9 +60,10 @@ class CollisionFrame: public AnimationFrame
 			rects = r;
 		}
 
+		void set_source ( SDL_Rect src );
 		void add_rect ( SCollisionRect r );
 		bool set_rect ( int i, SCollisionRect r );
-
+		
 		void clear_rects (  );
 		std::vector <SCollisionRect> get_rects (  );
 

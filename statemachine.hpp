@@ -51,13 +51,13 @@ class StateMachine
 		virtual int update (  );
 };
 
-class CState
+class State
 {
 	private:
 		int id;
 
 	public:
-		CState (  )
+		State (  )
 		{
 			id = DEFAULT_STATE_ID;
 		}
@@ -76,8 +76,8 @@ class CState
 class StatePatternMachine
 {
 	private:
-		CState * curr_state;
-		std::vector <CState *> state;
+		State * curr_state;
+		std::vector <State *> state;
 
 	public:
 		StatePatternMachine (  )
@@ -89,11 +89,11 @@ class StatePatternMachine
 		{
 		}
 
-		virtual bool have_state ( CState * s );
-		virtual bool add_state ( CState * s );
+		virtual bool has_state ( State * s );
+		virtual bool add_state ( State * s );
 		virtual bool set_state ( int id ); // troca de estado
-		virtual CState * get_state ( int id );
-		virtual CState * get_curr_state (  );
+		virtual State * get_state ( int id );
+		virtual State * get_curr_state (  );
 		virtual int update (  ); // retorna o id do estado
 };
 
