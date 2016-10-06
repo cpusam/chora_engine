@@ -155,6 +155,7 @@ struct Vect
 	}
 	*/
 
+	// angulo em radianos
 	Vect& rotate ( float angle )
 	{
 		float c = cos(angle);
@@ -167,6 +168,14 @@ struct Vect
 		y = ny;
 
 		return *this;
+	}
+
+	//rotação em graus
+	Vect& rotateDegree ( float angle )
+	{
+		angle = TO_RADIANS(angle);
+
+		return this->rotate(angle);
 	}
 
 	float cos_theta ( Vect & b )
