@@ -55,8 +55,6 @@ class TileMapView: public TileMap
 		}
 		~TileMapView (  )
 		{
-			if (texture)
-				SDL_DestroyTexture(texture);
 		}
 
 		void clear_source (  )

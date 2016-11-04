@@ -106,7 +106,7 @@ bool AnimationFrame::destroy (  )
 
 void Animation::play (  )
 {
-	if (get_state() == STOPED)
+	if (get_state() == STOPPED)
 		set_state(START);
 	else
 		set_state(RUNNING);
@@ -391,6 +391,56 @@ int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 }
 
 
+int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int destW, int destH )
+{
+	int ret = 0;
+	SDL_Rect dest, source;
+	dest = frames.at(index).get_destiny();
+	dest.w = destW;
+	dest.h = destH;
+	source = frames.at(index).get_source();
+
+	Vect pos = cam->get_position();
+	SDL_Rect dim = cam->get_dimension();
+	//SDL_Rect view = cam->get_view();
+
+	dest.x += x;
+	dest.y += y;
+
+	if (use_center)
+	{
+		dest.x = dest.x - dest.w / 2;
+		dest.y = dest.y - dest.h / 2;
+	}
+	
+	
+	dest.x = (dest.x - pos.x) + dim.x;
+	dest.y = (dest.y - pos.y) + dim.y;
+	
+	/*
+	SDL_Rect rect = rectIntersect(dest,dim);
+	dest = rect;
+	*/
+
+	if (texture.size() && texture.at(index))
+	{
+		//SDL_Color color = {255,255,0,128};
+		//fill_rect(renderer, color, rect);
+		// atualiza o viewport para desenhar nele
+		//cam->updateViewport(renderer);
+		if (use_rot == false)
+			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, 0, 0, frames[index].get_flip());
+		else
+		{
+			SDL_Point center = {dest.w/2, dest.h/2};
+
+			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
+		}
+	}
+	
+	return ret;
+}
+
 int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 {
 	int ret = 0;
@@ -468,7 +518,7 @@ int Animation::update (  )
 					else
 					{
 						index = int(frames.size() - 1);
-						set_state(STOPED); // terminou a animação e fica parado
+						set_state(STOPPED); // terminou a animação e fica parado
 						break;
 					}
 				}

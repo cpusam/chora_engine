@@ -41,14 +41,36 @@ TextureID::TextureID(std::string path, SDL_Renderer *renderer){
 	}
 }
 
+TextureID::TextureID(std::string path, SDL_Renderer *renderer, SDL_Color colorKey){
+	this->path = path;
+	this->name = path;
+
+	SDL_Surface * surf = IMG_Load(static_cast<const char *>(path.c_str()));
+	if (surf == 0)
+	{
+		std::string ret = "[Texture ID] Erro ao carregar Surface: " + std::string(SDL_GetError());
+		throw ret.c_str();
+	}
+	
+	SDL_SetColorKey(surf,SDL_TRUE,SDL_MapRGBA(surf->format, colorKey.r,colorKey.g,colorKey.b,colorKey.a));
+	
+	texture = SDL_CreateTextureFromSurface(renderer, surf);
+	SDL_FreeSurface(surf);
+	if(texture == 0){
+		std::string ret = "[Texture ID] Erro ao carregar Textura: " + std::string(SDL_GetError());
+		
+		throw ret.c_str();
+	}
+}
+
 TextureID::~TextureID(){
-	destroy();
+	//destroy();
 }
 
 void TextureID::destroy(){
-	if(texture != 0)
-		SDL_DestroyTexture(texture);
-	texture = 0;
+	//if(texture)
+	SDL_DestroyTexture(texture);
+	//texture = 0;
 	path = "";
 	name = "";
 }

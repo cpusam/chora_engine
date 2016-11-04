@@ -13,6 +13,8 @@ struct TextureID{
 	TextureID();
 	TextureID(SDL_Texture *tex, std::string n);
 	TextureID(std::string path, SDL_Renderer *renderer);
+	TextureID(std::string path, SDL_Renderer *renderer, SDL_Color colorKey);
+	
 	virtual ~TextureID();
 	virtual void destroy();
 };

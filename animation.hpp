@@ -45,6 +45,7 @@ struct STimer
 	public:
 		STimer (  )
 		{
+			state = 1;
 			time = 0;
 			step = 1;
 			lastTick = SDL_GetTicks();
@@ -209,7 +210,7 @@ class Animation: public StateMachine
 			CHANGE_FRAME, // trocou de frame
 			RUNNING, // rodando a animação
 			FINISHED, // terminou a animação e vai começar a repetir os frames
-			STOPED, // terminou a animação e parou
+			STOPPED, // terminou a animação e parou
 			PAUSED, // animação parada de trocar frames
 		};
 
@@ -288,6 +289,8 @@ class Animation: public StateMachine
 		virtual int draw ( SDL_Renderer * renderer, int x, int y );
 
 		virtual int draw ( SDL_Renderer * renderer, Camera * cam, int x, int y );
+		
+		virtual int draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int destW, int destH );
 
 		virtual int update (  );
 };
