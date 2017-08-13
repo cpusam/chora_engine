@@ -1,6 +1,24 @@
 #include "camera.hpp"
 #include "collision.hpp"
 
+Camera::Camera ( SDL_Renderer * renderer, int x, int y, int vpW, int vpH, int dimW, int dimH, SDL_Rect l )
+{
+	dimension = (SDL_Rect){0,0,dimW,dimH};
+	viewport = (SDL_Rect){x,y,vpW,vpH};
+	updateViewport(renderer);
+	limit = l;
+	SDL_RenderSetViewport(renderer, &viewport);
+	// focus padrão no meio da camera
+	focus.x = dimension.w / 2.0f;
+	focus.y = dimension.h / 2.0f;
+	//lookat(Vect(0,0));
+	if (limit.w < dimension.w || limit.h < dimension.h)
+		std::cout << "Camera: atenção limit W ou H menor que dimension W ou H\n";
+
+	action_area = (SDL_Rect){0,0,dimension.w,dimension.h};
+}
+
+
 Camera::Camera ( SDL_Renderer * renderer, int x, int y, int vpW, int vpH, SDL_Rect l )
 {
 	dimension = (SDL_Rect){0,0,vpW,vpH};

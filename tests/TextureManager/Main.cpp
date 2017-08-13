@@ -1,8 +1,8 @@
-#include "../../src/Chora.hpp"
+#include "../../Chora.hpp"
 
 int main(){
 	SDL_Init(SDL_INIT_VIDEO);
-	SDL_Window *window = SDL_CreateWindow("Textures", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
+	SDL_Window *window = SDL_CreateWindow("Textures", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
 	
 	if(window == NULL){std::cout << "Error1!\n";return -1;}
 	
@@ -10,14 +10,19 @@ int main(){
 
 	if(renderer == NULL){std::cout << "Error2!\n";return -1;}
 	
+	if (IMG_Init(IMG_INIT_PNG) < 0) {std::cout << "Error3!\n";return -1;}
+		
+	
 	SDL_Event event;
 	
+	std::string str("background.png");
 	try{
-	CTextureManager::instance()->add_texture(IMG_LoadTexture(renderer,"back.png"),"back");
+	Texturer::add(renderer, str);
 	} catch (const char * e)
 	{
 		std::cout << "Erro: " << e << std::endl;
 	}
+	std::cout<<"back = "<<str<<std::endl;
 	bool isRunning = true;
 	
 	while(isRunning){
@@ -30,7 +35,7 @@ int main(){
 		}
 		
 		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer,CTextureManager::instance()->get_texture("back"),NULL,NULL);
+		SDL_RenderCopy(renderer,Texturer::get(str),NULL,NULL);
 		SDL_RenderPresent(renderer);
 		SDL_Delay(60);
 	}
@@ -38,7 +43,8 @@ int main(){
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	
-	CTextureManager::instance()->destroy();
+	Texturer::destroy();
+	Texturer::instance();
 	
 	SDL_Quit();
 	

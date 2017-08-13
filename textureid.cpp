@@ -70,7 +70,7 @@ TextureID::~TextureID(){
 void TextureID::destroy(){
 	//if(texture)
 	SDL_DestroyTexture(texture);
-	//texture = 0;
+	texture = 0;
 	path = "";
 	name = "";
 }

@@ -464,7 +464,7 @@ int main (  )
 		try
 		{
 			Writer::instance()->set_renderer(renderer);
-			Writer::instance()->set_font("04B_20__.TTF", 50);
+			Writer::instance()->load_font("04B_20__.TTF","04B_20", 50);
 			
 			button = new GuiButton((SDL_Rect){20,12*32, 64,32}, "<-");
 			button->set_id("keyLeft");
@@ -512,6 +512,8 @@ int main (  )
 		FPSManager::instance()->update();
 		if (FPSManager::instance()->get_delta() > 0)
 		{
+			SDL_SetRenderDrawColor(renderer, 0,0,0,255);
+			SDL_RenderClear(renderer);
 			background.draw(&cam,renderer);
 			map.draw(renderer,&cam);
 			player.draw(renderer, &cam);

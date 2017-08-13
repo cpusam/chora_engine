@@ -44,7 +44,9 @@ class Camera
 			x,y posição na janela
 			vpW, vpH tamanho da viewport na janela
 			dimW, dimH dimensão da camera no mundo
+			vpW e vpH são o tamanho do video na janela
 		*/
+		Camera ( SDL_Renderer * renderer, int x, int y, int vpW, int vpH, int dimW, int dimH, SDL_Rect l );
 		Camera ( SDL_Renderer * renderer, int x, int y, int vpW, int vpH, SDL_Rect l );
 		Camera ( SDL_Rect d, SDL_Rect l );
 		
