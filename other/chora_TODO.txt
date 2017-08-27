@@ -19,6 +19,9 @@ Observações para o GameEditor:
 	-agora entendo por que no scratch usa uma seta indicando a orientação do sprite, é porque 
 	 assim pode-se padronizar o movimento do sprite.
 
+Adicionar:
+	-Adicionar os códigos do Entity, Exception, Key, Elements na chora engine. Eles estão na pasta do projeto SuperMarioBros
+
 Tarefas:
 	-atualizar os exemplos pois mudei muito a engine.
 	-adicionar uma posição x/y ao TileMap

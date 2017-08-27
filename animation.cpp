@@ -346,6 +346,11 @@ STimer Animation::get_timer (  )
 	return timer;
 }
 
+std::vector<AnimationFrame> & Animation::get_frames (  )
+{
+	return frames;
+}
+
 AnimationFrame Animation::get_frame ( int i )
 {
 	if (i > 0 && i <= int(frames.size()))
@@ -385,6 +390,11 @@ int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 			SDL_Point center = {frames[index].get_source().w/2, frames[index].get_source().h/2};
 			ret = SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
 		}
+	}
+	else
+	{
+		if (texture.size() && texture.at(index) == 0)
+			std::cerr<<"Erro ao desenhar uma textura, textura "<<index<<" é nula\n";
 	}
 	
 	return ret;
@@ -437,6 +447,11 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int d
 			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
 		}
 	}
+	else
+	{
+		if (texture.size() && texture.at(index) == 0)
+			std::cerr<<"Erro ao desenhar uma textura, textura "<<index<<" é nula\n";
+	}
 	
 	return ret;
 }
@@ -464,6 +479,7 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 	
 	dest.x = (dest.x - pos.x) + dim.x;
 	dest.y = (dest.y - pos.y) + dim.y;
+	
 	
 	/*
 	SDL_Rect rect = rectIntersect(dest,dim);

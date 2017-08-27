@@ -283,6 +283,7 @@ class Animation: public StateMachine
 		void set_timer ( STimer t );
 		STimer get_timer (  );
 
+		std::vector<AnimationFrame> & get_frames (  );
 		virtual AnimationFrame get_frame ( int i );
 		virtual AnimationFrame get_curr_frame (  );
 

@@ -73,7 +73,11 @@ class TileMap
 		void set_tile ( int i, int t );
 
 		int get_tile ( int x, int y );
+		
+		//pega a posição em pixels
+		Vect get_tile_pos ( int i );
 
+		// Se o indice i for um tile, retorna >= 0. Caso contrário < 0 caso não haja
 		int get_tile ( int i );
 
 		int get_tilesize (  );

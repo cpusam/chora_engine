@@ -18,7 +18,10 @@ Vect TileMap::get_pos (  )
 bool TileMap::set_tile ( int x, int y, int t )
 {
 	if (x < 0 || y < 0)
-		throw "TileMap: get_tile posições negativas!\n";
+	{
+		std::cout<<"TileMap: get_tile posições negativas!\n";
+		return false;
+	}
 
 	x = (x) / tilesize;
 	y = (y) / tilesize;
@@ -64,6 +67,18 @@ int TileMap::get_tile ( int x, int y )
 	}
 
 	return -1;
+}
+
+Vect TileMap::get_tile_pos ( int i )
+{
+	Vect p;
+	
+	p.set((i % width)*tilesize, (i / width)*tilesize);
+	
+	if (i < 0 || i >= int(tileset.size()))
+		p.zero();
+	
+	return p;
 }
 
 int TileMap::get_tile ( int i )

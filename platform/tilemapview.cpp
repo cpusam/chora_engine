@@ -1,6 +1,23 @@
 #include "tilemapview.hpp"
 
 ////////////////////////////////////////////////////////////////////
+CAnimatedTile TileMapView::get_animation ( int tile )
+{
+	for (unsigned int i = 0; i < animation.size(); i++)
+		if (animation.at(i).get_tile() == tile)
+			return animation.at(i);
+	
+	return CAnimatedTile();
+}
+
+SDL_Rect TileMapView::get_source ( int tile )
+{
+	if (source.count(tile) > 0)
+		return source[tile];
+	
+	return (SDL_Rect){0,0,-1,-1};
+}
+
 void TileMapView::add_animation ( CAnimatedTile a, int t )
 {
 	if (!texture)

@@ -30,6 +30,8 @@
 #include "sdl.hpp"
 #include "camera.hpp"
 
+extern void print_video_driver (  );
+
 extern Uint32 get_pixel ( SDL_Surface * surface, int x, int y );
 extern void put_pixel ( SDL_Surface *surface, int x, int y, Uint32 pixel );
 

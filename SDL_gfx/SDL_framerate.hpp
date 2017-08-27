@@ -157,6 +157,11 @@ class FPSManager
 		{
 			return time_passed;
 		}
+		
+		double get_delta_sec (  )
+		{
+			return double(time_passed)/1000.0;
+		}
 
 		Uint32 update (  )
 		{

@@ -56,7 +56,10 @@ class TileMapView: public TileMap
 		~TileMapView (  )
 		{
 		}
-
+		
+		CAnimatedTile get_animation ( int tile );
+		SDL_Rect get_source ( int tile );
+		
 		void clear_source (  )
 		{
 			source.clear();

@@ -72,7 +72,7 @@ SDL_Texture *Texturer::getTexture(std::string name) {
 	}
 
 	std::cout << "[Texture Manager] Error : Texture \"" << name << "\" não encontrado!\n" << std::endl;
-	throw "[TextureManager] Error : Texture not found!";
+	return 0;
 }
 
 void Texturer::destroyAll() {

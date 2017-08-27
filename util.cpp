@@ -1,5 +1,25 @@
 #include "util.hpp"
 
+void print_video_driver ()
+{
+	int numdrivers = SDL_GetNumRenderDrivers ();
+	std::cout << "Render driver count: " << numdrivers << std::endl;
+	for (int i=0; i<numdrivers; i++) {
+	SDL_RendererInfo drinfo;
+	SDL_GetRenderDriverInfo (0, &drinfo);
+	std::cout << "Driver name ("<<i<<"): " << drinfo.name << std::endl;
+	if (drinfo.flags & SDL_RENDERER_SOFTWARE) std::cout << " the renderer is\
+	a software fallback" << std::endl;
+	if (drinfo.flags & SDL_RENDERER_ACCELERATED) std::cout << " the renderer\
+	uses hardware acceleration" << std::endl;
+	if (drinfo.flags & SDL_RENDERER_PRESENTVSYNC) std::cout << " present is\
+	synchronized with the refresh rate" << std::endl;
+	if (drinfo.flags & SDL_RENDERER_TARGETTEXTURE) std::cout << " the\
+	renderer supports rendering to texture" << std::endl;
+	}
+}
+
+
 Uint32 get_pixel ( SDL_Surface *surface, int x, int y )
 {
 	/*
@@ -120,8 +140,9 @@ void fill_rect ( SDL_Renderer * renderer, Camera * cam, SDL_Color color, SDL_Rec
 	{
 		Vect pos = cam->get_position();
 		dim = cam->get_dimension();
-		d.x = r.x + dim.x;
-		d.y = r.y + dim.y;
+		d.x = r.x - pos.x;
+		d.y = r.y - pos.y;
+		/*
 
 		if (d.x < dim.x + pos.x)
 		{
@@ -172,6 +193,7 @@ void fill_rect ( SDL_Renderer * renderer, Camera * cam, SDL_Color color, SDL_Rec
 		{
 			d.y = d.y - pos.y;
 		}
+		*/
 	}
 	else
 	{
