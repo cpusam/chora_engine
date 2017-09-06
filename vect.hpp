@@ -219,7 +219,7 @@ struct Vect
 		return *this;
 	}
 	
-	Vect& set ( Vect& v )
+	Vect& set ( Vect v )
 	{
 		x = v.x;
 		y = v.y;

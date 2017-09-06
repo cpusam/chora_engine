@@ -516,6 +516,7 @@ int Animation::update (  )
 			if (frames.size() == 0)
 			{
 				printf("Animation: animação sem frames\n");
+				return -1;
 			}
 
 			timer.update();
@@ -552,104 +553,4 @@ int Animation::update (  )
 
 	return get_state();
 }
-
-/*
-int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
-{
-	int ret = 0;
-	SDL_Rect dest, source;
-	dest = frames.at(index).get_destiny();
-	source = frames.at(index).get_source();
-
-	Vect pos = cam->get_position();
-	SDL_Rect dim = cam->get_dimension();
-	//SDL_Rect view = cam->get_view();
-
-	dest.x += x;
-	dest.y += y;
-
-	if (use_center)
-	{
-		dest.x = dest.x - dest.w / 2;
-		dest.y = dest.y - dest.h / 2;
-	}
-	
-	
-	dest.x = (dest.x - pos.x) + dim.x;
-	dest.y = (dest.y - pos.y) + dim.y;
-		
-	SDL_Rect rect = rectIntersect(dest,dim);
-	
-	float s = 0;
-	if (rect.w < dest.w && angle == 0)
-	{
-		s = (float)rect.w / dest.w;
-		int w = source.w;
-		
-		std::string ifs;
-		
-		if (rect.x + dest.w > dim.x + dim.w)
-		{
-			source.w = w * s;
-			//source.x = source.w;
-			if (frames.at(index).get_flip() & SDL_FLIP_HORIZONTAL)
-				source.x = source.x + (w - source.w);
-		}
-		else if (rect.x <= dim.x)
-		{
-			source.w = (w * s);
-			if (frames.at(index).get_flip() & SDL_FLIP_HORIZONTAL)
-				source.x = source.x;
-			else
-				source.x = source.x + (w - source.w);
-		}
-		//printf("animation::draw: src.x=%d,src.w=%d,rect.w=%d,s=%.2f,w=%d, %s\n",source.x,source.w,rect.w,s,w,ifs.c_str());
-	}
-
-	if (rect.h < dest.h && angle == 0)
-	{
-		s = (float)rect.h / dest.h;
-		int h = source.h;
-		
-		std::string ifs;
-		
-		if (rect.y + dest.h > dim.y + dim.h)
-		{
-			source.h = h * s;
-			//source.x = source.w;
-			if (frames.at(index).get_flip() & SDL_FLIP_VERTICAL)
-				source.y = source.y + (h - source.h);
-		}
-		else if (rect.y <= dim.y)
-		{
-			source.h = (h * s);
-			if (frames.at(index).get_flip() & SDL_FLIP_VERTICAL)
-				source.y = source.y;
-			else
-				source.y = source.y + (h - source.h);
-		}
-		//printf("animation::draw: src.y=%d,src.h=%d,rect.h=%d,s=%.2f,h=%d, %s\n",source.y,source.h,rect.h,s,h,ifs.c_str());
-	}
-
-	if (angle == 0)
-		dest = rect;
-
-	if (frames.at(index).get_texture())
-	{
-		//SDL_Color color = {255,255,0,128};
-		//fill_rect(renderer, color, rect);
-		if (use_rot == false)
-			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, 0, 0, frames[index].get_flip());
-		else
-		{
-			SDL_Point center = {dest.w/2, dest.h/2};
-
-			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
-		}
-	}
-	
-	return ret;
-}
-*/
-
 
