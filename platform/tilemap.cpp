@@ -60,6 +60,9 @@ int TileMap::get_tile ( int x, int y )
 		return -1;
 	}
 
+	if (y >= height || x >= width)
+		return -1;
+
 	if (y * width + x < int(tileset.size()))
 	{
 		//if (x < width && y < height)
