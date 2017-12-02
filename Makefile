@@ -2,11 +2,12 @@
 CXX = g++
 AR = ar
 RANLIB = ranlib
-CXXFLAGS = -Wall
-BASE = obj/statemachine.o obj/vect.o obj/collision.o obj/movable.o obj/util.o obj/camera.o obj/animation.o obj/sprite.o obj/background.o obj/tilemap.o obj/tilemapview.o obj/soundplayer.o obj/textureid.o obj/texturer.o  obj/sprite.o
+CXXFLAGS = -std=c++11 -Wall
+BASE = obj/statemachine.o obj/vect.o obj/collision.o obj/movable.o obj/util.o obj/camera.o obj/animation.o obj/sprite.o obj/background.o obj/tilemap.o obj/tilemapview.o obj/soundplayer.o obj/textureid.o obj/texturer.o  obj/sprite.o obj/Exception.o
 GUI = obj/widget.o obj/writer.o obj/label.o obj/button.o obj/bar.o
 GFX = obj/SDL_framerate.o
-DEPS = $(BASE) $(GUI) $(GFX)
+GAME = obj/Entity.o obj/Elements.o obj/Key.o
+DEPS = $(BASE) $(GUI) $(GFX) $(GAME)
 
 all: libchora.a
 	
@@ -56,6 +57,9 @@ obj/tilemapview.o: platform/tilemapview.hpp platform/tilemapview.cpp
 obj/soundplayer.o: sound/soundplayer.hpp sound/soundplayer.cpp
 	$(CXX) -c sound/soundplayer.cpp -o $@ $(CXXFLAGS)
 
+obj/Exception.o: Exception.hpp Exception.cpp
+	$(CXX) -c Exception.cpp -o $@ $(CXXFLAGS)
+
 obj/SDL_framerate.o: SDL_gfx/SDL_framerate.hpp SDL_gfx/SDL_framerate.cpp
 	$(CXX) -c SDL_gfx/SDL_framerate.cpp -o $@ $(CXXFLAGS)
 
@@ -75,6 +79,16 @@ obj/button.o: gui/button.hpp gui/button.cpp
 obj/bar.o: gui/bar.hpp gui/bar.cpp
 	$(CXX) -c gui/bar.cpp -o $@ $(CXXFLAGS)
 
+#################################################
+obj/Key.o: game/Key.hpp game/Key.cpp
+	$(CXX) -c game/Key.cpp -o $@ $(CXXFLAGS)
+
+obj/Entity.o: game/Entity.hpp game/Entity.cpp
+	$(CXX) -c game/Entity.cpp -o $@ $(CXXFLAGS)
+
+obj/Elements.o: game/Elements.hpp game/Elements.cpp
+	$(CXX) -c game/Elements.cpp -o $@ $(CXXFLAGS)
+
 
 
 clean: clean_objs
@@ -82,4 +96,4 @@ clean: clean_objs
 	
 clean_objs:
 	rm -f obj/*.o
-	rm -f *~ platform/*~ gui/*~ SDL_gfx/*~ sound/*~
+	rm -f *~ platform/*~ gui/*~ game/*~ SDL_gfx/*~ sound/*~

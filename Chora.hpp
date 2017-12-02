@@ -35,8 +35,8 @@
 #include "util.hpp"
 #include "background.hpp"
 #include "texturer.hpp"
+#include "Exception.hpp"
 #include "SDL_gfx/SDL_framerate.hpp"
-//#include "SDL_gfx/SDL_rotozoom.hpp"
 
 // módulo de tiles
 #include "platform/tilemap.hpp"
@@ -51,6 +51,11 @@
 
 // módulo de som
 #include "sound/soundplayer.hpp"
+
+//módulo game
+#include "game/Entity.hpp"
+#include "game/Elements.hpp"
+#include "game/Key.hpp"
 
 #endif
 
