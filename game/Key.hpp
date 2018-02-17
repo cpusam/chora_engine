@@ -22,6 +22,7 @@ class Key: public StateMachine
 		
 		Uint32 getPressTime (  );
 
+		bool isPressed();
 		void setKey ( SDL_Keycode k );
 		SDL_Keycode getKey (  );
 		

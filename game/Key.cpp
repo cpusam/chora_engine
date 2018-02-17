@@ -25,6 +25,11 @@ Uint32 Key::getPressTime (  )
 	return pressTime;
 }
 
+bool Key::isPressed()
+{
+	return press;
+}
+
 void Key::setKey ( SDL_Keycode k )
 {
 	key = k;
@@ -91,6 +96,7 @@ int Key::update (  )
 			break;
 		
 		default:
+			set_state(FREE);
 			break;
 	}
 	

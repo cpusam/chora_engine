@@ -25,6 +25,11 @@
 #define CHORA_VECT_HPP
 
 #include <cmath>
+#include <string>
+
+#ifdef _DEBUG_
+#include <cstdio>
+#endif
 
 #define TO_RADIANS(a) ((a) * M_PI) / 180.0f
 #define TO_DEGREES(a) ((a) * 180.0f) / M_PI
@@ -224,6 +229,18 @@ struct Vect
 		x = v.x;
 		y = v.y;
 		return *this;
+	}
+
+	#ifdef _DEBUG_
+	void print()
+	{
+		printf("vect{x=%f, y=%f}\n",this->x,this->y);
+	}
+	#endif
+
+	std::string toString (  )
+	{
+		return "x="+std::to_string(this->x)+",y="+std::to_string(this->y);
 	}
 };
 

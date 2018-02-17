@@ -22,6 +22,34 @@ bool pointbox ( Vect p, SDL_Rect b )
 	return true;
 }
 
+
+bool lineIntersects ( Vect a1, Vect a2, Vect b1, Vect b2, Vect * result )
+{
+    Vect intersection;
+
+    Vect b = a2 - a1;
+    Vect d = b2 - b1;
+    float bDotDPerp = b.x * d.y - b.y * d.x;
+
+		//se b vezes d for 0 então as linhas são paralelas
+    if (bDotDPerp == 0)
+        return false;
+
+    Vect c = b1 - a1;
+    float t = (c.x * d.y - c.y * d.x) / bDotDPerp;
+    if (t < 0 || t > 1)
+        return false;
+
+    float u = (c.x * b.y - c.y * b.x) / bDotDPerp;
+    if (u < 0 || u > 1)
+        return false;
+
+		if (result)
+    	*result = a1 + (b * t);
+
+    return true;
+}
+
 // verifica se "a" está completamente dentro de "b", mas não o contrário
 bool rect_inside ( SDL_Rect a, SDL_Rect b )
 {
@@ -77,8 +105,8 @@ SDL_Rect rectIntersect ( SDL_Rect a, SDL_Rect b )
 		else
 			rect.w = a.w;
 	}
-	
-	
+
+
 	if (a.y < b.y)
 	{
 		rect.y = b.y;
@@ -117,7 +145,7 @@ SDL_Rect rectIntersect ( SDL_Rect a, SDL_Rect b )
 		else
 			rect.h = a.h;
 	}
-	
+
 	return rect;
 }
 
@@ -212,10 +240,10 @@ int collision_hor ( TileMap & map, std::vector <int> coll_tile, Vect & pos, std:
 	float p;
 	Vect cp;
 	SDL_Rect d = map.get_dimension();
-	
+
 	if (vel.x == 0)
 		return 0;
-	
+
 	for (unsigned int i = 0, s = c_point.size(); i < s; i++)
 	{
 		cp.x = pos.x + c_point[i].x + vel.x;
@@ -301,4 +329,3 @@ int collision_ver ( TileMap & map, std::vector <int> coll_tile, Vect & pos, std:
 
 	return ret;
 }
-

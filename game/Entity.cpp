@@ -12,7 +12,7 @@ Entity::Entity()
 	//std::cout<<"ID="<<id<<std::endl;
 	dir = NONE_DIR;
 	visible = true;
-	
+
 	level = nullptr;
 	collPoints = 3;
 	topLadderTile = -1;
@@ -87,6 +87,19 @@ Animation * Entity::getCurrAnim (  )
 	return currAnim;
 }
 
+bool Entity::setCurrAnim ( std::string animName )
+{
+	std::map<std::string, Animation>::const_iterator it = anim.find(animName);
+
+	if (it != anim.end())
+	{
+		currAnim = &anim[animName];
+		return true;
+	}
+
+	return false;
+}
+
 Vect Entity::getPosition (  )
 {
 	return pos;
@@ -110,17 +123,17 @@ int Entity::getTopLadderTile (  )
 void Entity::changeDir ( Direction d )
 {
 	bool changeH = true, changeV = true;
-	
+
 	if (dir == d)
 		return;
-	
-	
+
+
 	changeH = (d & RIGHT_DIR)||(d & LEFT_DIR);
 	changeV = (d & UP_DIR)||(d & DOWN_DIR);
-	
+
 	for (std::map<std::string,Animation>::iterator it = anim.begin(); it != anim.end(); it++)
 		it->second.flip(changeH, changeV);
-	
+
 	dir = d;
 }
 
@@ -137,6 +150,11 @@ TileMap * Entity::getLevel (  )
 void Entity::setLevel ( TileMap * level )
 {
 	this->level = level;
+}
+
+Vect Entity::getCollCenter (  )
+{
+	return Vect(int(pos.x)+collRect.x+collRect.w/2,int(pos.y)+collRect.y+collRect.h/2);
 }
 
 SDL_Rect Entity::getCollRect (  )
@@ -170,13 +188,13 @@ bool Entity::isSolidSide ( std::string side, int i )
 		std::cout<<"Error "<<side<<" lado não identificado\n";
 		return false;
 	}
-	
+
 	if (i >= 0)
 	{
 		if (i < int(vet.size()))
 		{
 			Vect p = vet.at(i);
-			
+
 			if (side == "up")
 				p.y -= 1;
 			else if (side == "down")
@@ -185,13 +203,13 @@ bool Entity::isSolidSide ( std::string side, int i )
 				p.x += 1;
 			else if (side == "left")
 				p.x -= 1;
-			
-			return isSolid(p);
+
+			return isSolid(p + pos);
 		}
-		
+
 		return false;
 	}
-	
+
 	for (auto & v: vet)
 	{
 		if (side == "up")
@@ -202,11 +220,11 @@ bool Entity::isSolidSide ( std::string side, int i )
 			v.x += 1;
 		else if (side == "left")
 			v.x -= 1;
-		
-		if (isSolid(v))
+
+		if (isSolid(v + pos))
 			return true;
 	}
-	
+
 	return false;
 }
 
@@ -217,7 +235,7 @@ std::vector<int>& Entity::getSolids (  )
 
 void Entity::addSolid ( int s )
 {
-	solid.push_back(s);	
+	solid.push_back(s);
 }
 
 bool Entity::remSolid ( int s )
@@ -229,9 +247,28 @@ bool Entity::remSolid ( int s )
 		{
 			aux.push_back(i);
 		}
-	
+
 	solid = aux;
 	return bef != solid.size();
+}
+
+void Entity::addOneWayUp ( int s )
+{
+	upSolid.push_back(s);
+}
+
+bool Entity::remOneWayUp ( int s )
+{
+	unsigned int bef = upSolid.size();
+	std::vector<int> aux;
+	for (auto i: upSolid)
+		if (i != s)
+		{
+			aux.push_back(i);
+		}
+
+	upSolid = aux;
+	return bef != upSolid.size();
 }
 
 bool Entity::isSolid ( Vect p )
@@ -250,8 +287,7 @@ bool Entity::isSolid ( Vect p )
 			return true;
 		}
 	}
-		
-	
+
 	return false;
 }
 
@@ -260,10 +296,11 @@ bool Entity::isGround (  )
 {
 	if (level == nullptr)
 		throw Exception("Entity::isGround level é nulo");
-	
+
 	setSides(collRect, collPoints);
 	for (auto p: downSide)
 	{
+		p = p + pos;
 		p.y += 1; // 1 pixel abaixo
 		// verifica se é sólido
 		if (isSolid(p))
@@ -275,33 +312,105 @@ bool Entity::isGround (  )
 	int y1 = pos.y + collRect.y + collRect.h;
 	// +1 para detectar o tile abaixo dele
 	y1 = y1 + 1;
-	
+
 	int x2 = pos.x + collRect.x + collRect.w;
 	int y2 = y1;
-	
+
 	int levelY = (y1/level->get_tilesize())*level->get_tilesize();
 	//verifica se é o topo da escada na parte de baixo (downSide)
 	if ((y1 - levelY) <= topTileSize && (level->get_tile(x1,y1) == topLadderTile || level->get_tile(x2,y2) == topLadderTile))
 		if (vel.y == 0)
 			return true;
-	
+
+	//colisão com plataforma
+	if (vel.y == 0)
+	{
+		for (auto p: downSide)
+		{
+			p = p + pos;
+			p.y += 1;
+
+			for (auto tile: upSolid)
+				if (tile == level->get_tile(p.x,p.y))
+					return true;
+		}
+	}
+
+	return false;
+}
+
+bool Entity::oneWayUpCollision ()
+{
+	Vect before = Vect(pos.x, pos.y);
+	Vect after = before;
+
+	if (vel.y <= 0)
+		return false;
+
+	before.y -= vel.y;
+
+	for (auto p: downSide)
+	{
+		Vect q = p;
+		Vect a = p + after;
+		Vect b = p + before;
+
+		bool jump = false;
+		for (auto tile: upSolid)
+			if (tile == level->get_tile(b.x,b.y))
+			{
+				jump = true;
+				break;
+			}
+
+
+		if (jump)
+		{
+			for (auto tile: upSolid)
+				if (tile == level->get_tile(a.x,a.y))
+				{
+					if (int(a.y)/level->get_tilesize() != int(b.y)/level->get_tilesize())
+					{
+						int y = int(a.y / level->get_tilesize()) * level->get_tilesize();
+						pos.y = y - int(q.y) - 1;
+						vel.y = 0;
+						return true;
+					}
+				}
+			continue;
+		}
+
+
+		p = a;
+		for (auto tile: upSolid)
+			if (tile == level->get_tile(p.x,p.y))
+			{
+				int y = int(p.y / level->get_tilesize()) * level->get_tilesize();
+				pos.y = y - int(q.y) - 1;
+				vel.y = 0;
+				return true;
+			}
+	}
+
 	return false;
 }
 
 bool Entity::collisionVer (  )
 {
 	if (level == nullptr)
-		throw Exception("Entity::"+name+" collisionVer level é nulo");
+		throw Exception("Entity::"+name+" collisionVer level map é nulo");
 	if (vel.y == 0)
 		return false;
-	
+
 	// atualiza a posição dos pontos de colisão
 	setSides(collRect, collPoints);
-	
+
 	if (vel.y < 0)
 	{
+		//colisão acima da cabeça e embaixo do tile
 		for (auto p: upSide)
 		{
+			p = p + pos;
 			p.y += vel.y;
 			p.y = round(p.y);
 			if (isSolid(p))
@@ -309,8 +418,7 @@ bool Entity::collisionVer (  )
 				int y = (int(p.y)/level->get_tilesize() + 1)*level->get_tilesize();
 				pos.y = p.y - collRect.y + (y - int(p.y));
 				pos.y = floor(pos.y);
-				setSides(collRect,collPoints);
-				
+
 				return true;
 			}
 		}
@@ -319,6 +427,7 @@ bool Entity::collisionVer (  )
 	{
 		for (auto p: downSide)
 		{
+			p = p + pos;
 			p.y += vel.y;
 			p.y = round(p.y);
 			if (isSolid(p))
@@ -326,15 +435,19 @@ bool Entity::collisionVer (  )
 				int y = (int(p.y)/level->get_tilesize())*level->get_tilesize();
 				pos.y = p.y - (collRect.y + collRect.h) + (y - int(p.y));
 				pos.y = floor(pos.y) - 1;
-				setSides(collRect,collPoints);
 				return true;
 			}
+
+			//tenta colidir com algum tile one way
+			if (oneWayUpCollision())
+				return true;
 		}
 
 		// colisão com a ponta da escada
 		// aqui é colisão "oneway" do lado de cima
 		for (auto p: downSide)
 		{
+			p = p + pos;
 			p.y += vel.y;
 			p.y = round(p.y);
 			int x = p.x;
@@ -350,24 +463,25 @@ bool Entity::collisionVer (  )
 				}
 		}
 	}
-	
+
 	return false;
 }
 
 bool Entity::collisionHor (  )
 {
 	if (level == nullptr)
-		throw Exception("Entity::"+name+" collisionHor level é nulo");
+		throw Exception("Entity::"+name+" collisionHor level map é nulo");
 	if (vel.x == 0)
 		return false;
-	
+
 	// atualiza a posição dos pontos de colisão
 	setSides(collRect, collPoints);
-	
+
 	if (vel.x < 0)
 	{
 		for (auto p: leftSide)
 		{
+			p = p + pos;
 			p.x += vel.x;
 			p.x = round(p.x);
 			if (isSolid(p))
@@ -376,7 +490,7 @@ bool Entity::collisionHor (  )
 				pos.x = p.x -collRect.x + (x - int(p.x));
 				pos.x = int(pos.x);
 				setSides(collRect,collPoints);
-				
+
 				return true;
 			}
 		}
@@ -385,6 +499,7 @@ bool Entity::collisionHor (  )
 	{
 		for (auto p: rightSide)
 		{
+			p = p + pos;
 			p.x += vel.x;
 			p.x = round(p.x);
 			if (isSolid(p))
@@ -397,7 +512,7 @@ bool Entity::collisionHor (  )
 			}
 		}
 	}
-	
+
 	return false;
 }
 
@@ -405,45 +520,43 @@ bool Entity::collisionHor (  )
 void Entity::setSides ( SDL_Rect rect, int numPoints )
 {
 	float size, x, y;
-	
+
 	if (numPoints <= 2)
 		throw Exception("Entity::"+name+" setSides numPoints <= 2");
-	
+
 	collPoints = numPoints;
-	
+
 	// limpa tudo
 	rightSide.clear();
 	leftSide.clear();
 	upSide.clear();
 	downSide.clear();
-	
+
 	size = rect.h/(numPoints - 1);
 	for (int i = 0; i < numPoints; i++)
 	{
 		// define o lado direito
-		x = rect.x + pos.x + rect.w;
-		y = rect.y + pos.y + float(i) * size;
+		x = rect.x + rect.w;
+		y = rect.y + float(i) * size;
 		rightSide.push_back(Vect(x,y));
-		
+
 		// define o lado esquerdo
-		x = rect.x + pos.x;
+		x = rect.x;
 		//y = i * size;
 		leftSide.push_back(Vect(x,y));
-		if (name == "bigeye")
-			printf("%d = %.2f %.2f\n", i, rightSide.back().x, rightSide.back().y);
 	}
-	
+
 	size = rect.w/(numPoints - 1);
 	for (int i = 0; i < numPoints; i++)
 	{
 		// define o lado superior
-		x = rect.x + pos.x + i * size;
-		y = rect.y + pos.y;
+		x = rect.x + i * size;
+		y = rect.y;
 		upSide.push_back(Vect(x,y));
-		
+
 		// define o lado inferior
 		//x = 0;
-		y = rect.y + pos.y + rect.h;
+		y = rect.y + rect.h;
 		downSide.push_back(Vect(x,y));
 	}
 
@@ -453,35 +566,35 @@ void Entity::drawSides ( SDL_Renderer * renderer, Camera * camera )
 {
 	SDL_Color color = {255,0,0,255};
 	SDL_Rect rect = {0,0,5,5};
-	
+
 	for (auto p: rightSide)
 	{
-		rect.x = p.x;
-		rect.y = p.y;
+		rect.x = p.x + pos.x;
+		rect.y = p.y + pos.y;
 		fill_rect(renderer, camera, color, rect);
 	}
-	
+
 	for (auto p: leftSide)
 	{
-		rect.x = p.x;
-		rect.y = p.y;
+		rect.x = p.x + pos.x;
+		rect.y = p.y + pos.y;
 		fill_rect(renderer, camera, color, rect);
 	}
-	
+
 	color.r = 255;
 	color.g = 255;
 	for (auto p: downSide)
 	{
-		rect.x = p.x;
-		rect.y = p.y;
+		rect.x = p.x + pos.x;
+		rect.y = p.y + pos.y;
 		fill_rect(renderer, camera, color, rect);
 	}
-	
+
 	// centro
 	rect.x = pos.x + collRect.x + collRect.w/2;
 	rect.y = pos.y + collRect.y + collRect.h/2;
 	fill_rect(renderer, camera, color, rect);
-	
+
 }
 
 std::string Entity::getStateString (  )
@@ -489,14 +602,19 @@ std::string Entity::getStateString (  )
 	return "null";
 }
 
+std::string Entity::to_json ()
+{
+	return "";
+}
+
 void Entity::input ( SDL_Event & event )
 {
-	
+
 }
 
 void Entity::draw ( SDL_Renderer * renderer, Camera * camera )
 {
-	
+
 }
 
 int Entity::update (  )

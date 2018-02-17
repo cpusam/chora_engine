@@ -23,6 +23,9 @@ Adicionar:
 	-Adicionar os códigos do Entity, Exception, Key, Elements na chora engine. Eles estão na pasta do projeto SuperMarioBros
 
 Tarefas:
+	-adicionar suporte a scons
+	-adicionar um toString() no vector
+	-refazer os elementos de GUI
 	-atualizar os exemplos pois mudei muito a engine.
 	-adicionar uma posição x/y ao TileMap
 	-adicionar Megaman/src/Entity.cpp.hpp ao código da engine
