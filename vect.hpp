@@ -231,6 +231,11 @@ struct Vect
 		return *this;
 	}
 
+	float distance ( const Vect & b )
+	{
+		return sqrt((b.x - this->x) * (b.x - this->x) + (b.y - this->y) * (b.y - this->y));
+	}
+
 	#ifdef _DEBUG_
 	void print()
 	{
