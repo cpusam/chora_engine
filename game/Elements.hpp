@@ -15,6 +15,8 @@ class Elements
 		virtual ~Elements();
 		
 		static Elements * instance (  );
+		static void setRenderer ( SDL_Renderer * renderer );
+		static SDL_Renderer * getRenderer (  );
 		
 		static bool has ( Entity * e );
 		static void add ( Entity * e ); // adiciona uma entidade
@@ -22,7 +24,7 @@ class Elements
 		static Entity * getByName ( std::string name ); // pega objeto pelo nome
 		static std::map<int, Entity *> & getAllEntities (  );
 		static std::vector<Entity *> getAllByGroup ( std::string group ); // pega objeto pelo grupo
-		static void rem ( int id ); //remove uma entity
+		static void remove ( int id ); //remove uma entity
 		static void clear (  );
 		
 		static void notifyGroup ( Entity *sender, std::string mesg, std::string group );
@@ -34,11 +36,13 @@ class Elements
 		static void print (  );
 	
 	private:
+		SDL_Renderer * currRenderer;
 		std::map<int, Entity *> entities;
 		static Elements * singleton;
 		Elements();
 		
-		
+		void setCurrRenderer ( SDL_Renderer * renderer );
+		SDL_Renderer * getCurrRenderer (  );
 		bool hasEntity ( Entity * e );
 		std::map<int, Entity *> & getEntities (  );
 		void addEntity ( Entity * e );

@@ -162,6 +162,11 @@ SDL_Rect Entity::getCollRect (  )
 	return (SDL_Rect){int(pos.x) + collRect.x, int(pos.y) + collRect.y, collRect.w,collRect.h};
 }
 
+void Entity::setCollRect ( SDL_Rect rect )
+{
+	collRect = rect; 
+}
+
 SDL_Rect Entity::getView (  )
 {
 	return (SDL_Rect){int(pos.x) + view.x, int(pos.y) + view.y, view.w,view.h};
@@ -614,7 +619,8 @@ void Entity::input ( SDL_Event & event )
 
 void Entity::draw ( SDL_Renderer * renderer, Camera * camera )
 {
-
+	if (isVisible() && currAnim)
+		currAnim->draw(renderer, pos.x, pos.y);
 }
 
 int Entity::update (  )

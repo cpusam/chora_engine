@@ -104,6 +104,15 @@ class FPSManager
 			return singleton;
 		}
 
+		static void destroy (  )
+		{
+			if (singleton)
+			{
+				delete singleton;
+				singleton = nullptr;
+			}
+		}
+
 		Uint32 get_ticks (  )
 		{
 			Uint32 ticks = SDL_GetTicks();

@@ -30,6 +30,7 @@
 
 #include "../sdl.hpp"
 #include "../util.hpp"
+#include "../Exception.hpp"
 
 struct SText
 {
@@ -91,7 +92,7 @@ class Writer
 			return singleton;
 		}
 		
-		~Writer (  );
+		virtual ~Writer (  );
 
 		
 		int load_font ( std::string path, std::string name, int s );

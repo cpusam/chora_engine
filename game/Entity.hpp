@@ -74,6 +74,7 @@ class Entity: public StateMachine, public Movable
 		
 		Vect getCollCenter (  );
 		SDL_Rect getCollRect (  );// retorna o retângulo de colisão em coordenadas do mundo
+		void setCollRect ( SDL_Rect rect );
 		SDL_Rect getView (  );
 		// define as laterais do corpo baseado num retangulo usando numPoints por lateral
 		void setSides ( SDL_Rect rect, int numPoints );

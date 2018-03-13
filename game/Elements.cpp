@@ -20,6 +20,16 @@ Elements * Elements::instance (  )
 	return singleton;
 }
 
+void Elements::setCurrRenderer ( SDL_Renderer * renderer )
+{
+	currRenderer = renderer;
+}
+
+SDL_Renderer * Elements::getCurrRenderer (  )
+{
+	return currRenderer;
+}
+
 std::map<int, Entity *> & Elements::getEntities (  )
 {
 	return entities;
@@ -29,7 +39,7 @@ bool Elements::hasEntity ( Entity * e )
 {
 	if (e)
 		for (auto & it: entities)
-			if (e->getId() == it.first)
+			if (e == it.second)
 				return true;
 	
 	return false;
@@ -75,7 +85,7 @@ void Elements::add ( Entity * e )
 {
 	if (e == nullptr)
 		return;
-	std::cout<<"Adicionando "<<e->getId()<<std::endl;
+	std::cout<<"Adicionando "<<e->getId()<<" name = "<<e->getName()<<std::endl;
 	instance()->addEntity(e);
 }
 
@@ -99,12 +109,27 @@ std::vector<Entity *> Elements::getAllByGroup ( std::string group )
 	return instance()->getAllEntityByGroup(group);
 }
 
+void Elements::setRenderer ( SDL_Renderer * renderer )
+{
+	instance()->setCurrRenderer(renderer);
+}
+
+SDL_Renderer * Elements::getRenderer (  )
+{
+	SDL_Renderer * renderer = instance()->getCurrRenderer();
+
+	if (renderer == nullptr)
+		printf("Elements::Erro renderer não definido\n");
+	
+	return renderer;
+}
+
 bool Elements::has ( Entity * e )
 {
 	return instance()->hasEntity(e);
 }
 
-void Elements::rem ( int id )
+void Elements::remove ( int id )
 {
 	instance()->remEntity(id);
 }
@@ -158,13 +183,15 @@ void Elements::update (  )
 {
 	std::map<int,Entity*>::iterator it;
 	for (it = instance()->getEntities().begin(); it != instance()->getEntities().end(); it++)
-		it->second->update();
+		if (it->second)
+			it->second->update();
 }
 
 void Elements::print (  )
 {
 	std::map<int,Entity*>::iterator it = instance()->getEntities().begin(), end = instance()->getEntities().end();
 	for (; it != end; it++)
-		std::cout<<"id = "<<it->first<<std::endl;
-	std::cout<< "Temos "<<instance()->getEntities().size()<<std::endl;
+		if (it->second)
+			std::cout<<"id = "<<it->first<<"|"<<it->second->getName()<<std::endl;
+	std::cout<< "Temos "<<instance()->getEntities().size()<<" entidades"<<std::endl;
 }
