@@ -170,7 +170,10 @@ SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, 
 
 	if (line == 1)
 	{
-		return tmp[0];
+		if (tmp.size() == 1)
+			return tmp[0];
+		else
+			throw Exception("Writer::Erro ao criar surface");
 	}
 
 	int h = 0, w = 0;

@@ -1,5 +1,6 @@
 #objs
 obj/*.*
+libchora.a
 
 #arquivos backup do gedit
 *~ 

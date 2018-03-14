@@ -9,7 +9,10 @@ GFX = obj/SDL_framerate.o
 GAME = obj/Entity.o obj/Elements.o obj/Key.o
 DEPS = $(BASE) $(GUI) $(GFX) $(GAME)
 
-all: libchora.a
+all: objDir libchora.a
+
+objDir:
+	mkdir obj
 	
 libchora.a: $(DEPS) Chora.hpp sdl.hpp
 	$(AR) rc $@ $(DEPS)
