@@ -12,7 +12,7 @@ DEPS = $(BASE) $(GUI) $(GFX) $(GAME)
 all: objDir libchora.a
 
 objDir:
-	mkdir obj
+	mkdir -p obj
 	
 libchora.a: $(DEPS) Chora.hpp sdl.hpp
 	$(AR) rc $@ $(DEPS)
