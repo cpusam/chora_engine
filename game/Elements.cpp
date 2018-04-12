@@ -139,6 +139,15 @@ void Elements::clear (  )
 	instance()->clearAll();
 }
 
+void Elements::destroy (  )
+{
+	if (singleton)
+	{
+		delete singleton;
+		singleton = nullptr;
+	}
+}
+
 void Elements::clearAll (  )
 {
 	entities.clear();

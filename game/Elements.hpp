@@ -26,7 +26,8 @@ class Elements
 		static std::vector<Entity *> getAllByGroup ( std::string group ); // pega objeto pelo grupo
 		static void remove ( int id ); //remove uma entity
 		static void clear (  );
-		
+		static void destroy (  );
+
 		static void notifyGroup ( Entity *sender, std::string mesg, std::string group );
 		
 		static void input ( SDL_Event & event );
@@ -34,13 +35,15 @@ class Elements
 		static void update (  );
 		
 		static void print (  );
+
+
 	
 	private:
 		SDL_Renderer * currRenderer;
 		std::map<int, Entity *> entities;
 		static Elements * singleton;
 		Elements();
-		
+
 		void setCurrRenderer ( SDL_Renderer * renderer );
 		SDL_Renderer * getCurrRenderer (  );
 		bool hasEntity ( Entity * e );
