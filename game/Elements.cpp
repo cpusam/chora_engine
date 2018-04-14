@@ -78,7 +78,7 @@ std::vector<Entity *> Elements::getAllEntityByGroup ( std::string group )
 
 void Elements::remEntity ( int id )
 {
-	entities.erase(id);
+	entities[id] = nullptr;
 }
 
 void Elements::add ( Entity * e )
@@ -166,24 +166,25 @@ void Elements::input ( SDL_Event & event )
 {
 	std::map<int,Entity*>::iterator it;
 	for (it = instance()->getEntities().begin(); it != instance()->getEntities().end(); it++)
-		it->second->input(event);
+		if (it->second)
+			it->second->input(event);
 }
 void Elements::draw ( SDL_Renderer * renderer, Camera * camera )
 {
 	std::map<int, std::vector<Entity*> > layers;
-	std::map<int,std::vector<Entity *> >::iterator layerIt;
-	std::map<int,Entity*>::iterator it;
-	for (it = instance()->getEntities().begin(); it != instance()->getEntities().end(); it++)
+	std::map<int, Entity *> & entities = instance()->getEntities();
+	for (std::map<int,Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
 	{
-		layers[it->second->getLayer()].push_back(it->second);
+		if (it->second)
+			layers[it->second->getLayer()].push_back(it->second);
 	}
 	
-	for (layerIt = layers.begin(); layerIt != layers.end(); layerIt++)
+	for (std::map<int,std::vector<Entity*> >::iterator it = layers.begin(); it != layers.end(); it++)
 	{
-		for (std::vector<Entity*>::iterator entity = layerIt->second.begin(); entity != layerIt->second.end(); entity++)
+		for (auto * entity: it->second)
 		{
-			if (*entity)
-				(*entity)->draw(renderer, camera);
+			if (entity)
+				entity->draw(renderer, camera);
 		}
 	}
 }
