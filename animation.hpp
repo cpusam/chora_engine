@@ -216,6 +216,7 @@ class Animation: public StateMachine
 
 	protected:
 		std::vector <SDL_Texture *> texture;
+		std::string name;
 	public:
 		Animation (  )
 		{
@@ -227,6 +228,7 @@ class Animation: public StateMachine
 			orientation.set(1,0);
 			use_rot = false;
 			use_center = false;
+			name = "";
 		}
 
 		//using StateMachine::get_state;
@@ -282,6 +284,9 @@ class Animation: public StateMachine
 		
 		void set_timer ( STimer t );
 		STimer get_timer (  );
+
+		void set_name ( std::string n );
+		std::string get_name (  );
 
 		std::vector<AnimationFrame> & get_frames (  );
 		virtual AnimationFrame get_frame ( int i );

@@ -346,6 +346,16 @@ STimer Animation::get_timer (  )
 	return timer;
 }
 
+void Animation::set_name ( std::string n )
+{
+	name = n;
+}
+
+std::string Animation::get_name (  )
+{
+	return name;
+}
+
 std::vector<AnimationFrame> & Animation::get_frames (  )
 {
 	return frames;
