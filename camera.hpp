@@ -50,6 +50,8 @@ class Camera
 		Camera ( SDL_Renderer * renderer, int x, int y, int vpW, int vpH, SDL_Rect l );
 		Camera ( SDL_Rect d, SDL_Rect l );
 		
+
+		void adjustViewport(SDL_Renderer * renderer, SDL_Rect v);
 		SDL_Rect getViewport (  );
 		// atualiza o viewport para o renderer
 		// fazer isso antes de desenhar na camera

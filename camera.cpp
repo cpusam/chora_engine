@@ -50,6 +50,12 @@ Camera::Camera ( SDL_Rect d, SDL_Rect l )
 	action_area = (SDL_Rect){0,0,d.w,d.h};
 }
 
+void Camera::adjustViewport(SDL_Renderer * renderer, SDL_Rect v)
+{
+	viewport = v;
+	updateViewport(renderer);
+}
+
 SDL_Rect Camera::getViewport (  )
 {
 	return viewport;
