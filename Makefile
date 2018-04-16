@@ -2,7 +2,7 @@
 CXX = g++
 AR = ar
 RANLIB = ranlib
-CXXFLAGS = -std=c++11 -Wall
+CXXFLAGS = -std=c++11 -Wall -g
 BASE = obj/statemachine.o obj/vect.o obj/collision.o obj/movable.o obj/util.o obj/camera.o obj/animation.o obj/sprite.o obj/background.o obj/tilemap.o obj/tilemapview.o obj/soundplayer.o obj/textureid.o obj/texturer.o  obj/sprite.o obj/Exception.o
 GUI = obj/widget.o obj/writer.o obj/label.o obj/button.o obj/bar.o
 GFX = obj/SDL_framerate.o

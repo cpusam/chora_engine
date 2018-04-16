@@ -2,14 +2,14 @@
 #include "../Exception.hpp"
 #include <math.h>
 
-int Entity::countID = 0;
+unsigned long int Entity::countID = 1;
 
 Entity::Entity()
 {
 	layer = 0;
 	id = countID;
 	countID++;
-	//std::cout<<"ID="<<id<<std::endl;
+	std::cout<<"ID="<<id<<std::endl;
 	dir = NONE_DIR;
 	visible = true;
 
@@ -20,6 +20,7 @@ Entity::Entity()
 	collRect = (SDL_Rect){0,0,0,0};//retangulo de colisão
 	texture = nullptr;
 	currAnim = nullptr;
+	name = "";
 }
 
 Entity::~Entity()
@@ -57,7 +58,7 @@ std::string Entity::getGroup (  )
 	return group;
 }
 
-int Entity::getId (  )
+unsigned long int Entity::getId (  )
 {
 	return id;
 }

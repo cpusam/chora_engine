@@ -8,6 +8,7 @@
 #include "Entity.hpp"
 
 class Entity;
+typedef unsigned long int EntityID;
 
 class Elements
 {
@@ -20,11 +21,11 @@ class Elements
 		
 		static bool has ( Entity * e );
 		static void add ( Entity * e ); // adiciona uma entidade
-		static Entity * get ( int id ); // pega uma entidade pelo id dela
+		static Entity * get ( EntityID id ); // pega uma entidade pelo id dela
 		static Entity * getByName ( std::string name ); // pega objeto pelo nome
-		static std::map<int, Entity *> & getAllEntities (  );
+		static std::map<EntityID, Entity *> getAllEntities (  );
 		static std::vector<Entity *> getAllByGroup ( std::string group ); // pega objeto pelo grupo
-		static void remove ( int id ); //remove uma entity
+		static Entity * remove ( EntityID id ); //remove uma entity
 		static void clear (  );
 		static void destroy (  );
 
@@ -40,20 +41,24 @@ class Elements
 	
 	private:
 		SDL_Renderer * currRenderer;
-		std::map<int, Entity *> entities;
+		std::map<EntityID, Entity *> entities;
 		static Elements * singleton;
 		Elements();
 
 		void setCurrRenderer ( SDL_Renderer * renderer );
 		SDL_Renderer * getCurrRenderer (  );
 		bool hasEntity ( Entity * e );
-		std::map<int, Entity *> & getEntities (  );
+		std::map<EntityID, Entity *> getEntities (  );
 		void addEntity ( Entity * e );
-		Entity * getEntity ( int id );
+		Entity * getEntity ( EntityID id );
 		Entity * getEntityByName ( std::string name );
 		std::vector<Entity *> getAllEntityByGroup ( std::string group );
-		void remEntity ( int id );
+		Entity * remEntity ( EntityID id );
 		void clearAll (  );
+
+		void inputEntities ( SDL_Event & event );
+		void drawEntities ( SDL_Renderer * renderer, Camera * camera );
+		void updateEntities (  );
 };
 
 #endif // ELEMENTS_HPP

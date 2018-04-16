@@ -9,6 +9,8 @@
 #include <vector>
 #include "../Chora.hpp"
 
+typedef unsigned long int EntityID;
+
 // devia estar em movable.hpp
 enum Direction: unsigned int
 {
@@ -33,7 +35,7 @@ class Entity: public StateMachine, public Movable
 		std::string getName (  );
 		void setGroup ( std::string g );
 		std::string getGroup (  );
-		int getId (  );
+		EntityID getId (  );
 		void show ( bool s );
 		bool isVisible (  );
 		void setDir ( Direction d );
@@ -111,8 +113,8 @@ class Entity: public StateMachine, public Movable
 		std::vector<Vect> upSide, downSide;//leteral de cima e em baixo do corpo da entidade
 
 	private:
-		static int countID;
-		int id;
+		static EntityID countID;
+		EntityID id;
 		bool visible;
 };
 

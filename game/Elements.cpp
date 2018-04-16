@@ -30,7 +30,7 @@ SDL_Renderer * Elements::getCurrRenderer (  )
 	return currRenderer;
 }
 
-std::map<int, Entity *> & Elements::getEntities (  )
+std::map<EntityID, Entity *> Elements::getEntities (  )
 {
 	return entities;
 }
@@ -47,11 +47,14 @@ bool Elements::hasEntity ( Entity * e )
 
 void Elements::addEntity ( Entity * e )
 {
-	if (e)
-		entities.insert(std::pair<int,Entity*>(e->getId(), e));
+	if (e == nullptr)
+		return;
+	
+	std::cout<<"Elements::Adicionando "<<e->getId()<<" name = "<<e->getName()<<std::endl;
+	entities[e->getId()] = e;
 }
 
-Entity * Elements::getEntity ( int id )
+Entity * Elements::getEntity ( EntityID id )
 {
 	return entities[id];
 }
@@ -59,7 +62,7 @@ Entity * Elements::getEntity ( int id )
 Entity * Elements::getEntityByName ( std::string name )
 {
 	for (auto & it: entities)
-		if (it.second->getName() == name)
+		if (it.second && it.second->getName() == name)
 			return it.second;
 	
 	return nullptr;
@@ -69,27 +72,39 @@ std::vector<Entity *> Elements::getAllEntityByGroup ( std::string group )
 {
 	std::vector<Entity*> entity;
 	for (auto & it: entities)
-		if (it.second->getGroup() == group)
+		if (it.second && it.second->getGroup() == group)
 			entity.push_back(it.second);
 	
 	return entity;
 }
 
 
-void Elements::remEntity ( int id )
+Entity * Elements::remEntity ( EntityID id )
 {
+	std::map<EntityID,Entity *>::iterator it = entities.find(id);
+	
+	if (it == entities.end())
+		return nullptr;
+	
+	if (it->second == nullptr)
+		return nullptr;
+
+	std::cout<<"Elements::Removendo "<<it->second->getId()<<" name = "<<it->second->getName()<<std::endl;
+
+	Entity * ret = entities[id];
+	//entidade anulada até que apague todas as entidades
+	//este id fica inutilizável temporariamente
 	entities[id] = nullptr;
+
+	return ret;
 }
 
 void Elements::add ( Entity * e )
 {
-	if (e == nullptr)
-		return;
-	std::cout<<"Adicionando "<<e->getId()<<" name = "<<e->getName()<<std::endl;
 	instance()->addEntity(e);
 }
 
-Entity * Elements::get ( int id )
+Entity * Elements::get ( EntityID id )
 {
 	return instance()->getEntity(id);
 }
@@ -99,7 +114,7 @@ Entity * Elements::getByName ( std::string name )
 	return instance()->getEntityByName(name);
 }
 
-std::map<int, Entity *> & Elements::getAllEntities (  )
+std::map<EntityID, Entity *> Elements::getAllEntities (  )
 {
 	return instance()->getEntities();
 }
@@ -129,9 +144,9 @@ bool Elements::has ( Entity * e )
 	return instance()->hasEntity(e);
 }
 
-void Elements::remove ( int id )
+Entity * Elements::remove ( EntityID id )
 {
-	instance()->remEntity(id);
+	return instance()->remEntity(id);
 }
 
 void Elements::clear (  )
@@ -164,22 +179,37 @@ void Elements::notifyGroup ( Entity * sender, std::string mesg, std::string grou
 ////////////////////////////////////////////////////////////////////////
 void Elements::input ( SDL_Event & event )
 {
-	std::map<int,Entity*>::iterator it;
-	for (it = instance()->getEntities().begin(); it != instance()->getEntities().end(); it++)
+	instance()->inputEntities(event);
+}
+
+void Elements::draw ( SDL_Renderer * renderer, Camera * camera )
+{
+	instance()->drawEntities(renderer, camera);
+}
+
+void Elements::update (  )
+{
+	instance()->updateEntities();
+}
+
+void Elements::inputEntities ( SDL_Event & event )
+{
+	std::map<EntityID,Entity*>::iterator it;
+	for (it = entities.begin(); it != entities.end(); it++)
 		if (it->second)
 			it->second->input(event);
 }
-void Elements::draw ( SDL_Renderer * renderer, Camera * camera )
+
+void Elements::drawEntities ( SDL_Renderer * renderer, Camera * camera )
 {
-	std::map<int, std::vector<Entity*> > layers;
-	std::map<int, Entity *> & entities = instance()->getEntities();
-	for (std::map<int,Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
+	std::map<EntityID, std::vector<Entity*> > layers;
+	for (std::map<EntityID,Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
 	{
 		if (it->second)
 			layers[it->second->getLayer()].push_back(it->second);
 	}
 	
-	for (std::map<int,std::vector<Entity*> >::iterator it = layers.begin(); it != layers.end(); it++)
+	for (std::map<EntityID,std::vector<Entity*> >::iterator it = layers.begin(); it != layers.end(); it++)
 	{
 		for (auto * entity: it->second)
 		{
@@ -189,17 +219,16 @@ void Elements::draw ( SDL_Renderer * renderer, Camera * camera )
 	}
 }
 
-void Elements::update (  )
+void Elements::updateEntities (  )
 {
-	std::map<int,Entity*>::iterator it;
-	for (it = instance()->getEntities().begin(); it != instance()->getEntities().end(); it++)
-		if (it->second)
-			it->second->update();
+	for (auto & it: entities)
+		if (it.second)
+			it.second->update();
 }
 
 void Elements::print (  )
 {
-	std::map<int,Entity*>::iterator it = instance()->getEntities().begin(), end = instance()->getEntities().end();
+	std::map<EntityID,Entity*>::iterator it = instance()->getEntities().begin(), end = instance()->getEntities().end();
 	for (; it != end; it++)
 		if (it->second)
 			std::cout<<"id = "<<it->first<<"|"<<it->second->getName()<<std::endl;
