@@ -138,6 +138,14 @@ void Animation::set_delay ( int f, int d )
 		frames[f].set_delay(d);
 }
 
+int Animation::get_total_time (  )
+{
+	int total = 0;
+	for (auto & frame: frames)
+		total += frame.get_delay();
+	return total;
+}
+
 // seta todos os frames para o mesmo delay
 void Animation::set_frames_delay ( int d )
 {

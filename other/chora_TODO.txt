@@ -23,6 +23,12 @@ Adicionar:
 	-Adicionar os códigos do Entity, Exception, Key, Elements na chora engine. Eles estão na pasta do projeto SuperMarioBros
 
 Tarefas:
+	-criar um leitor de configurações ou de variaveis tipo o Editor.cpp do DonkeyKong
+	 colocar para se ter comentários no arquivo
+	-Elements::getAllEntities não deveria retornar nenhuma entidade que esteja nula
+	-depois resolver o problema de ter uma tela autoajustavel (uma camera no caso), ver main.cpp do DonkeyKong
+	 no if (event.type == SDL_WINDOWEVENT)
+	-adicionar um método update() na camera e também um input, talvez seja bom virar uma state machine
 	-adicionar suporte a scons para o make
 	-adicionar um toString() no vector
 	-refazer os elementos de GUI

@@ -240,6 +240,7 @@ class Animation: public StateMachine
 		void set_repeat ( bool r );
 
 		void set_delay ( int f, int d );
+		int get_total_time (  );
 
 		// seta todos os frames para o mesmo delay
 		void set_frames_delay ( int d );

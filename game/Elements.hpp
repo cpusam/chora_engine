@@ -24,6 +24,7 @@ class Elements
 		static Entity * get ( EntityID id ); // pega uma entidade pelo id dela
 		static Entity * getByName ( std::string name ); // pega objeto pelo nome
 		static std::map<EntityID, Entity *> getAllEntities (  );
+		//retorna todas entidades do group e sem nenhuma nulaou de id nulo
 		static std::vector<Entity *> getAllByGroup ( std::string group ); // pega objeto pelo grupo
 		static Entity * remove ( EntityID id ); //remove uma entity
 		static void clear (  );
