@@ -213,7 +213,7 @@ void Elements::drawEntities ( SDL_Renderer * renderer, Camera * camera )
 	{
 		for (auto * entity: it->second)
 		{
-			if (entity)
+			if (entity && renderer && camera)
 				entity->draw(renderer, camera);
 		}
 	}

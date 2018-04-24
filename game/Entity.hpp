@@ -42,6 +42,7 @@ class Entity: public StateMachine, public Movable
 		Direction getDir (  );
 		Animation * getCurrAnim (  );
 		bool setCurrAnim ( std::string animName );//muda para uma animação já carregada de nome animName
+		virtual void changeAnim ( std::string animName, bool reset=false );
 		virtual void setPosition ( Vect p );
 		virtual Vect getPosition (  );
 		void setTopLadderTile ( int t );

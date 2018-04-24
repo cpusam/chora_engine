@@ -101,6 +101,22 @@ bool Entity::setCurrAnim ( std::string animName )
 	return false;
 }
 
+void Entity::changeAnim ( std::string animName, bool reset )
+{
+	if (anim.size() > 0)
+	{
+		if (anim.find(animName) != anim.end())
+		{
+			currAnim = &anim[animName];
+		}
+		else
+			std::cout<<"Entity::Não encontrou uma animação chamada "<<animName<<std::endl;
+	}
+
+	if (reset)
+		currAnim->reset();
+}
+
 Vect Entity::getPosition (  )
 {
 	return pos;
