@@ -1,4 +1,4 @@
-# This is a sample build configuration for C++ â€“ Make.
+# This is a sample build configuration for C++ – Make.
 # Check our guides at https://confluence.atlassian.com/x/5Q4SMw for more examples.
 # Only use spaces to indent your .yml configuration.
 # -----
@@ -8,5 +8,8 @@ image: gcc:6.1
 pipelines:
   default:
     - step:
-        script: # Modify the commands below to build your repository.
+        script: 
+          # Install Deps
+          - apt-get update && apt-get install -y libsdl2-*dev
+          # Compile
           - make
