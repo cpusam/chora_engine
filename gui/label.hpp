@@ -37,6 +37,7 @@ class GuiLabel: public Widget
 
 	protected:
 		std::string str;
+		std::string fontName;
 
 	protected:
 		GuiLabel (  )
@@ -49,7 +50,7 @@ class GuiLabel: public Widget
 		}
 
 	public:
-		GuiLabel ( std::string s, SDL_Color c )
+		GuiLabel ( std::string s, SDL_Color c, std::string fontName="=>default" )
 		{
 			color = c;
 
@@ -63,7 +64,8 @@ class GuiLabel: public Widget
 			if (s == "")
 				s = " ";
 
-			set_str(s);
+			set_str(s,fontName);
+			this->fontName = fontName;
 		}
 
 		~GuiLabel (  )
@@ -73,12 +75,12 @@ class GuiLabel: public Widget
 		}
 
 	protected:
-		void str_to_surface ( std::string s );
+		void str_to_surface ( std::string s, std::string fontName="=>default" );
 
 	public:
 		void set_color ( SDL_Color c );
 
-		void set_str ( std::string s );
+		void set_str ( std::string s, std::string fontName="=>default" );
 
 		SDL_Texture * get_texture (  );
 

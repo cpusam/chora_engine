@@ -110,20 +110,20 @@ SDL_Surface * optimize_surface ( SDL_Surface * s, SDL_Surface * screen )
 
 int texture_width ( SDL_Texture * t )
 {
-	int w;
 	if (!t)
 		return 0;
 
+	int w;
 	SDL_QueryTexture(t, 0, 0, &w, 0);
 	return w;
 }
 
 int texture_height ( SDL_Texture * t )
 {
-	int h;
 	if (!t)
 		return 0;
 
+	int h;
 	SDL_QueryTexture(t, 0, 0, 0, &h);
 	return h;
 }

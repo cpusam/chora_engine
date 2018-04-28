@@ -24,7 +24,7 @@ int Writer::load_font ( std::string path, std::string name, int s )
 	font.font = TTF_OpenFont(static_cast<const char *>(path.c_str()), s);
 	if (!font.font)
 	{
-		return 0;
+		throw Exception("Writer::load_font não carregou uma fonta chmada "+name+" com path="+path);
 	}
 	
 	fonts[name] = font;
@@ -82,9 +82,13 @@ SDL_Renderer * Writer::get_renderer (  )
 
 
 SDL_Texture * Writer::render_text ( std::string name, std::string text, SDL_Color c, int type )
-{
-	if (name == "default")
-		name = fonts.begin()->second.name;//primeira fonte é a default
+{	
+	if (name == "")
+	{
+		if (fonts.find("=>default") == fonts.end())
+			throw Exception("Writer::Sem primeira fonte definida");
+		name = "=>default";
+	}
 	
 	if (text == "")
 	{
@@ -111,8 +115,12 @@ SDL_Texture * Writer::render_text ( std::string name, std::string text, SDL_Colo
 
 SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, SDL_Color c, int type )
 {
-	if (name == "default")
-		name = fonts.begin()->second.name;//primeira fonte é a default
+	if (name == "")
+	{
+		if (fonts.find("=>default") == fonts.end())
+			throw Exception("Writer::Sem primeira fonte definida");
+		name = "=>default";
+	}
 	
 	TTF_Font * font = fonts[name].font;
 	if (font == nullptr)
@@ -137,31 +145,36 @@ SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, 
 				str.push_back('\0');
 			}
 
+			SDL_Surface * surface = nullptr;
 			switch (type)
 			{
 				case SOLID_TEXT:
-					tmp.push_back(TTF_RenderText_Solid(font, str.c_str(), c));
+					surface = TTF_RenderText_Solid(font, str.c_str(), c);
 					break;
 				case UTF8_TEXT:
-					tmp.push_back(TTF_RenderUTF8_Solid(font, str.c_str(), c));
+					surface = TTF_RenderUTF8_Solid(font, str.c_str(), c);
 					break;
-			#ifndef __clang__
+			#ifndef EMSCRIPTEN
 				case UNICODE_TEXT:
 				{
-					Uint16 * s = (Uint16 *)malloc(sizeof(Uint16) * (str.length() + 1));
-					for (unsigned int i(0); i < str.length(); i++)
+					unsigned int length = str.length();
+					Uint16 * s = (Uint16 *)malloc(sizeof(Uint16) * (length + 1));
+					for (unsigned int i(0); i < length; i++)
 						s[i] = str[i];
-					s[str.length()] = 0x0;
-					tmp.push_back(TTF_RenderUNICODE_Solid(font, s, c));
+					s[length] = 0x0;
+					surface = TTF_RenderUNICODE_Solid(font, s, c);
 					free(s);
 				}
 				break;
 			#endif
 				default:
-					tmp.push_back(TTF_RenderText_Solid(font, str.c_str(), c));
+					surface = TTF_RenderText_Solid(font, str.c_str(), c);
 					break;
 			}
 
+			if (surface == nullptr)
+				throw Exception("Writer::Não foi possivel criar surface com texto \""+text+"\"");
+			tmp.push_back(surface);
 			str.clear();
 		}
 		else
@@ -171,7 +184,7 @@ SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, 
 	if (line == 1)
 	{
 		if (tmp.size() == 1)
-			return tmp[0];
+			return tmp.back();
 		else
 			throw Exception("Writer::Erro ao criar surface");
 	}
@@ -197,9 +210,8 @@ SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, 
 	amask = 0xff000000;
 #endif
 
-	surf = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 32,
-								rmask, gmask, bmask, amask);
-	if(surf == 0)
+	surf = SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
+	if(surf == nullptr)
 	{
 		printf("Error: %s\n",SDL_GetError());
 		throw Exception(SDL_GetError());

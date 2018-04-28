@@ -1,14 +1,20 @@
 #include "label.hpp"
 #include "writer.hpp"
 
-void GuiLabel::str_to_surface ( std::string s )
+void GuiLabel::str_to_surface ( std::string s, std::string fontName )
 {
 	int w, h;
 	if (texture)
 		SDL_DestroyTexture(texture);
 
 	if (s != "")
-		texture = Writer::instance()->render_text("default",s, color, UTF8_TEXT);
+	{
+		try {
+		texture = Writer::instance()->render_text(fontName, s, color, SOLID_TEXT);
+		} catch(Exception & e){
+			e.what();
+		}
+	}
 	else
 	{
 		texture = 0;
@@ -34,14 +40,14 @@ void GuiLabel::set_color ( SDL_Color c )
 	str_to_surface(str);
 }
 
-void GuiLabel::set_str ( std::string s )
+void GuiLabel::set_str ( std::string s, std::string fontName )
 {
 	if (s == str)
 		return;
 
 	str = s;
 
-	str_to_surface(s);
+	str_to_surface(s, fontName);
 }
 
 SDL_Texture * GuiLabel::get_texture (  )
@@ -101,9 +107,9 @@ void GuiLabel::draw ( SDL_Renderer * renderer )
 	if (!visible)
 		return;
 
-	SDL_Rect d = dim;
+	SDL_Rect d = {int(pos.x),int(pos.y),dim.w,dim.h};
 	if (texture)
-		SDL_RenderCopy(renderer, texture, 0, &d);
+		SDL_RenderCopy(renderer, texture, nullptr, &d);
 	child_draw(renderer);
 }
 
