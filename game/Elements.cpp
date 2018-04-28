@@ -209,9 +209,9 @@ void Elements::drawEntities ( SDL_Renderer * renderer, Camera * camera )
 			layers[it->second->getLayer()].push_back(it->second);
 	}
 	
-	for (std::map<EntityID,std::vector<Entity*> >::iterator it = layers.begin(); it != layers.end(); it++)
+	for (auto & it: layers)
 	{
-		for (auto * entity: it->second)
+		for (auto * entity: it.second)
 		{
 			if (entity && renderer && camera)
 				entity->draw(renderer, camera);

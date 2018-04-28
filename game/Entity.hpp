@@ -48,7 +48,7 @@ class Entity: public StateMachine, public Movable
 		void setTopLadderTile ( int t );
 		int getTopLadderTile (  );
 		virtual void changeDir ( Direction d );
-
+		virtual double Rand ( double min, double max );
 		// método que recebe mensagens de outros elementos
 		// retorna true caso a mensagem tenha sigod usada; false caso contrario
 		virtual bool receive ( Entity * sender, std::string mesg );
@@ -71,9 +71,13 @@ class Entity: public StateMachine, public Movable
 		bool isLadder (  );
 		bool isTopLadder (  );
 		void catchLadder (  );
-		bool oneWayUpCollision();
-		bool collisionVer (  );
-		bool collisionHor (  );
+		bool oneWayUpCollision (  );
+
+		bool moveToPosition (Vect pos, float maxVel );
+		void setCountPath ( int count );
+		bool moveInPath ( Vect startPos, std::vector<Vect> & path, float maxVel, bool back );
+		virtual bool collisionVer (  );
+		virtual bool collisionHor (  );
 		
 		Vect getCollCenter (  );
 		SDL_Rect getCollRect (  );// retorna o retângulo de colisão em coordenadas do mundo
@@ -117,6 +121,8 @@ class Entity: public StateMachine, public Movable
 		static EntityID countID;
 		EntityID id;
 		bool visible;
+		bool changeBack;
+		int countPath;
 };
 
 #endif // ENTITY_HPP

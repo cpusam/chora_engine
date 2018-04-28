@@ -1,6 +1,7 @@
 #include "Entity.hpp"
 #include "../Exception.hpp"
-#include <math.h>
+#include <cmath>
+#include <random>
 
 unsigned long int Entity::countID = 1;
 
@@ -21,6 +22,7 @@ Entity::Entity()
 	texture = nullptr;
 	currAnim = nullptr;
 	name = "";
+	countPath = 0;
 }
 
 Entity::~Entity()
@@ -110,11 +112,19 @@ void Entity::changeAnim ( std::string animName, bool reset )
 			currAnim = &anim[animName];
 		}
 		else
-			std::cout<<"Entity::Não encontrou uma animação chamada "<<animName<<std::endl;
+			std::cout<<"Entity->"<<getName()<<"::Não encontrou uma animação chamada "<<animName<<std::endl;
 	}
 
 	if (reset)
 		currAnim->reset();
+}
+
+double Entity::Rand ( double min, double max )
+{
+	std::random_device rd;
+	std::mt19937 mt(rd());
+	std::uniform_real_distribution<double> dist(min, max);
+	return dist(mt);
 }
 
 Vect Entity::getPosition (  )
@@ -412,6 +422,74 @@ bool Entity::oneWayUpCollision ()
 				vel.y = 0;
 				return true;
 			}
+	}
+
+	return false;
+}
+
+bool Entity::moveToPosition (Vect pos, float maxVel )
+{
+	Vect diff;
+	diff.x = pos.x - this->pos.x;
+	diff.y = pos.y - this->pos.y;
+
+	double hipo = sqrt(diff.x*diff.x + diff.y*diff.y);
+
+	if (hipo < maxVel*2 || std::isnan(hipo))
+		return true;
+
+	diff.x /= hipo;
+	diff.y /= hipo;
+
+	this->vel.x = maxVel * diff.x;
+	this->pos.x += this->vel.x;
+
+	this->vel.y = maxVel * diff.y;
+	this->pos.y += this->vel.y;
+
+	return false;
+}
+
+//move num caminho realtivo à posição do corpo
+// back é pra retornar quando chegar ao fim
+void Entity::setCountPath ( int count)
+{
+	countPath = 0;
+}
+
+bool Entity::moveInPath (Vect pos, std::vector<Vect> & path, float maxVel, bool back )
+{
+	if (path.size() == 0 || countPath >= int(path.size()))
+		return false;
+
+	Vect point = Vect(path[countPath].x + pos.x, path[countPath].y + pos.y);
+
+	if (countPath > -1 && moveToPosition(point, maxVel))
+	{
+		if (changeBack == false)
+		{
+			countPath++;
+			if (countPath >= int(path.size()))
+			{
+				if (back)
+				{
+					changeBack = true;
+					countPath = path.size() - 1;
+				}
+			}
+		}
+		else
+		{
+			countPath--;
+			if (countPath < 0)
+			{
+				countPath = 0;
+				if (back)
+					changeBack = false;
+			}
+		}
+
+		return true;
 	}
 
 	return false;
