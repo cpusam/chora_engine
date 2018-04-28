@@ -12,4 +12,4 @@ pipelines:
           # Install Deps
           - apt-get update && apt-get install -y libsdl2-dev libsdl2-ttf-dev libsdl2-net-dev libsdl2-gfx-dev libsdl2-image-dev libsdl2-mixer-dev
           # Compile
-          - make
+          - make -j8
