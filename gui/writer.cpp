@@ -14,10 +14,10 @@ Writer::~Writer (  )
 
 int Writer::load_font ( std::string path, std::string name, int s )
 {
-	Font font;
-	if (fonts[name].font)
+	if (fonts.find(name) != fonts.end() && fonts[name].font != nullptr)
 		TTF_CloseFont(fonts[name].font);
 
+	Font font;
 	font.size = s;
 	font.path = path;
 	font.name = name;
@@ -44,10 +44,10 @@ void Writer::destroy (  )
 
 TTF_Font * Writer::get_font ( std::string name )
 {
-	if (name == "default")
-		return fonts.begin()->second.font;//primeira fonte é a default
-	
-	return fonts[name].font;
+	if (fonts.find(name) != fonts.end())
+		return fonts[name].font;
+
+	return fonts["=>default"].font;
 }
 
 bool Writer::resize_font ( std::string name, int s )
@@ -212,7 +212,7 @@ SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, 
 	surf = SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
 	if(surf == nullptr)
 	{
-		printf("Error: %s\n",SDL_GetError());
+		printf("Error Surface: %s\n",SDL_GetError());
 		throw Exception(SDL_GetError());
 	}
 
