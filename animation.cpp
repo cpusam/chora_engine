@@ -409,11 +409,6 @@ int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 			ret = SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
 		}
 	}
-	else
-	{
-		if (texture.size() && texture.at(index) == 0)
-			std::cerr<<"Erro ao desenhar uma textura, textura "<<index<<" é nula\n";
-	}
 	
 	return ret;
 }
@@ -464,11 +459,6 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int d
 
 			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
 		}
-	}
-	else
-	{
-		if (texture.size() && texture.at(index) == 0)
-			std::cerr<<"Erro ao desenhar uma textura, textura "<<index<<" é nula\n";
 	}
 	
 	return ret;

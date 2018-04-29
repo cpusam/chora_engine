@@ -27,6 +27,7 @@ int Writer::load_font ( std::string path, std::string name, int s )
 		throw Exception("Writer::load_font não carregou uma fonta chmada "+name+" com path="+path);
 	}
 	
+	fonts["=>default"] = font;
 	fonts[name] = font;
 
 	return 1;
@@ -50,10 +51,7 @@ TTF_Font * Writer::get_font ( std::string name )
 }
 
 bool Writer::resize_font ( std::string name, int s )
-{
-	if (name == "default")
-		name = fonts.begin()->second.name;//primeira fonte é a default
-	
+{	
 	Font font = fonts[name];
 	if (font.font == nullptr || s <= 0)
 		return false;
@@ -65,6 +63,7 @@ bool Writer::resize_font ( std::string name, int s )
 	if (!font.font)
 		throw Exception("Writer: não conseguiu redimensionar fonte\n");
 
+	fonts["=>default"] = font;
 	fonts[name] = font;
 
 	return true;
