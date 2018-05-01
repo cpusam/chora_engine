@@ -103,6 +103,8 @@ class Widget: public StateMachine
 
 		Widget * get_child ( int index );
 
+		const std::vector<Widget *> get_children();
+
 		int child_size (  );
 
 		/*

@@ -160,6 +160,10 @@ Widget * Widget::get_child ( int index )
 	return 0;
 }
 
+const std::vector<Widget *> Widget::get_children(){
+	return child;
+}
+
 int Widget::child_size (  )
 {
 	return child.size();
