@@ -21,10 +21,6 @@
 	distribution.
 */
 
-/*
-	Nome provisório
-*/
-
 #ifndef BAR_HPP
 #define BAR_HPP
 
