@@ -32,7 +32,11 @@ SDL_Renderer * Elements::getCurrRenderer (  )
 
 std::map<EntityID, Entity *> Elements::getEntities (  )
 {
-	return entities;
+	std::map<EntityID, Entity *> all;
+	for (auto & entity: entities)
+		if (entity.second)
+			all[entity.first] = entity.second;
+	return all;
 }
 
 bool Elements::hasEntity ( Entity * e )
