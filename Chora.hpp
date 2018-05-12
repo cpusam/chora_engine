@@ -48,6 +48,7 @@
 #include "gui/button.hpp"
 #include "gui/bar.hpp"
 #include "gui/writer.hpp"
+#include "gui/textinput.hpp"
 
 // módulo de som
 #include "sound/soundplayer.hpp"

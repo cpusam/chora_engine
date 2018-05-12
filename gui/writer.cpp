@@ -91,8 +91,7 @@ SDL_Texture * Writer::render_text ( std::string name, std::string text, SDL_Colo
 	
 	if (text == "")
 	{
-		text = " "; // para evitar textura sem tamanho
-		printf("Writer: sem texto visível.\n");
+		printf("Writer: WARNING: sem texto visível.\n");
 	}
 
 	if (renderer == nullptr)
@@ -125,8 +124,27 @@ SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, 
 	if (font == nullptr)
 		throw Exception("Writer: Nenhuma "+name+" fonte usada\n");
 
+	Uint32 rmask, gmask, bmask, amask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+	rmask = 0xff000000;
+	gmask = 0x00ff0000;
+	bmask = 0x0000ff00;
+	amask = 0x000000ff;
+#else
+	rmask = 0x000000ff;
+	gmask = 0x0000ff00;
+	bmask = 0x00ff0000;
+	amask = 0xff000000;
+#endif
+
 	if (text == "")
-		text = " "; // para evitar surface sem tamanho
+	{
+		SDL_Surface * surface = SDL_CreateRGBSurface(0, 1,1,32, rmask, gmask, bmask, amask);
+		if (!surface)
+			throw Exception("Writer: Erro ao criar surface vazia");
+		
+		return surface;
+	}
 
 	std::string str;
 	std::vector <SDL_Surface *> tmp;
@@ -196,18 +214,7 @@ SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, 
 			w = tmp[i]->w;
 	}
 
-	Uint32 rmask, gmask, bmask, amask;
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	rmask = 0xff000000;
-	gmask = 0x00ff0000;
-	bmask = 0x0000ff00;
-	amask = 0x000000ff;
-#else
-	rmask = 0x000000ff;
-	gmask = 0x0000ff00;
-	bmask = 0x00ff0000;
-	amask = 0xff000000;
-#endif
+	
 
 	surf = SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
 	if(surf == nullptr)

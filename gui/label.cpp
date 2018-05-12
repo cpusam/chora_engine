@@ -30,6 +30,8 @@ void GuiLabel::str_to_surface ( std::string s, std::string fontName )
 
 	SDL_QueryTexture(texture, 0, 0, &w, &h);
 
+	str = s;
+
 	dim.x = pos.x + rel_pos.x, dim.y = pos.y + rel_pos.y;
 	dim.w = w, dim.h = h;
 }
@@ -168,106 +170,5 @@ bool GuiLabelNumber::set_value ( float v )
 	value = v;
 
 	return true;
-}
-
-/////////////////////////////////////////////////////////////
-
-void GuiTextInput::set_cursor_size ( int w, int h )
-{
-	cursor.w = w;
-	cursor.h = h;
-}
-
-void GuiTextInput::set_pos ( Vect p )
-{
-	Widget::set_pos(p);
-	cursor.x = pos.x + rel_pos.x + get_texture_width();
-	cursor.y = pos.y + rel_pos.y;
-}
-
-void GuiTextInput::set_rel_pos ( Vect p )
-{
-	Widget::set_rel_pos(p);
-	cursor.x = pos.x + rel_pos.x + get_texture_width();
-	cursor.y = pos.y + rel_pos.y;
-}
-
-void GuiTextInput::input ( SDL_Event & event )
-{
-	if (!visible)
-		return;
-
-	if (event.type == SDL_KEYDOWN)
-	{
-		if (event.key.keysym.sym == SDLK_BACKSPACE)
-		{
-			if (str.size() > 0)
-			{
-				str.erase(str.end() - 1);
-				str_to_surface(str);
-				cursor.x = pos.x + rel_pos.x + get_texture_width();
-			}
-		}
-		else if (event.key.keysym.sym == SDLK_CAPSLOCK)
-		{
-			if (caps_lock)
-				caps_lock = false;
-			else
-				caps_lock = true;
-		}
-		else if (event.key.keysym.sym == SDLK_LSHIFT || event.key.keysym.sym == SDLK_RSHIFT)
-		{
-			shift_key = true;
-		}
-		else	 // if (event.key.keysym.sym >= SDLK_SPACE && event.key.keysym.sym <= SDLK_z)
-		{
-			if (str.size() < (unsigned int)strsize)
-			{
-				std::stringstream s;
-				s << str;
-
-				if (event.key.keysym.sym >= SDLK_a && event.key.keysym.sym <= SDLK_z)
-				{
-					if (caps_lock || shift_key)
-						s << char(toupper(char(event.key.keysym.sym)));
-					else
-						s << char(event.key.keysym.sym);
-				}
-				else
-					s << char(event.key.keysym.sym);
-
-				str = s.str();
-				str_to_surface(str);
-				int w;
-				SDL_QueryTexture(get_texture(), 0, 0, &w, 0);
-				cursor.x = pos.x + rel_pos.x + w;
-			}
-		}
-	}
-
-	if (event.type == SDL_KEYUP)
-	{
-		if (event.key.keysym.sym == SDLK_LSHIFT || event.key.keysym.sym == SDLK_RSHIFT)
-			shift_key = false;
-	}
-
-	child_input(event);
-}
-
-void GuiTextInput::draw ( SDL_Renderer * renderer )
-{
-	if (!visible)
-		return;
-
-	SDL_Rect d;
-
-	if ((++count) % 10 < 5)
-	{
-		d = cursor;
-		SDL_SetRenderDrawColor(renderer, (cursor_color & 0xFF000000) >> 24, (cursor_color & 0x00FF0000) >> 16, (cursor_color & 0x0000FF00) >> 8, (cursor_color & 0x000000FF));
-		SDL_RenderFillRect(renderer, &d);
-	}
-
-	GuiLabel::draw(renderer);
 }
 

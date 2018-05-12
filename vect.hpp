@@ -236,12 +236,10 @@ struct Vect
 		return sqrt((b.x - this->x) * (b.x - this->x) + (b.y - this->y) * (b.y - this->y));
 	}
 
-	#ifdef _DEBUG_
 	void print()
 	{
 		printf("vect{x=%f, y=%f}\n",this->x,this->y);
 	}
-	#endif
 
 	std::string toString (  )
 	{

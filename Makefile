@@ -4,7 +4,7 @@ AR = ar
 RANLIB = ranlib
 CXXFLAGS = -std=c++11 -Wall -g
 BASE = obj/statemachine.o obj/vect.o obj/collision.o obj/movable.o obj/util.o obj/camera.o obj/animation.o obj/sprite.o obj/background.o obj/tilemap.o obj/tilemapview.o obj/soundplayer.o obj/textureid.o obj/texturer.o  obj/sprite.o obj/Exception.o
-GUI = obj/widget.o obj/writer.o obj/label.o obj/button.o obj/bar.o
+GUI = obj/widget.o obj/writer.o obj/label.o obj/button.o obj/bar.o obj/textinput.o
 GFX = obj/SDL_framerate.o
 GAME = obj/Entity.o obj/Elements.o obj/Key.o
 DEPS = $(BASE) $(GUI) $(GFX) $(GAME)
@@ -81,6 +81,9 @@ obj/button.o: gui/button.hpp gui/button.cpp
 
 obj/bar.o: gui/bar.hpp gui/bar.cpp
 	$(CXX) -c gui/bar.cpp -o $@ $(CXXFLAGS)
+
+obj/textinput.o: gui/textinput.hpp gui/textinput.cpp
+	$(CXX) -c gui/textinput.cpp -o $@ $(CXXFLAGS)
 
 #################################################
 obj/Key.o: game/Key.hpp game/Key.cpp

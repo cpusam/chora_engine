@@ -38,7 +38,7 @@
 struct STimer
 {
 	int state;
-	float time;
+	float ticks;
 	float step;
 	Uint32 lastTick;
 
@@ -46,7 +46,7 @@ struct STimer
 		STimer (  )
 		{
 			state = 1;
-			time = 0;
+			ticks = 0;
 			step = 1;
 			lastTick = SDL_GetTicks();
 		}
@@ -63,13 +63,13 @@ struct STimer
 
 		void reset (  )
 		{
-			time = 0;
+			ticks = 0;
 			lastTick = SDL_GetTicks();
 		}
 
 		int steps (  )
 		{
-			return int(time);
+			return int(ticks);
 		}
 
 		void update (  )
@@ -80,7 +80,7 @@ struct STimer
 				//#warning "Aqui deveria usar FPSManager::get_delta para tempo gasto"
 				step = FPSManager::instance()->get_delta();//(float)tick - lastTick;
 				
-				time += step;
+				ticks += step;
 				lastTick = tick;
 				
 			}
