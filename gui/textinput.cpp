@@ -29,6 +29,11 @@ GuiTextInput::GuiTextInput ( int fontsize, SDL_Color c, int ss, std::string font
 	cursor.h = fontsize;
 	cursor_color = 0xFF0000FF;
 
+	controls["backspace"] = Key(SDLK_BACKSPACE);
+	controls["delete"] = Key(SDLK_DELETE);
+	controls["right"] = Key(SDLK_RIGHT);
+	controls["left"] = Key(SDLK_LEFT);
+
 	box.x = box.y = 0;
 	box.w = width * ss;
 	box.h = height;
@@ -100,6 +105,11 @@ void GuiTextInput::input ( SDL_Event & event )
 {
 	if (!visible)
 		return;
+	
+	for (auto & key: controls)
+	{
+		key.second.input(event);
+	}
 
 	if (event.type == SDL_TEXTINPUT)
 	{
@@ -112,7 +122,7 @@ void GuiTextInput::input ( SDL_Event & event )
 
 			if (int(str.length()) >= strsize && strsize > 0)
 			{
-				str[strsize-1] = '\0';
+				str.erase(str.begin() + strsize-1, str.end());
 			}
 
 			if (cursorStart == oldSize && int(str.length()) < strsize)
@@ -176,6 +186,9 @@ void GuiTextInput::draw ( SDL_Renderer * renderer )
 
 int GuiTextInput::update (  )
 {
+	for (auto &key: controls)
+		key.second.update();
+	
 	GuiLabel::update();
 	
 	if (remakeTexture)
@@ -185,6 +198,61 @@ int GuiTextInput::update (  )
 
 		dim.w = get_texture_width();
 		dim.h = get_texture_height();
+	}
+
+	if (controls["backspace"].get_state() == Key::PRESS && cursorStart > 0)
+	{
+		cursorStart--;
+		if (cursorStart < 0)
+			cursorStart = 0;
+		cursor.x = get_pos().x + cursorStart * textsize;
+
+		if (str.size())
+			str.erase(str.begin() + cursorStart, str.begin() + cursorStart + 1);
+		remakeTexture = true;
+	}
+
+	if (controls["delete"].get_state() == Key::PRESS && cursorStart < int(str.length()))
+	{
+		cursorStart++;
+		if (cursorStart > int(str.length()))
+			cursorStart = int(str.length());
+		cursor.x = get_pos().x + cursorStart * textsize;
+
+		if (str.size())
+			str.erase(str.begin() + cursorStart, str.begin() + cursorStart + 1);
+		remakeTexture = true;
+	}
+
+	if (controls["left"].get_state() == Key::PRESS)
+	{
+		cursorStart--;
+		if (cursorStart < 0)
+			cursorStart = 0;
+		cursor.x = get_pos().x + cursorStart * textsize;
+	}
+
+	if (controls["right"].get_state() == Key::PRESS)
+	{
+		cursorStart++;
+		if (cursorStart > int(str.length()))
+			cursorStart = str.length();
+		cursor.x = get_pos().x + cursorStart * textsize;
+	}
+
+	if (timer.steps() < time_change/2)
+	{
+		if (controls["backspace"].get_state() == Key::HOLD && cursorStart > 0)
+		{
+			cursorStart--;
+			if (cursorStart < 0)
+				cursorStart = 0;
+			cursor.x = get_pos().x + cursorStart * textsize;
+			
+			if (str.size())
+				str.erase(str.begin() + cursorStart, str.begin() + cursorStart + 1);
+			remakeTexture = true;
+		}
 	}
 
 	timer.update();

@@ -39,6 +39,7 @@ int main (int argc, char ** argv )
 
 	int done = 0;
 	GuiTextInput * textinput = new GuiTextInput(50, (SDL_Color){255, 0, 0, 255}, 10);
+	textinput->show();
 	while (!done)
 	{
 		SDL_Event event;

@@ -24,9 +24,12 @@
 #ifndef CHORA_TEXTINPUT_HPP
 #define CHORA_TEXTINPUT_HPP
 
+#include <map>
+
 #include "label.hpp"
 #include "../animation.hpp"
 #include "../Exception.hpp"
+#include "../game/Key.hpp"
 
 /*
 	GuiTextInput usada para escrever o que o usuário digitar
@@ -52,6 +55,7 @@ class GuiTextInput: public GuiLabel
 
 	public:
 		Uint32 cursor_color;
+		std::map<std::string, Key> controls;
 
 	protected:
 		Vect cursorPos;
