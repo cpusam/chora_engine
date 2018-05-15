@@ -11,4 +11,5 @@ compiler:
 
 # Build steps
 script:
+  - cmake .
   - make -j4
