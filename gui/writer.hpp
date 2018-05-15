@@ -55,7 +55,7 @@ struct Font
 	Font (  )
 	{
 		size = 0;
-		font = 0;
+		font = nullptr;
 	}
 };
 
@@ -94,6 +94,7 @@ class Writer
 		
 		virtual ~Writer (  );
 
+		void free_fonts (  );
 		
 		int load_font ( std::string path, std::string name, int s );
 

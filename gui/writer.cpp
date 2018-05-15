@@ -4,11 +4,23 @@ Writer * Writer::singleton = 0;
 
 Writer::~Writer (  )
 {
-	for (std::map<std::string, Font>::iterator it = fonts.begin(); it != fonts.end(); it++)
-		if (it->second.font)
+	
+}
+
+void Writer::free_fonts (  )
+{
+	bool closed = false;
+	for (auto & it: fonts)
+		if (it.second.font && it.first != "=>default")
 		{
-			TTF_CloseFont(it->second.font);
+			if (it.second.font == fonts["=>default"].font)
+				closed = true;
+			TTF_CloseFont(it.second.font);
 		}
+
+	if (closed == false && fonts["=>default"].font)
+		TTF_CloseFont(fonts["=>default"].font);
+
 	fonts.clear();
 }
 
@@ -37,6 +49,7 @@ void Writer::destroy (  )
 {
 	if (singleton)
 	{
+		singleton->free_fonts();
 		delete singleton;
 		singleton = 0;
 	}
@@ -53,10 +66,25 @@ TTF_Font * Writer::get_font ( std::string name )
 bool Writer::resize_font ( std::string name, int s )
 {	
 	Font font = fonts[name];
-	if (font.font == nullptr || s <= 0)
+	if (fonts.size() == 0 || font.font == nullptr || s <= 0)
 		return false;
 
-	TTF_CloseFont(font.font);
+	if (font.font)
+	{
+		std::vector<std::map<std::string, Font>::iterator> keys;
+		for (auto & it: fonts)
+			if (it.second.font == font.font)
+			{
+				keys.push_back(fonts.find(it.first));
+			}
+		
+		//apaga todas as fontes que tem a mesma TTF_Font
+		for (auto & key: keys)
+			fonts.erase(key);
+		
+		TTF_CloseFont(font.font);
+	}
+
 	font.font = TTF_OpenFont(font.path.c_str(), s);
 	font.size = s;
 	
