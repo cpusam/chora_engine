@@ -25,17 +25,17 @@
 #define CHORA_HPP
 
 #include "sdl.hpp"
-#include "statemachine.hpp"
-#include "vect.hpp"
-#include "camera.hpp"
-#include "collision.hpp"
-#include "animation.hpp"
-#include "sprite.hpp"
-#include "movable.hpp"
-#include "util.hpp"
-#include "background.hpp"
-#include "texturer.hpp"
-#include "Exception.hpp"
+#include "include/statemachine.hpp"
+#include "include/vect.hpp"
+#include "include/camera.hpp"
+#include "include/collision.hpp"
+#include "include/animation.hpp"
+#include "include/sprite.hpp"
+#include "include/movable.hpp"
+#include "include/util.hpp"
+#include "include/background.hpp"
+#include "include/texturer.hpp"
+#include "include/Exception.hpp"
 #include "SDL_gfx/SDL_framerate.hpp"
 
 // módulo de tiles

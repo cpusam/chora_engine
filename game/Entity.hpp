@@ -27,9 +27,9 @@
 #include <map>
 #include <vector>
 
-#include "platform/tilemap.hpp"
-#include "movable.hpp"
-#include "statemachine.hpp"
+#include "../platform/tilemap.hpp"
+#include "../include/movable.hpp"
+#include "../include/statemachine.hpp"
 
 typedef unsigned long int EntityID;
 

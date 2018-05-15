@@ -27,8 +27,8 @@
 #include <string>
 #include <vector>
 
-#include "sdl.hpp"
-#include "statemachine.hpp"
+#include "../sdl.hpp"
+#include "../include/statemachine.hpp"
 
 enum ESoundType
 {

@@ -27,9 +27,9 @@
 #include <map>
 
 #include "label.hpp"
-#include "animation.hpp"
-#include "Exception.hpp"
-#include "game/Key.hpp"
+#include "../include/animation.hpp"
+#include "../include/Exception.hpp"
+#include "../game/Key.hpp"
 
 /*
 	GuiTextInput usada para escrever o que o usuário digitar

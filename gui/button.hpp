@@ -26,7 +26,7 @@
 
 #include "widget.hpp"
 #include "label.hpp"
-#include "collision.hpp"
+#include "../include/collision.hpp"
 
 /*
 	Botão simples de 4 estados, normal, selecionado, pressionado e solto depois de press

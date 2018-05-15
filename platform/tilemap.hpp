@@ -30,10 +30,10 @@
 #include <fstream>
 #include <sstream>
 
-#include "sdl.hpp"
-#include "vect.hpp"
-#include "camera.hpp"
-#include "animation.hpp"
+#include "../sdl.hpp"
+#include "../include/vect.hpp"
+#include "../include/camera.hpp"
+#include "../include/animation.hpp"
 
 class TileMap
 {
