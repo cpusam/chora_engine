@@ -126,7 +126,7 @@ int main ( int argc, char ** argv )
 	Writer::instance()->set_renderer(renderer);
 	try
 	{
-		Writer::instance()->set_font(font, size);
+		Writer::instance()->load_font("=>default", font, size);
 	}
 	catch (const char * e)
 	{
@@ -136,7 +136,7 @@ int main ( int argc, char ** argv )
 	SDL_Surface * bmp;
 	try
 	{
-		bmp = Writer::instance()->render_text_surface(std::string(text),color);
+		bmp = Writer::instance()->render_text_surface("=>default", std::string(text),color);
 	}
 	catch (const char * e)
 	{
@@ -164,7 +164,7 @@ int main ( int argc, char ** argv )
 	for (int i = 0; text[i]; i++)
 	{
 		char str[2] = {text[i], '\0'};
-		chars.push_back(Writer::instance()->render_text_surface(str, color));
+		chars.push_back(Writer::instance()->render_text_surface("=>default", str, color));
 	}
 	
 	
