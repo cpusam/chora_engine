@@ -27,9 +27,9 @@
 #include <string>
 #include <vector>
 
-#include "../sdl.hpp"
-#include "../statemachine.hpp"
-#include "../vect.hpp"
+#include "sdl.hpp"
+#include "statemachine.hpp"
+#include "vect.hpp"
 
 class Widget: public StateMachine
 {

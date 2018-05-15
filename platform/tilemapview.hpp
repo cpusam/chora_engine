@@ -1,7 +1,7 @@
 #ifndef CHORA_TILEMAPVIEW_HPP
 #define CHORA_TILEMAPVIEW_HPP
 
-#include "../animation.hpp"
+#include "animation.hpp"
 #include "tilemap.hpp"
 
 class CAnimatedTile: public Animation

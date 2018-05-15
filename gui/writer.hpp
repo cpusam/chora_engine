@@ -28,9 +28,9 @@
 #include <vector>
 #include <map>
 
-#include "../sdl.hpp"
-#include "../util.hpp"
-#include "../Exception.hpp"
+#include "sdl.hpp"
+#include "util.hpp"
+#include "Exception.hpp"
 
 struct SText
 {

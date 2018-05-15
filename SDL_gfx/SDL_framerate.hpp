@@ -30,7 +30,7 @@ Andreas Schiffler -- aschiffler at ferzkopp dot net
 #ifndef CHORA_SDL_framerate_h
 #define CHORA_SDL_framerate_h
 
-#include "../sdl.hpp"
+#include "sdl.hpp"
 
 /* --------- Definitions */
 

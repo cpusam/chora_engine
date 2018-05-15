@@ -27,8 +27,8 @@
 #include <string>
 #include <vector>
 
-#include "../sdl.hpp"
-#include "../statemachine.hpp"
+#include "sdl.hpp"
+#include "statemachine.hpp"
 
 enum ESoundType
 {
@@ -39,7 +39,7 @@ enum ESoundType
 
 enum ESoundState
 {
-	UNLOADED_SOUND, // som ainda não carregado
+	UNLOADED_SOUND, // som ainda nï¿½o carregado
 	INACTIVE_SOUND, // som carregado e pronto para tocar
 	PAUSED_SOUND, // som pausado
 	PLAYING_SOUND // tocando o som

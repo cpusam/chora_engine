@@ -26,7 +26,10 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "../Chora.hpp"
+
+#include "platform/tilemap.hpp"
+#include "movable.hpp"
+#include "statemachine.hpp"
 
 typedef unsigned long int EntityID;
 

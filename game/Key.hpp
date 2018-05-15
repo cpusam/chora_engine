@@ -24,8 +24,8 @@
 #ifndef KEY_HPP
 #define KEY_HPP
 
-#include "../sdl.hpp"
-#include "../statemachine.hpp"
+#include "sdl.hpp"
+#include "statemachine.hpp"
 
 class Key: public StateMachine
 {

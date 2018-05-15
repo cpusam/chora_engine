@@ -1,5 +1,5 @@
 #include "Entity.hpp"
-#include "../Exception.hpp"
+#include "Exception.hpp"
 #include <cmath>
 #include <random>
 

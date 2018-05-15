@@ -27,7 +27,6 @@
 #include <vector>
 #include <map>
 
-#include "../Chora.hpp"
 #include "Entity.hpp"
 
 class Entity;
