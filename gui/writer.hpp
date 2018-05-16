@@ -108,15 +108,9 @@ class Writer
 
 		SDL_Renderer * get_renderer (  );
 
-
 		SDL_Texture * render_text ( std::string name, std::string text, SDL_Color c, int type=SOLID_TEXT );
 
 		SDL_Surface * render_text_surface ( std::string name, std::string text, SDL_Color c, int type=SOLID_TEXT );
-
-		/*
-			Para colorir um texto basta usar as tags <color=R,G,B> TEXTO AQUI </color>
-		*/
-		SDL_Surface * render_colored_text ( std::string text, SDL_Color color, int type=SOLID_TEXT );
 };
 
 #endif

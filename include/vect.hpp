@@ -131,6 +131,16 @@ struct Vect
 		return *this;
 	}
 
+	static Vect add (Vect a, Vect b)
+	{
+		return Vect(a.x + b.x, a.y + b.y);
+	}
+
+	static Vect sub ( Vect a, Vect b )
+	{
+		return Vect(a.x - b.x, a.y - b.y);
+	}
+
 	float length (  )
 	{
 		return sqrt(x * x + y * y);

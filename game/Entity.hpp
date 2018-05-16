@@ -101,8 +101,10 @@ class Entity: public StateMachine, public Movable
 		virtual bool collisionVer (  );
 		virtual bool collisionHor (  );
 		
+		Vect getCollPos (  );//retorna posição do collRect somada à posição do this
 		Vect getCollCenter (  );
-		SDL_Rect getCollRect (  );// retorna o retângulo de colisão em coordenadas do mundo
+		//se relative == true retorna collRect sem somar 'pos'
+		SDL_Rect getCollRect ( bool relative=false );// retorna o retângulo de colisão em coordenadas do mundo
 		void setCollRect ( SDL_Rect rect );
 		SDL_Rect getView (  );
 		// define as laterais do corpo baseado num retangulo usando numPoints por lateral

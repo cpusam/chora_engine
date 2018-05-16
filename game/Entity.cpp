@@ -179,14 +179,22 @@ void Entity::setLevel ( TileMap * level )
 	this->level = level;
 }
 
+Vect Entity::getCollPos (  )
+{
+	return Vect(int(pos.x) + collRect.x, int(pos.y) + collRect.y);
+}
+
 Vect Entity::getCollCenter (  )
 {
 	return Vect(int(pos.x)+collRect.x+collRect.w/2,int(pos.y)+collRect.y+collRect.h/2);
 }
 
-SDL_Rect Entity::getCollRect (  )
+SDL_Rect Entity::getCollRect ( bool relative )
 {
-	return (SDL_Rect){int(pos.x) + collRect.x, int(pos.y) + collRect.y, collRect.w,collRect.h};
+	if (relative == false)
+		return (SDL_Rect){int(pos.x) + collRect.x, int(pos.y) + collRect.y, collRect.w,collRect.h};
+	
+	return collRect;
 }
 
 void Entity::setCollRect ( SDL_Rect rect )
