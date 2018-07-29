@@ -125,6 +125,12 @@ void Entity::changeAnim ( std::string animName, bool reset )
 		currAnim->reset();
 }
 
+void Entity::updateAnim (  )
+{
+	if (currAnim)
+		currAnim->update();
+}
+
 double Entity::Rand ( double min, double max )
 {
 	std::random_device rd;
