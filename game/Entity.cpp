@@ -761,6 +761,8 @@ void Entity::moveX ( float add )
 		vel.x = -maxVel.x;
 	else//está abaixo do intervalo
 		vel.x -= vel.x * damping.x;//aqui era para diminuir o valor da velocidade até zero
+	
+	pos.x += vel.x;
 }
 
 void Entity::moveY ( float add )
@@ -772,6 +774,8 @@ void Entity::moveY ( float add )
 		vel.y = -maxVel.y;
 	else//está abaixo do intervalo
 		vel.y -= vel.y * damping.y;
+	
+	pos.y += vel.y;
 }
 
 std::string Entity::getStateString (  )

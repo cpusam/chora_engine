@@ -8,6 +8,5 @@ Exception::Exception(std::string e)
 
 const char * Exception::what (  )
 {
-	std::cerr<<mesg<<std::endl;
-	return static_cast<const char *>(mesg.c_str());
+	return mesg.c_str();
 }
