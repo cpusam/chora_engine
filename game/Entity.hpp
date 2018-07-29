@@ -114,6 +114,7 @@ class Entity: public StateMachine, public Movable
 		void drawSides ( SDL_Renderer * renderer, Camera * camera );
 
 		//move com velocidade limitada por maxVel
+		// add = adiciona à velocidade antes junto com a aceleração
 		virtual void moveX ( float add = 0 );
 		virtual void moveY ( float add = 0 );
 
@@ -125,7 +126,7 @@ class Entity: public StateMachine, public Movable
 		virtual int update (  );
 
 	protected:
-		Vect maxVel;
+		Vect maxVel, minVel;
 		int layer;//camada de desenho, quanto meno primeiro desenha
 		TileMap * level;//mapa de tiles sólidos e vázios, é o mapa de colisão
 		Direction dir;
