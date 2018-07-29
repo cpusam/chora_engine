@@ -754,26 +754,48 @@ void Entity::drawSides ( SDL_Renderer * renderer, Camera * camera )
 
 void Entity::moveX ( float add )
 {
-	vel.x += acc.x + add;
+	bool damped = false;
+	add += acc.x;
+	vel.x += add;
 	if (vel.x > minVel.x && vel.x > maxVel.x)
 		vel.x = maxVel.x;
 	else if (vel.x < -minVel.x && vel.x < -maxVel.x)
 		vel.x = -maxVel.x;
-	else//está abaixo do intervalo
-		vel.x -= vel.x * damping.x;//aqui era para diminuir o valor da velocidade até zero
+	//está abaixo do intervalo
+	else
+	{
+		damped = true;
+		vel.x -= vel.x * damping.x;
+	}
+
+	//se não está aplicando desaceleração e a aceleração for zero...
+	if (!damped && add == 0)
+	//então aplique a desaceleração
+		vel.x -= vel.x * damping.x;	
 	
 	pos.x += vel.x;
 }
 
 void Entity::moveY ( float add )
 {
-	vel.y += acc.y + add;
+	bool damped = false;
+	add += acc.y;
+	vel.y += add;
 	if (vel.y > minVel.y && vel.y > maxVel.y)
 		vel.y = maxVel.y;
 	else if (vel.y < -minVel.y && vel.y < -maxVel.y)
 		vel.y = -maxVel.y;
-	else//está abaixo do intervalo
+	//está abaixo do intervalo
+	else
+	{
+		damped = true;
 		vel.y -= vel.y * damping.y;
+	}
+
+	//se não está aplicando desaceleração e a aceleração for zero...
+	if (!damped && add == 0)
+	//então aplique a desaceleração
+		vel.y -= vel.y * damping.y;	
 	
 	pos.y += vel.y;
 }
