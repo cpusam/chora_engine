@@ -89,11 +89,11 @@ class Entity: public StateMachine, public Movable
 		void addOneWayUp ( int s );
 		bool remOneWayUp ( int s );
 		bool isSolid ( Vect p );
-		bool isGround (  );
 		bool isLadder (  );
 		bool isTopLadder (  );
 		void catchLadder (  );
 		bool oneWayUpCollision (  );
+		virtual bool isGround (  );
 
 		bool moveToPosition (Vect pos, float maxVel );
 		void setCountPath ( int count );
@@ -113,6 +113,10 @@ class Entity: public StateMachine, public Movable
 		void setSides ( SDL_Rect rect, int numPoints );
 		void drawSides ( SDL_Renderer * renderer, Camera * camera );
 
+		//move com velocidade limitada por maxVel
+		virtual void moveX();
+		virtual void moveY();
+
 		virtual std::string getStateString (  );
 		virtual std::string to_json ();
 
@@ -121,6 +125,7 @@ class Entity: public StateMachine, public Movable
 		virtual int update (  );
 
 	protected:
+		Vect maxVel;
 		int layer;//camada de desenho, quanto meno primeiro desenha
 		TileMap * level;//mapa de tiles sólidos e vázios, é o mapa de colisão
 		Direction dir;

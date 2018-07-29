@@ -2,6 +2,7 @@
 #include "Exception.hpp"
 #include <cmath>
 #include <random>
+#include <limits>
 
 unsigned long int Entity::countID = 1;
 
@@ -23,6 +24,9 @@ Entity::Entity()
 	currAnim = nullptr;
 	name = "";
 	countPath = 0;
+	
+	//coloca a velocidade máxima... ao máximo
+	maxVel.set(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
 }
 
 Entity::~Entity()
