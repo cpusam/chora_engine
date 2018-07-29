@@ -27,6 +27,8 @@ Entity::Entity()
 	
 	//coloca a velocidade máxima... ao máximo
 	maxVel.set(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+	//máximo de desaceleração, pará bruscamente quando não movendo
+	damping.set(1.0,1.0);
 }
 
 Entity::~Entity()
@@ -752,7 +754,7 @@ void Entity::moveX ( float add )
 	else if (vel.x < -minVel.x && vel.x < -maxVel.x)
 		vel.x = -maxVel.x;
 	else//está abaixo do intervalo
-		vel.x = 0;
+		vel.x -= vel.x * damping.x;//aqui era para diminuir o valor da velocidade até zero
 }
 
 void Entity::moveY ( float add )
@@ -763,7 +765,7 @@ void Entity::moveY ( float add )
 	else if (vel.y < -minVel.y && vel.y < -maxVel.y)
 		vel.y = -maxVel.y;
 	else//está abaixo do intervalo
-		vel.y = 0;
+		vel.y -= vel.y * damping.y;
 }
 
 std::string Entity::getStateString (  )

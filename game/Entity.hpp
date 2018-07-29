@@ -126,6 +126,7 @@ class Entity: public StateMachine, public Movable
 		virtual int update (  );
 
 	protected:
+		Vect damping;//desaceleração (de 0 ao 1)
 		Vect maxVel, minVel;
 		int layer;//camada de desenho, quanto meno primeiro desenha
 		TileMap * level;//mapa de tiles sólidos e vázios, é o mapa de colisão
