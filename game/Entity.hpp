@@ -114,8 +114,8 @@ class Entity: public StateMachine, public Movable
 		void drawSides ( SDL_Renderer * renderer, Camera * camera );
 
 		//move com velocidade limitada por maxVel
-		virtual void moveX();
-		virtual void moveY();
+		virtual void moveX ( float add = 0 );
+		virtual void moveY ( float add = 0 );
 
 		virtual std::string getStateString (  );
 		virtual std::string to_json ();

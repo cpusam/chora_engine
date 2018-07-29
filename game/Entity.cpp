@@ -744,6 +744,24 @@ void Entity::drawSides ( SDL_Renderer * renderer, Camera * camera )
 
 }
 
+void Entity::moveX ( float add )
+{
+	vel.x += acc.x + add;
+	if (vel.x > maxVel.x)
+		vel.x = maxVel.x;
+	else if (vel.x < -maxVel.x)
+		vel.x = -maxVel.x;
+}
+
+void Entity::moveY ( float add )
+{
+	vel.y += acc.y + add;
+	if (vel.y > maxVel.y)
+		vel.y = maxVel.y;
+	else if (vel.y < -maxVel.y)
+		vel.y = -maxVel.y;
+}
+
 std::string Entity::getStateString (  )
 {
 	return "null";
