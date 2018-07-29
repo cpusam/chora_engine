@@ -3,14 +3,15 @@ obj/*.*
 libchora.a
 
 #arquivos backup do gedit
-./*~ 
+*~ 
 other/*~
 platform/*~ 
 gui/*~ 
 SDL_gfx/*~ 
 sound/*~
 src/*.*~
-include/*.*~
+include/*~
+game/*~
 
 #cmake e outros
 cmake-build-debug

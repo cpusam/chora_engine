@@ -207,6 +207,41 @@ SDL_Rect Entity::getView (  )
 	return (SDL_Rect){int(pos.x) + view.x, int(pos.y) + view.y, view.w,view.h};
 }
 
+std::vector<int> Entity::getTilesAroundCollRect (  )
+{
+	std::vector<int> ret;
+	
+	for (auto it: rightSide)
+	{
+		int tile = level->get_tile(it.x, it.y);
+		if (tile > -1)
+			ret.push_back(tile);
+	}
+	
+	for (auto it: leftSide)
+	{
+		int tile = level->get_tile(it.x, it.y);
+		if (tile > -1)
+			ret.push_back(tile);
+	}
+	
+	for (auto it: downSide)
+	{
+		int tile = level->get_tile(it.x, it.y);
+		if (tile > -1)
+			ret.push_back(tile);
+	}
+	
+	for (auto it: upSide)
+	{
+		int tile = level->get_tile(it.x, it.y);
+		if (tile > -1)
+			ret.push_back(tile);
+	}
+	
+	return ret;
+}
+
 bool Entity::isDir ( Direction d )
 {
 	return d & dir;

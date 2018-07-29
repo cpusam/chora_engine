@@ -107,6 +107,8 @@ class Entity: public StateMachine, public Movable
 		SDL_Rect getCollRect ( bool relative=false );// retorna o retângulo de colisão em coordenadas do mundo
 		void setCollRect ( SDL_Rect rect );
 		SDL_Rect getView (  );
+		//pega todos os tiles de acordo com os pontos de colisão do collRect
+		std::vector<int> getTilesAroundCollRect (  );
 		// define as laterais do corpo baseado num retangulo usando numPoints por lateral
 		void setSides ( SDL_Rect rect, int numPoints );
 		void drawSides ( SDL_Renderer * renderer, Camera * camera );
