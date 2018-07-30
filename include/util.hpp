@@ -30,6 +30,9 @@
 #include "sdl.hpp"
 #include "camera.hpp"
 
+extern double Rand ( double min, double max );
+extern int RandInt ( int min, int max );
+
 extern void print_video_driver (  );
 
 extern Uint32 get_pixel ( SDL_Surface * surface, int x, int y );

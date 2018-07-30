@@ -62,6 +62,11 @@ class Entity: public StateMachine, public Movable
 		bool isVisible (  );
 		void setDir ( Direction d );
 		Direction getDir (  );
+		Vect getMinVel (  );
+		Vect getMaxVel (  );
+		void setMinVel ( Vect maxVel );
+		void setMaxVel ( Vect maxVel );
+
 		Animation * getCurrAnim (  );
 		bool setCurrAnim ( std::string animName );//muda para uma animação já carregada de nome animName
 		virtual void changeAnim ( std::string animName, bool reset=false );
@@ -72,7 +77,7 @@ class Entity: public StateMachine, public Movable
 		void setTopLadderTile ( int t );
 		int getTopLadderTile (  );
 		virtual void changeDir ( Direction d );
-		virtual double Rand ( double min, double max );
+		
 		// método que recebe mensagens de outros elementos
 		// retorna true caso a mensagem tenha sigod usada; false caso contrario
 		virtual bool receive ( Entity * sender, std::string mesg );
@@ -107,10 +112,9 @@ class Entity: public StateMachine, public Movable
 		Vect getCollCenter (  );
 		//se relative == true retorna collRect sem somar 'pos'
 		SDL_Rect getCollRect ( bool relative=false );// retorna o retângulo de colisão em coordenadas do mundo
-		void setCollRect ( SDL_Rect rect );
+		void setCollRect ( SDL_Rect rect, int numPoints=0 );
 		SDL_Rect getView (  );
-		//pega todos os tiles de acordo com os pontos de colisão do collRect
-		std::vector<int> getTilesAroundCollRect (  );
+		std::vector<Vect> getSide ( std::string side, bool relative=false );
 		// define as laterais do corpo baseado num retangulo usando numPoints por lateral
 		void setSides ( SDL_Rect rect, int numPoints );
 		void drawSides ( SDL_Renderer * renderer, Camera * camera );

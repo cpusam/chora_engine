@@ -1,7 +1,6 @@
 #include "Entity.hpp"
 #include "Exception.hpp"
 #include <cmath>
-#include <random>
 #include <limits>
 
 unsigned long int Entity::countID = 1;
@@ -91,6 +90,26 @@ Direction Entity::getDir (  )
 	return dir;
 }
 
+Vect Entity::getMinVel (  )
+{
+	return minVel;
+}
+
+Vect Entity::getMaxVel (  )
+{
+	return maxVel;
+}
+
+void Entity::setMinVel ( Vect maxVel )
+{
+	this->minVel = minVel;
+}
+
+void Entity::setMaxVel ( Vect maxVel )
+{
+	this->maxVel = maxVel;
+}
+
 Animation * Entity::getCurrAnim (  )
 {
 	return currAnim;
@@ -129,14 +148,6 @@ void Entity::updateAnim (  )
 {
 	if (currAnim)
 		currAnim->update();
-}
-
-double Entity::Rand ( double min, double max )
-{
-	std::random_device rd;
-	std::mt19937 mt(rd());
-	std::uniform_real_distribution<double> dist(min, max);
-	return dist(mt);
 }
 
 Vect Entity::getPosition (  )
@@ -209,49 +220,16 @@ SDL_Rect Entity::getCollRect ( bool relative )
 	return collRect;
 }
 
-void Entity::setCollRect ( SDL_Rect rect )
+void Entity::setCollRect ( SDL_Rect rect, int numPoints )
 {
-	collRect = rect; 
+	collRect = rect;
+	if (numPoints > 2)
+		setSides(rect, numPoints);
 }
 
 SDL_Rect Entity::getView (  )
 {
 	return (SDL_Rect){int(pos.x) + view.x, int(pos.y) + view.y, view.w,view.h};
-}
-
-std::vector<int> Entity::getTilesAroundCollRect (  )
-{
-	std::vector<int> ret;
-	
-	for (auto it: rightSide)
-	{
-		int tile = level->get_tile(it.x, it.y);
-		if (tile > -1)
-			ret.push_back(tile);
-	}
-	
-	for (auto it: leftSide)
-	{
-		int tile = level->get_tile(it.x, it.y);
-		if (tile > -1)
-			ret.push_back(tile);
-	}
-	
-	for (auto it: downSide)
-	{
-		int tile = level->get_tile(it.x, it.y);
-		if (tile > -1)
-			ret.push_back(tile);
-	}
-	
-	for (auto it: upSide)
-	{
-		int tile = level->get_tile(it.x, it.y);
-		if (tile > -1)
-			ret.push_back(tile);
-	}
-	
-	return ret;
 }
 
 bool Entity::isDir ( Direction d )
@@ -671,6 +649,43 @@ bool Entity::collisionHor (  )
 	return false;
 }
 
+std::vector<Vect> Entity::getSide ( std::string side, bool relative )
+{
+	std::vector<Vect> ret, * ref;
+	if (side == "left")
+	{
+		ref = &leftSide;
+	}
+	else if (side == "right")
+	{
+		ref = &rightSide;
+	}
+	else if (side == "down")
+	{
+		ref = &downSide;
+	}
+	else if (side == "up")
+	{
+		ref = &upSide;
+	}
+	else
+	{
+		throw Exception("Erro: lado "+side+" não encontrado");
+	}
+
+	if (relative)
+	{
+		Vect p = getCollPos();
+		for (auto it: *ref)
+			ret.push_back(Vect::add(it, p));
+	}
+	else
+	{
+		ret = *ref;
+	}
+
+	return ret;
+}
 
 void Entity::setSides ( SDL_Rect rect, int numPoints )
 {
@@ -762,7 +777,7 @@ void Entity::moveX ( float add )
 	else if (vel.x < -minVel.x && vel.x < -maxVel.x)
 		vel.x = -maxVel.x;
 	//está abaixo do intervalo
-	else
+	else if (add == 0)
 	{
 		damped = true;
 		vel.x -= vel.x * damping.x;
@@ -786,7 +801,7 @@ void Entity::moveY ( float add )
 	else if (vel.y < -minVel.y && vel.y < -maxVel.y)
 		vel.y = -maxVel.y;
 	//está abaixo do intervalo
-	else
+	else if (add == 0)
 	{
 		damped = true;
 		vel.y -= vel.y * damping.y;
