@@ -66,6 +66,9 @@ class Entity: public StateMachine, public Movable
 		Vect getMaxVel (  );
 		void setMinVel ( Vect maxVel );
 		void setMaxVel ( Vect maxVel );
+		Vect getDamping (  );
+		void setDamping ( Vect d );
+
 
 		Animation * getCurrAnim (  );
 		bool setCurrAnim ( std::string animName );//muda para uma animação já carregada de nome animName

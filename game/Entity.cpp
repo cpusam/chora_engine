@@ -110,6 +110,16 @@ void Entity::setMaxVel ( Vect maxVel )
 	this->maxVel = maxVel;
 }
 
+Vect Entity::getDamping (  )
+{
+	return damping;
+}
+
+void Entity::setDamping ( Vect d )
+{
+	damping = d;
+}
+
 Animation * Entity::getCurrAnim (  )
 {
 	return currAnim;

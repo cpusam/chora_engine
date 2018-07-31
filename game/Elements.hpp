@@ -52,6 +52,7 @@ class Elements
 		static void clear (  );
 		static void destroy (  );
 
+		//se group == "ALL" notifica todo mundo
 		static void notifyGroup ( Entity *sender, std::string mesg, std::string group );
 		
 		static void input ( SDL_Event & event );

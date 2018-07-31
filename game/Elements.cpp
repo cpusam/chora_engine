@@ -162,6 +162,12 @@ void Elements::destroy (  )
 {
 	if (singleton)
 	{
+		std::map<EntityID, Entity *> entities = singleton->getAllEntities();
+		for (std::pair<EntityID,Entity*> it: entities)
+			if (it.second)
+				delete it.second;
+		singleton->clearAll();
+
 		delete singleton;
 		singleton = nullptr;
 	}
@@ -174,7 +180,19 @@ void Elements::clearAll (  )
 
 void Elements::notifyGroup ( Entity * sender, std::string mesg, std::string group )
 {
-	std::vector<Entity *> entities = instance()->getAllByGroup(group);
+	std::vector<Entity *> entities;
+	
+	if (group == "ALL")
+	{
+		std::map<EntityID, Entity*> all = instance()->getAllEntities();
+		for (auto it: all)
+		{
+			entities.push_back(it.second);
+		}
+	}
+	else
+		entities = instance()->getAllByGroup(group);
+	
 	for (auto *entity: entities)
 		if (entity != sender)
 			entity->receive(sender,mesg);
