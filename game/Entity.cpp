@@ -2,8 +2,9 @@
 #include "Exception.hpp"
 #include <cmath>
 #include <limits>
+#include <algorithm>
 
-unsigned long int Entity::countID = 1;
+EntityID Entity::countID = 1;
 
 Entity::Entity()
 {
@@ -65,7 +66,7 @@ std::string Entity::getGroup (  )
 	return group;
 }
 
-unsigned long int Entity::getId (  )
+EntityID Entity::getId (  )
 {
 	return id;
 }
@@ -296,7 +297,7 @@ bool Entity::isSolidSide ( std::string side, int i )
 		else if (side == "left")
 			v.x -= 1;
 
-		if (isSolid(v + pos))
+		if (isSolid(Vect::add(v, pos)))
 			return true;
 	}
 
@@ -353,17 +354,7 @@ bool Entity::isSolid ( Vect p )
 		throw Exception("Entity::isSolid level é nulo");
 	}
 
-	int t = level->get_tile(int(p.x),int(p.y));
-
-	for (auto tile: solid)
-	{
-		if (tile == t)
-		{
-			return true;
-		}
-	}
-
-	return false;
+	return std::find(solid.begin(), solid.end(), level->get_tile(p.x, p.y)) != solid.end();
 }
 
 
@@ -624,15 +615,20 @@ bool Entity::collisionHor (  )
 	{
 		for (auto p: leftSide)
 		{
-			p = p + pos;
+			p = Vect::add(p, pos);
 			p.x += vel.x;
-			p.x = round(p.x);
+			//p.x = int(p.x);
 			if (isSolid(p))
 			{
+				#ifdef USE_ORIGINAL12
 				int x = (int(p.x)/level->get_tilesize() + 1)*level->get_tilesize();
 				pos.x = p.x -collRect.x + (x - int(p.x));
 				pos.x = int(pos.x);
 				setSides(collRect,collPoints);
+				#else
+					int x = (int(p.x) / level->get_tilesize()) * level->get_tilesize();
+					pos.x = x + level->get_tilesize();
+				#endif
 
 				return true;
 			}
@@ -642,9 +638,9 @@ bool Entity::collisionHor (  )
 	{
 		for (auto p: rightSide)
 		{
-			p = p + pos;
+			p = Vect::add(p, pos);
 			p.x += vel.x;
-			p.x = round(p.x);
+			p.x = int(p.x);
 			if (isSolid(p))
 			{
 				int x = (int(p.x)/level->get_tilesize())*level->get_tilesize();

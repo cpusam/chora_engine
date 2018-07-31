@@ -9,8 +9,8 @@ Camera::Camera ( SDL_Renderer * renderer, int x, int y, int vpW, int vpH, int di
 	limit = l;
 	SDL_RenderSetViewport(renderer, &viewport);
 	// focus padrão no meio da camera
-	focus.x = dimension.w / 2.0f;
-	focus.y = dimension.h / 2.0f;
+	focus.x = vpW / 2.0f;
+	focus.y = vpH / 2.0f;
 	//lookat(Vect(0,0));
 	if (limit.w < dimension.w || limit.h < dimension.h)
 		std::cout << "Camera: atenção limit W ou H menor que dimension W ou H\n";
@@ -27,8 +27,8 @@ Camera::Camera ( SDL_Renderer * renderer, int x, int y, int vpW, int vpH, SDL_Re
 	limit = l;
 	SDL_RenderSetViewport(renderer, &viewport);
 	// focus padrão no meio da camera
-	focus.x = dimension.w / 2.0f;
-	focus.y = dimension.h / 2.0f;
+	focus.x = vpW / 2.0f;
+	focus.y = vpH / 2.0f;
 	//lookat(Vect(0,0));
 	if (limit.w < dimension.w || limit.h < dimension.h)
 		std::cout << "Camera: atenção limit W ou H menor que dimension W ou H\n";
@@ -69,15 +69,15 @@ void Camera::updateViewport ( SDL_Renderer * renderer )
 void Camera::lookat ( Vect p )
 {
 	// antes aqui tinha um bug e só funcionava para eixos positivos
-	//position.x = p.x - focus.x;
-	//position.y = p.y - focus.y;
-	position = p - focus;
+	position.x = p.x - focus.x;
+	position.y = p.y - focus.y;
+	//position = Vect::sub(p, focus);
 
 	if (position.x < limit.x)
 		position.x = limit.x;
 	else if (position.x + dimension.w > limit.x + limit.w)
 		position.x = (limit.x + limit.w) - dimension.w;
-
+	
 	if (position.y < limit.y)
 		position.y = limit.y;
 	else if (position.y + dimension.h > limit.x + limit.h)

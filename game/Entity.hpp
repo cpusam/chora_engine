@@ -31,7 +31,7 @@
 #include "../include/movable.hpp"
 #include "../include/statemachine.hpp"
 
-typedef unsigned long int EntityID;
+typedef long int EntityID;
 
 // devia estar em movable.hpp
 enum Direction: unsigned int

@@ -30,7 +30,6 @@
 #include "Entity.hpp"
 
 class Entity;
-typedef unsigned long int EntityID;
 
 class Elements
 {
