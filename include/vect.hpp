@@ -246,6 +246,19 @@ struct Vect
 		return sqrt((b.x - this->x) * (b.x - this->x) + (b.y - this->y) * (b.y - this->y));
 	}
 
+	static Vect abs (const Vect & v )
+	{
+		return Vect(std::fabs(v.x), std::fabs(v.y));
+	}
+
+	Vect abs (  )
+	{
+		this->x = std::fabs(this->x);
+		this->y = std::fabs(this->y);
+
+		return *this;
+	}
+
 	void print()
 	{
 		printf("vect{x=%f, y=%f}\n",this->x,this->y);

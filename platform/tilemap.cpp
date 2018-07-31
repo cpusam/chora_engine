@@ -53,8 +53,10 @@ int TileMap::get_tile ( int x, int y )
 	if (x < 0 || y < 0)
 	{
 		static int p = 0;
-		if (p % 10 == 0)
+		if (p < 100)
+		{
 			printf("CTilaMap: get_tile posições negativas x = %d, y = %d\n", x, y);
+		}
 		p++;
 		//throw "TileMap: get_tile posições negativas!\n";
 		return -1;

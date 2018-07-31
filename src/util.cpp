@@ -159,8 +159,8 @@ void fill_rect ( SDL_Renderer * renderer, Camera * cam, SDL_Color color, SDL_Rec
 	{
 		Vect pos = cam->get_position();
 		dim = cam->get_dimension();
-		d.x = r.x - pos.x;
-		d.y = r.y - pos.y;
+		d.x = (dim.x + r.x) - pos.x;
+		d.y = (dim.y + r.y) - pos.y;
 		
 		/*
 		if (d.x < dim.x + pos.x)

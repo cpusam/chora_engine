@@ -215,7 +215,7 @@ void Entity::setLevel ( TileMap * level )
 
 Vect Entity::getCollPos (  )
 {
-	return Vect(int(pos.x) + collRect.x, int(pos.y) + collRect.y);
+	return Vect(pos.x + collRect.x, pos.y + collRect.y);
 }
 
 Vect Entity::getCollCenter (  )
@@ -223,9 +223,9 @@ Vect Entity::getCollCenter (  )
 	return Vect(int(pos.x)+collRect.x+collRect.w/2,int(pos.y)+collRect.y+collRect.h/2);
 }
 
-SDL_Rect Entity::getCollRect ( bool relative )
+SDL_Rect Entity::getCollRect ( RelativePosition relative )
 {
-	if (relative == false)
+	if (relative == RELATIVE_WORLD)
 		return (SDL_Rect){int(pos.x) + collRect.x, int(pos.y) + collRect.y, collRect.w,collRect.h};
 	
 	return collRect;
@@ -354,7 +354,11 @@ bool Entity::isSolid ( Vect p )
 		throw Exception("Entity::isSolid level é nulo");
 	}
 
-	return std::find(solid.begin(), solid.end(), level->get_tile(p.x, p.y)) != solid.end();
+	int tile = level->get_tile(p.x, p.y);
+	if (tile < 0)
+		return false;
+	
+	return std::find(solid.begin(), solid.end(), tile) != solid.end();
 }
 
 
@@ -382,11 +386,7 @@ bool Entity::isGround (  )
 	int x2 = pos.x + collRect.x + collRect.w;
 	int y2 = y1;
 
-	int levelY = (y1/level->get_tilesize())*level->get_tilesize();
-	//verifica se é o topo da escada na parte de baixo (downSide)
-	if ((y1 - levelY) <= topTileSize && (level->get_tile(x1,y1) == topLadderTile || level->get_tile(x2,y2) == topLadderTile))
-		if (vel.y == 0)
-			return true;
+	
 
 	//colisão com plataforma
 	if (vel.y == 0)
@@ -397,9 +397,18 @@ bool Entity::isGround (  )
 			p.y += 1;
 
 			for (auto tile: upSolid)
-				if (tile == level->get_tile(p.x,p.y))
+				if (tile == level->get_tile(p.x,p.y) && level->get_tile(p.x,p.y) > -1)
 					return true;
 		}
+	}
+
+	if (topLadderTile >= 0)
+	{
+		int levelY = (y1/level->get_tilesize())*level->get_tilesize();
+		//verifica se é o topo da escada na parte de baixo (downSide)
+		if ((y1 - levelY) <= topTileSize && (level->get_tile(x1,y1) == topLadderTile || level->get_tile(x2,y2) == topLadderTile))
+			if (vel.y == 0)
+				return true;
 	}
 
 	return false;
@@ -620,15 +629,8 @@ bool Entity::collisionHor (  )
 			//p.x = int(p.x);
 			if (isSolid(p))
 			{
-				#ifdef USE_ORIGINAL12
-				int x = (int(p.x)/level->get_tilesize() + 1)*level->get_tilesize();
-				pos.x = p.x -collRect.x + (x - int(p.x));
-				pos.x = int(pos.x);
-				setSides(collRect,collPoints);
-				#else
-					int x = (int(p.x) / level->get_tilesize()) * level->get_tilesize();
-					pos.x = x + level->get_tilesize();
-				#endif
+				int x = (int(p.x) / level->get_tilesize()) * level->get_tilesize();
+				pos.x = x + level->get_tilesize();
 
 				return true;
 			}
@@ -655,39 +657,42 @@ bool Entity::collisionHor (  )
 	return false;
 }
 
-std::vector<Vect> Entity::getSide ( std::string side, bool relative )
+std::vector<Vect> Entity::getSide ( std::string side, RelativePosition relative )
 {
-	std::vector<Vect> ret, * ref;
+	std::vector<Vect> ret, ref;
+
+	setSides(collRect, collPoints);
 	if (side == "left")
 	{
-		ref = &leftSide;
+		ref = leftSide;
 	}
 	else if (side == "right")
 	{
-		ref = &rightSide;
+		ref = rightSide;
 	}
 	else if (side == "down")
 	{
-		ref = &downSide;
+		ref = downSide;
 	}
 	else if (side == "up")
 	{
-		ref = &upSide;
+		ref = upSide;
 	}
 	else
 	{
 		throw Exception("Erro: lado "+side+" não encontrado");
 	}
 
-	if (relative)
+	if (relative == RELATIVE_WORLD)
 	{
-		Vect p = getCollPos();
-		for (auto it: *ref)
-			ret.push_back(Vect::add(it, p));
+		for (auto it: ref)
+		{
+			ret.push_back(Vect::add(pos, it));
+		}
 	}
 	else
 	{
-		ret = *ref;
+		ret = ref;
 	}
 
 	return ret;

@@ -48,20 +48,21 @@ void TileMapView::update_animation (  )
 int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 {
 	int i, j, t, ret = 0;
-	Vect pos = cam->get_position() - this->pos, p = cam->get_position() - this->pos;
+	Vect pos = cam->get_position() - this->pos, pCam = cam->get_position() - this->pos;
 	SDL_Rect dest = {0,0,tilesize,tilesize};
 	SDL_Rect src = {0,0,0,0};
 	SDL_Rect dim = cam->get_dimension();
 
-	pos.x = int(pos.x) / tilesize;
-	pos.y = int(pos.y) / tilesize;
+	Vect p;
+	p.x = int(pos.x) / tilesize;
+	p.y = int(pos.y) / tilesize;
 	dim.w /= tilesize;
 	dim.h /= tilesize;
-	int mod_x = int(p.x) % tilesize;
-	int mod_y = int(p.y) % tilesize;
+	int mod_x = int(pCam.x) % tilesize;
+	int mod_y = int(pCam.y) % tilesize;
 
-	for (i = pos.x - 1; i <= pos.x + dim.w + 1; i++)
-		for (j = pos.y - 1; j <= pos.y + dim.h + 1; j++)
+	for (i = p.x - 1; i <= p.x + dim.w + 1; i++)
+		for (j = p.y - 1; j <= p.y + dim.h + 1; j++)
 		{
 			//t = tileset.at(i * width + j); <- BUGADO!
 			t = get_tile(i * tilesize, j * tilesize);
@@ -77,8 +78,9 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 			if (texture)
 			{
 				src = source[t];
-				dest.x = (i - pos.x) * tilesize + dim.x - mod_x;
-				dest.y = (j - pos.y) * tilesize + dim.y - mod_y; 
+				//é preciso parenteses extras para evitar bugs
+				dest.x = ((i - p.x) * tilesize + dim.x) - mod_x;
+				dest.y = ((j - p.y) * tilesize + dim.y) - mod_y; 
 				dest.w = tilesize;
 				dest.h = tilesize;
 				ret = SDL_RenderCopy(renderer, texture, &src, &dest);
@@ -144,8 +146,9 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 			if (texture)
 			{
 				src = source[t];
-				dest.x = (i - pos.x) * tilesize + dim.x + x - mod_x;
-				dest.y = (j - pos.y) * tilesize + dim.y + y - mod_y;
+				//é preciso parenteses extras para evitar bugs
+				dest.x = ((i - pos.x) * tilesize + dim.x + x) - mod_x;
+				dest.y = ((j - pos.y) * tilesize + dim.y + y) - mod_y;
 				dest.w = tilesize;
 				dest.h = tilesize;
 				ret = SDL_RenderCopy(renderer, texture, &src, &dest);
