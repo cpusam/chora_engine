@@ -170,8 +170,8 @@ int TileMapView::draw ( SDL_Renderer * renderer, int x, int y )
 	dim.w /= tilesize;
 	dim.h /= tilesize;
 
-	for (i = 0; i <= dim.w; i++)
-		for (j = 0; j <= dim.h; j++)
+	for (i = -1; i <= dim.w+1; i++)
+		for (j = -1; j <= dim.h+1; j++)
 		{
 			//t = tileset.at(i * width + j); <- BUGADO!
 			t = get_tile(i * tilesize, j * tilesize);
