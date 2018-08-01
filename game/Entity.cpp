@@ -778,6 +778,11 @@ void Entity::drawSides ( SDL_Renderer * renderer, Camera * camera )
 
 }
 
+void Entity::applyImpulse ( Vect impulse )
+{
+	vel = Vect::add(vel, impulse);
+}
+
 void Entity::moveX ( float add )
 {
 	bool damped = false;

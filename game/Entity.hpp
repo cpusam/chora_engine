@@ -128,6 +128,8 @@ class Entity: public StateMachine, public Movable
 		void setSides ( SDL_Rect rect, int numPoints );
 		void drawSides ( SDL_Renderer * renderer, Camera * camera );
 
+		//aplica impulso
+		void applyImpulse ( Vect impulse );
 		//move com velocidade limitada por maxVel
 		// add = adiciona à velocidade antes junto com a aceleração
 		virtual void moveX ( float add = 0 );
