@@ -31,6 +31,16 @@ Vect Movable::get_vel (  )
 	return vel;
 }
 
+float Movable::get_vel_x (  )
+{
+	return vel.x;
+}
+
+float Movable::get_vel_y (  )
+{
+	return vel.y;
+}
+
 void Movable::set_acc ( Vect a )
 {
 	acc = a;

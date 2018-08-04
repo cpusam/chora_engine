@@ -1,5 +1,6 @@
 #include "Entity.hpp"
 #include "Exception.hpp"
+#include "SDL_gfx/SDL_framerate.hpp"
 #include <cmath>
 #include <limits>
 #include <algorithm>
@@ -848,7 +849,9 @@ void Entity::applyImpulse ( Vect impulse )
 void Entity::moveX ( float add )
 {
 	bool damped = false;
-	add += acc.x;
+	//aplica aceleração
+	add *= FPSManager::instance()->get_delta_sec();
+	add += acc.x * FPSManager::instance()->get_delta_sec();
 	vel.x += add;
 	
 
@@ -876,7 +879,9 @@ void Entity::moveX ( float add )
 void Entity::moveY ( float add )
 {
 	bool damped = false;
-	add += acc.y;
+	//aplica aceleração
+	add *= FPSManager::instance()->get_delta_sec();
+	add += acc.y * FPSManager::instance()->get_delta_sec();
 	vel.y += add;
 	
 	

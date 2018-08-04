@@ -55,6 +55,8 @@ class Movable
 		virtual void set_vel ( Vect v );
 
 		virtual Vect get_vel (  );
+		virtual float get_vel_x (  );
+		virtual float get_vel_y (  );
 
 		virtual void set_acc ( Vect a );
 
