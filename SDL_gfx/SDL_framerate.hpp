@@ -203,9 +203,7 @@ class FPSManager
 			if (current_ticks <= target_ticks)
 			{
 				the_delay = target_ticks - current_ticks;
-	#ifndef __clang__
 				SDL_Delay(the_delay);
-	#endif
 			}
 			else
 			{
