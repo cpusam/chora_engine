@@ -30,6 +30,7 @@
 #include "../platform/tilemap.hpp"
 #include "../include/movable.hpp"
 #include "../include/statemachine.hpp"
+#include "../include/collision.hpp"
 
 typedef long int EntityID;
 
@@ -97,7 +98,8 @@ class Entity: public StateMachine, public Movable
 		bool isDir ( Direction d );
 
 		bool isSolidSide ( std::string side, int i=-1 );
-
+		//verifica se é sólido nos pontos laterias, ou no ponto lateral 'i'
+		bool isSolidSide ( std::string side, SDL_Rect other, int i=-1 );
 		// colisão
 		std::vector<int>& getSolids (  );
 		void addSolid ( int s );
@@ -117,6 +119,7 @@ class Entity: public StateMachine, public Movable
 		virtual bool collisionVer (  );
 		virtual bool collisionHor (  );
 		
+		void setCollPos ( Vect p );
 		Vect getCollPos (  );//retorna posição do collRect somada à posição do this
 		Vect getCollCenter (  );
 		//se relative == true retorna collRect sem somar 'pos'

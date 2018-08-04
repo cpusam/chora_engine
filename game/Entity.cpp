@@ -213,6 +213,12 @@ void Entity::setLevel ( TileMap * level )
 	this->level = level;
 }
 
+void Entity::setCollPos ( Vect p )
+{
+	pos.x = p.x - collRect.x;
+	pos.y = p.y - collRect.y;
+}
+
 Vect Entity::getCollPos (  )
 {
 	return Vect(pos.x + collRect.x, pos.y + collRect.y);
@@ -304,6 +310,63 @@ bool Entity::isSolidSide ( std::string side, int i )
 	return false;
 }
 
+
+bool Entity::isSolidSide ( std::string side, SDL_Rect other, int i )
+{
+	std::vector<Vect> vet;
+	if (side == "up")
+		vet = upSide;
+	else if (side == "down")
+		vet = downSide;
+	else if (side == "right")
+		vet = rightSide;
+	else if (side == "left")
+		vet = leftSide;
+	else
+	{
+		std::cout<<"Error "<<side<<" lado não identificado\n";
+		return false;
+	}
+
+	if (i >= 0)
+	{
+		if (i < int(vet.size()))
+		{
+			Vect p = vet.at(i);
+
+			if (side == "up")
+				p.y -= 1;
+			else if (side == "down")
+				p.y += 1;
+			else if (side == "right")
+				p.x += 1;
+			else if (side == "left")
+				p.x -= 1;
+
+			return pointbox(Vect::add(p, pos), other);
+		}
+
+		return false;
+	}
+
+	for (auto & v: vet)
+	{
+		if (side == "up")
+			v.y -= 1;
+		else if (side == "down")
+			v.y += 1;
+		else if (side == "right")
+			v.x += 1;
+		else if (side == "left")
+			v.x -= 1;
+
+		if (pointbox(Vect::add(v, pos), other))
+			return true;
+	}
+
+	return false;
+}
+
 std::vector<int>& Entity::getSolids (  )
 {
 	return solid;
@@ -363,7 +426,7 @@ bool Entity::isSolid ( Vect p )
 
 
 bool Entity::isGround (  )
-{
+{	
 	if (level == nullptr)
 		throw Exception("Entity::isGround level é nulo");
 
@@ -544,6 +607,8 @@ bool Entity::collisionVer (  )
 		throw Exception("Entity::"+name+" collisionVer level map é nulo");
 	if (vel.y == 0)
 		return false;
+	
+	bool ret = false;
 
 	// atualiza a posição dos pontos de colisão
 	setSides(collRect, collPoints);
@@ -553,16 +618,14 @@ bool Entity::collisionVer (  )
 		//colisão acima da cabeça e embaixo do tile
 		for (auto p: upSide)
 		{
-			p = p + pos;
+			p = Vect::add(p, pos);
 			p.y += vel.y;
-			p.y = round(p.y);
 			if (isSolid(p))
 			{
-				int y = (int(p.y)/level->get_tilesize() + 1)*level->get_tilesize();
-				pos.y = p.y - collRect.y + (y - int(p.y));
-				pos.y = floor(pos.y);
-
-				return true;
+				int y = (int(p.y)/level->get_tilesize())*level->get_tilesize();
+				pos.y = y + level->get_tilesize() + 1;
+				ret = true;
+				break;
 			}
 		}
 	}
@@ -572,42 +635,43 @@ bool Entity::collisionVer (  )
 		{
 			p = p + pos;
 			p.y += vel.y;
-			p.y = round(p.y);
 			if (isSolid(p))
 			{
 				int y = (int(p.y)/level->get_tilesize())*level->get_tilesize();
-				pos.y = p.y - (collRect.y + collRect.h) + (y - int(p.y));
-				pos.y = floor(pos.y) - 1;
-				return true;
+				pos.y = y - collRect.h - 1;
+				ret = true;
+				break;
 			}
-
-			//tenta colidir com algum tile one way
-			if (oneWayUpCollision())
-				return true;
 		}
+
+		//tenta colidir com algum tile one way
+		if (oneWayUpCollision())
+			ret = true;
 
 		// colisão com a ponta da escada
 		// aqui é colisão "oneway" do lado de cima
-		for (auto p: downSide)
-		{
-			p = p + pos;
-			p.y += vel.y;
-			p.y = round(p.y);
-			int x = p.x;
-			int y = p.y;
-			int levelY = (y / level->get_tilesize())*level->get_tilesize();
-			if (y - levelY < topTileSize)
-				if (level->get_tile(x,y) == topLadderTile)
-				{
-					pos.y = p.y - (collRect.y + collRect.h) + (levelY - int(p.y));
-					pos.y = floor(pos.y) - 1;
-					setSides(collRect,collPoints);
-					return true;
-				}
-		}
+		if (topLadderTile > -1)
+			for (auto p: downSide)
+			{
+				p = p + pos;
+				p.y += vel.y;
+				p.y = round(p.y);
+				int x = p.x;
+				int y = p.y;
+				int levelY = (y / level->get_tilesize())*level->get_tilesize();
+				if (y - levelY < topTileSize)
+					if (level->get_tile(x,y) == topLadderTile)
+					{
+						pos.y = p.y - (collRect.y + collRect.h) + (levelY - int(p.y));
+						pos.y = floor(pos.y) - 1;
+						setSides(collRect,collPoints);
+						ret = true;
+						break;
+					}
+			}
 	}
 
-	return false;
+	return ret;
 }
 
 bool Entity::collisionHor (  )
@@ -616,6 +680,7 @@ bool Entity::collisionHor (  )
 		throw Exception("Entity::"+name+" collisionHor level map é nulo");
 	if (vel.x == 0)
 		return false;
+	bool ret = false;
 
 	// atualiza a posição dos pontos de colisão
 	setSides(collRect, collPoints);
@@ -626,13 +691,12 @@ bool Entity::collisionHor (  )
 		{
 			p = Vect::add(p, pos);
 			p.x += vel.x;
-			//p.x = int(p.x);
 			if (isSolid(p))
 			{
-				int x = (int(p.x) / level->get_tilesize()) * level->get_tilesize();
-				pos.x = x + level->get_tilesize();
-
-				return true;
+				int x = (int(p.x) / level->get_tilesize() + 1) * level->get_tilesize();
+				pos.x = x + 1;
+				ret = true;
+				break;
 			}
 		}
 	}
@@ -642,19 +706,17 @@ bool Entity::collisionHor (  )
 		{
 			p = Vect::add(p, pos);
 			p.x += vel.x;
-			p.x = int(p.x);
 			if (isSolid(p))
 			{
-				int x = (int(p.x)/level->get_tilesize())*level->get_tilesize();
-				pos.x = p.x - (collRect.x + collRect.w) + (x - int(p.x));
-				pos.x = int(pos.x) - 1;
-				setSides(collRect,collPoints);
-				return true;
+				int x = (int(p.x) / level->get_tilesize()) * level->get_tilesize();
+				pos.x = x - collRect.w - 1;
+				ret = true;
+				break;
 			}
 		}
 	}
 
-	return false;
+	return ret;
 }
 
 std::vector<Vect> Entity::getSide ( std::string side, RelativePosition relative )
@@ -788,21 +850,25 @@ void Entity::moveX ( float add )
 	bool damped = false;
 	add += acc.x;
 	vel.x += add;
+	
+
+	//se não está aplicando desaceleração e a aceleração for zero...
+	if (add == 0)
+	{
+		//então aplique a desaceleração
+		vel.x -= vel.x * damping.x;	
+		damped = true;
+	}
+	
 	if (vel.x > minVel.x && vel.x > maxVel.x)
 		vel.x = maxVel.x;
 	else if (vel.x < -minVel.x && vel.x < -maxVel.x)
 		vel.x = -maxVel.x;
 	//está abaixo do intervalo
-	else if (add == 0)
+	else if (!damped && add == 0)
 	{
-		damped = true;
 		vel.x -= vel.x * damping.x;
 	}
-
-	//se não está aplicando desaceleração e a aceleração for zero...
-	if (!damped && add == 0)
-	//então aplique a desaceleração
-		vel.x -= vel.x * damping.x;	
 	
 	pos.x += vel.x;
 }
@@ -812,22 +878,26 @@ void Entity::moveY ( float add )
 	bool damped = false;
 	add += acc.y;
 	vel.y += add;
+	
+	
+
+	//se não está aplicando desaceleração e a aceleração for zero...
+	if (add == 0)
+	{
+		//então aplique a desaceleração
+		vel.y -= vel.y * damping.y;	
+		damped = true;
+	}
+	
 	if (vel.y > minVel.y && vel.y > maxVel.y)
 		vel.y = maxVel.y;
 	else if (vel.y < -minVel.y && vel.y < -maxVel.y)
 		vel.y = -maxVel.y;
 	//está abaixo do intervalo
-	else if (add == 0)
+	else if (!damped && add == 0)
 	{
-		damped = true;
 		vel.y -= vel.y * damping.y;
 	}
-
-	//se não está aplicando desaceleração e a aceleração for zero...
-	if (!damped && add == 0)
-	//então aplique a desaceleração
-		vel.y -= vel.y * damping.y;	
-	
 	pos.y += vel.y;
 }
 

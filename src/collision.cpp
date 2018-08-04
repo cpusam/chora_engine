@@ -27,8 +27,8 @@ bool lineIntersects ( Vect a1, Vect a2, Vect b1, Vect b2, Vect * result )
 {
     Vect intersection;
 
-    Vect b = a2 - a1;
-    Vect d = b2 - b1;
+    Vect b = Vect::sub(a2, a1);
+    Vect d = Vect::sub(b2, b1);
     float bDotDPerp = b.x * d.y - b.y * d.x;
 
 		//se b vezes d for 0 então as linhas são paralelas
@@ -45,7 +45,7 @@ bool lineIntersects ( Vect a1, Vect a2, Vect b1, Vect b2, Vect * result )
         return false;
 
 		if (result)
-    	*result = a1 + (b * t);
+    	*result = Vect::add(a1, (b * t));
 
     return true;
 }
