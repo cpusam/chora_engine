@@ -14,7 +14,7 @@ SET(COMPILE_TO_WINDOWS FALSE)
 
 IF (WIN32 OR COMPILE_TO_WINDOWS)
 	set(CMAKE_SYSTEM_NAME Windows)
-	set(TOOLCHAIN_PREFIX /usr/bin/i686-w64-mingw32)
+	set(TOOLCHAIN_PREFIX /usr/bin/x86_64-w64-mingw32)
 
 	# cross compilers to use for C, C++ and Fortran
 	set(CMAKE_C_COMPILER ${TOOLCHAIN_PREFIX}-gcc)
