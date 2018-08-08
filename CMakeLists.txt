@@ -8,7 +8,7 @@ include_directories(. include)
 add_library(chora ${HDRS} ${SRCS})
 
 #nota para compilar com o mingw tem que usar o gnu++11
-add_definitions("--std=gnu++11")
+add_definitions("--std=gnu++11 -O1")
 
 SET(COMPILE_TO_WINDOWS FALSE)
 

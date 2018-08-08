@@ -615,19 +615,22 @@ bool Entity::collisionVer (  )
 		return false;
 	
 	bool ret = false;
+	float beforeX = getCollPos().x;
+	setSides(collRect, collPoints);
 
 	if (vel.y < 0)
 	{
-		std::vector<Vect> up = getSide("up", RELATIVE_ENTITY);
 		//colisão acima da cabeça e embaixo do tile
-		for (auto p: up)
+		for (auto p: upSide)
 		{
-			if (isSolid(Vect::add(p, pos)))
+			p.x += pos.x;
+			p.y += pos.y;
+			if (isSolid(p))
 			{
-				int y = (int(pos.y + p.y) / level->get_tilesize() + 1) * level->get_tilesize();
+				int y = (int(p.y) / level->get_tilesize() + 1) * level->get_tilesize();
 				//tem que arrendondar o p.y para evitar bugs
 				//esse 5 não era pra estar aqui!
-				setCollPos(Vect(getCollPos().x, y + int(p.y) + 5));
+				setCollPos(Vect(beforeX, y + 5));
 				ret = true;
 				break;
 			}
@@ -635,14 +638,15 @@ bool Entity::collisionVer (  )
 	}
 	else
 	{
-		std::vector<Vect> down = getSide("down", RELATIVE_WORLD);
 		//colisão com a parte de baixo de entity
-		for (auto p: down)
+		for (auto p: downSide)
 		{
+			p.x += pos.x;
+			p.y += pos.y;
 			if (isSolid(p))
 			{
 				int y = (int(p.y) / level->get_tilesize())*level->get_tilesize();
-				setCollPos(Vect(getCollPos().x, y - collRect.h - 1));
+				setCollPos(Vect(beforeX, y - collRect.h - 1));
 				ret = true;
 				break;
 			}
@@ -688,14 +692,15 @@ bool Entity::collisionHor (  )
 	if (vel.x == 0)
 		return false;
 	bool ret = false;
-
-	float beforeY = getCollPos().y - vel.y;
+	float beforeY = getCollPos().y;
+	setSides(collRect, collPoints);
 
 	if (vel.x < 0)
 	{
-		std::vector<Vect> left = getSide("left", RELATIVE_WORLD);
-		for (auto p: left)
+		for (auto p: leftSide)
 		{
+			p.x += pos.x;
+			p.y += pos.y;
 			if (isSolid(p))
 			{
 				int x = (int(p.x) / level->get_tilesize() + 1) * level->get_tilesize();
@@ -708,9 +713,10 @@ bool Entity::collisionHor (  )
 	}
 	else
 	{
-		std::vector<Vect> right = getSide("right", RELATIVE_WORLD);
-		for (auto p: right)
+		for (auto p: rightSide)
 		{
+			p.x += pos.x;
+			p.y += pos.y;
 			if (isSolid(p))
 			{
 				int x = (int(p.x) / level->get_tilesize()) * level->get_tilesize();
@@ -721,8 +727,6 @@ bool Entity::collisionHor (  )
 			}
 		}
 	}
-
-	setCollPos(Vect(getCollPos().x, beforeY + vel.y));
 
 	return ret;
 }
