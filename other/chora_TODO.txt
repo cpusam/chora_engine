@@ -14,6 +14,8 @@ Observações:
 	 desenhar na tela assim todo desenho irá para aquela viewport, além disso, 
 	 não pode usar uma textura como alvo do renderer, pois pode ser que a camera fique 
 	 diminuida na textura renderizada.
+	-tem que ocmpilar a SDL2 (e as outras libs) com o compilador mingw no linux 
+	 para poder compilar programas, dá erro de versão quando tenta compilar com o SDL2-*devel.
 
 Observações para o GameEditor:
 	-agora entendo por que no scratch usa uma seta indicando a orientação do sprite, é porque 

@@ -480,6 +480,9 @@ bool Entity::isGround (  )
 
 bool Entity::oneWayUpCollision ()
 {
+	if (!level)
+		throw Exception("Entity::Erro level é nulo");
+
 	Vect before = Vect(pos.x, pos.y);
 	Vect after = before;
 
@@ -511,7 +514,8 @@ bool Entity::oneWayUpCollision ()
 					if (int(a.y)/level->get_tilesize() != int(b.y)/level->get_tilesize())
 					{
 						int y = int(a.y / level->get_tilesize()) * level->get_tilesize();
-						pos.y = y - int(q.y) - 1;
+						p.y = y - int(q.y) - 1;
+						setCollPos(p);
 						vel.y = 0;
 						return true;
 					}
@@ -525,7 +529,8 @@ bool Entity::oneWayUpCollision ()
 			if (tile == level->get_tile(p.x,p.y))
 			{
 				int y = int(p.y / level->get_tilesize()) * level->get_tilesize();
-				pos.y = y - int(q.y) - 1;
+				p.y = y - int(q.y) - 1;
+				setCollPos(p);
 				vel.y = 0;
 				return true;
 			}
@@ -611,20 +616,18 @@ bool Entity::collisionVer (  )
 	
 	bool ret = false;
 
-	// atualiza a posição dos pontos de colisão
-	setSides(collRect, collPoints);
-
 	if (vel.y < 0)
 	{
+		std::vector<Vect> up = getSide("up", RELATIVE_ENTITY);
 		//colisão acima da cabeça e embaixo do tile
-		for (auto p: upSide)
+		for (auto p: up)
 		{
-			p = Vect::add(p, pos);
-			p.y += vel.y;
-			if (isSolid(p))
+			if (isSolid(Vect::add(p, pos)))
 			{
-				int y = (int(p.y)/level->get_tilesize())*level->get_tilesize();
-				pos.y = y + level->get_tilesize() + 1;
+				int y = (int(pos.y + p.y) / level->get_tilesize() + 1) * level->get_tilesize();
+				//tem que arrendondar o p.y para evitar bugs
+				//esse 5 não era pra estar aqui!
+				setCollPos(Vect(getCollPos().x, y + int(p.y) + 5));
 				ret = true;
 				break;
 			}
@@ -632,26 +635,27 @@ bool Entity::collisionVer (  )
 	}
 	else
 	{
-		for (auto p: downSide)
+		std::vector<Vect> down = getSide("down", RELATIVE_WORLD);
+		//colisão com a parte de baixo de entity
+		for (auto p: down)
 		{
-			p = p + pos;
-			p.y += vel.y;
 			if (isSolid(p))
 			{
-				int y = (int(p.y)/level->get_tilesize())*level->get_tilesize();
-				pos.y = y - collRect.h - 1;
+				int y = (int(p.y) / level->get_tilesize())*level->get_tilesize();
+				setCollPos(Vect(getCollPos().x, y - collRect.h - 1));
 				ret = true;
 				break;
 			}
 		}
 
+		#if 0
 		//tenta colidir com algum tile one way
-		if (oneWayUpCollision())
+		if (!ret && oneWayUpCollision())
 			ret = true;
 
 		// colisão com a ponta da escada
 		// aqui é colisão "oneway" do lado de cima
-		if (topLadderTile > -1)
+		if (!ret && topLadderTile > -1)
 			for (auto p: downSide)
 			{
 				p = p + pos;
@@ -663,13 +667,15 @@ bool Entity::collisionVer (  )
 				if (y - levelY < topTileSize)
 					if (level->get_tile(x,y) == topLadderTile)
 					{
-						pos.y = p.y - (collRect.y + collRect.h) + (levelY - int(p.y));
-						pos.y = floor(pos.y) - 1;
+						p.y = p.y - (collRect.y + collRect.h) + (levelY - int(p.y));
+						p.y = floor(pos.y) - 1;
+						setCollPos(p);
 						setSides(collRect,collPoints);
 						ret = true;
 						break;
 					}
 			}
+		#endif
 	}
 
 	return ret;
@@ -683,19 +689,18 @@ bool Entity::collisionHor (  )
 		return false;
 	bool ret = false;
 
-	// atualiza a posição dos pontos de colisão
-	setSides(collRect, collPoints);
+	float beforeY = getCollPos().y - vel.y;
 
 	if (vel.x < 0)
 	{
-		for (auto p: leftSide)
+		std::vector<Vect> left = getSide("left", RELATIVE_WORLD);
+		for (auto p: left)
 		{
-			p = Vect::add(p, pos);
-			p.x += vel.x;
 			if (isSolid(p))
 			{
 				int x = (int(p.x) / level->get_tilesize() + 1) * level->get_tilesize();
-				pos.x = x + 1;
+				p.x = x;
+				setCollPos(Vect(p.x, beforeY));
 				ret = true;
 				break;
 			}
@@ -703,19 +708,21 @@ bool Entity::collisionHor (  )
 	}
 	else
 	{
-		for (auto p: rightSide)
+		std::vector<Vect> right = getSide("right", RELATIVE_WORLD);
+		for (auto p: right)
 		{
-			p = Vect::add(p, pos);
-			p.x += vel.x;
 			if (isSolid(p))
 			{
 				int x = (int(p.x) / level->get_tilesize()) * level->get_tilesize();
-				pos.x = x - collRect.w - 1;
+				p.x = x - collRect.w - 1;
+				setCollPos(Vect(p.x,beforeY));
 				ret = true;
 				break;
 			}
 		}
 	}
+
+	setCollPos(Vect(getCollPos().x, beforeY + vel.y));
 
 	return ret;
 }
@@ -776,7 +783,7 @@ void Entity::setSides ( SDL_Rect rect, int numPoints )
 	upSide.clear();
 	downSide.clear();
 
-	size = rect.h/(numPoints - 1);
+	size = float(rect.h) / float(numPoints - 1);
 	for (int i = 0; i < numPoints; i++)
 	{
 		// define o lado direito
@@ -790,11 +797,11 @@ void Entity::setSides ( SDL_Rect rect, int numPoints )
 		leftSide.push_back(Vect(x,y));
 	}
 
-	size = rect.w/(numPoints - 1);
+	size = float(rect.w) / float(numPoints - 1);
 	for (int i = 0; i < numPoints; i++)
 	{
 		// define o lado superior
-		x = rect.x + i * size;
+		x = rect.x + float(i) * size;
 		y = rect.y;
 		upSide.push_back(Vect(x,y));
 

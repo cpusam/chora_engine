@@ -25,19 +25,11 @@
 #define CHORA_SDL_HPP
 
 #if _WIN32 || _WIN64
-	#if __MINGW32__ || __MINGW64__
-		#include <SDL2\\SDL.h>
-		#include <SDL2\\SDL_ttf.h>
-		#include <SDL2\\SDL_mixer.h>
-		#include <SDL2\\SDL_image.h>
-
-		#undef main
-	#else
 		#include "SDL.h"
 		#include "SDL_ttf.h"
 		#include "SDL_mixer.h"
 		#include "SDL_image.h"
-	#endif
+		#undef main
 #else
 	#include <SDL2/SDL.h>
 	#include <SDL2/SDL_ttf.h>
