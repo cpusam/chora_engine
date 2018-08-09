@@ -25,13 +25,15 @@
 #define CHORA_TEXTURER_HPP
 
 #include <vector>
-
+#include <atomic>
+#include <mutex>
 #include "textureid.hpp"
 
 
 class Texturer{
 	std::vector<TextureID>	 textureID;
-	static Texturer 		*singleton;
+	static std::atomic<Texturer *> singleton;
+	static std::mutex myMutex;
 
 	Texturer();
 	virtual ~Texturer();

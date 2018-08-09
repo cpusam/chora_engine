@@ -200,7 +200,8 @@ void SoundFX::set_music ( std::string p )
 
 /////////////////////////////////////////////////////////////////
 
-SoundPlayer * SoundPlayer::singleton = 0;
+std::atomic<SoundPlayer *> SoundPlayer::singleton{nullptr};
+std::mutex SoundPlayer::myMutex;
 
 
 void SoundPlayer::free_sounds (  )

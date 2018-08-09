@@ -31,6 +31,8 @@ Andreas Schiffler -- aschiffler at ferzkopp dot net
 #define CHORA_SDL_framerate_h
 
 #include "sdl.hpp"
+#include <atomic>
+#include <mutex>
 
 /* --------- Definitions */
 
@@ -74,7 +76,8 @@ class FPSManager
 		Uint32 lastticks;
 		Uint32 time_passed;
 	private:
-		static FPSManager * singleton;
+		static std::atomic<FPSManager *> singleton;
+		static std::mutex myMutex;
 
 	protected:
 		FPSManager (  )
@@ -99,7 +102,11 @@ class FPSManager
 		static FPSManager * instance (  )
 		{
 			if (!singleton)
-				singleton = new FPSManager();
+			{
+				std::lock_guard<std::mutex> lock(myMutex);
+				if (!singleton)
+					singleton = new FPSManager();
+			}
 
 			return singleton;
 		}

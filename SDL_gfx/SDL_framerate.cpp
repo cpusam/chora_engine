@@ -1,4 +1,5 @@
 #include "SDL_framerate.hpp"
 
-FPSManager * FPSManager::singleton = 0;
+std::atomic<FPSManager *> FPSManager::singleton {nullptr};
+std::mutex FPSManager::myMutex;
 

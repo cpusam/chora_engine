@@ -26,6 +26,8 @@
 
 #include <string>
 #include <vector>
+#include <atomic>
+#include <mutex>
 
 #include "../sdl.hpp"
 #include "../include/statemachine.hpp"
@@ -97,8 +99,9 @@ class SoundFX: public StateMachine
 
 class SoundPlayer: public StateMachine
 {
-	protected:
-		static SoundPlayer * singleton;
+	private:
+		static std::atomic<SoundPlayer *> singleton;
+		static std::mutex myMutex;
 		std::vector <SoundFX> sound;
 
 	protected:

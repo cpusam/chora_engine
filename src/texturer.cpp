@@ -1,14 +1,17 @@
 #include "texturer.hpp"
 
-Texturer * Texturer::singleton = 0;
+std::atomic<Texturer *> Texturer::singleton{nullptr};
+std::mutex Texturer::myMutex;
 
 Texturer::Texturer(){}
 
 Texturer::~Texturer(){}
 
 Texturer* Texturer::instance(){
-	if( singleton == 0 ){
-		singleton = new Texturer();
+	if(!singleton){
+		std::lock_guard<std::mutex> lock(myMutex);
+		if (!singleton)
+			singleton = new Texturer();
 	}
 	return singleton;
 }
@@ -84,6 +87,7 @@ void Texturer::destroyAll() {
 
 	textureID.clear();
 	delete singleton;
+	singleton = nullptr;
 }
 
 SDL_Texture * Texturer::add (SDL_Renderer * renderer, std::string path)
