@@ -1,6 +1,7 @@
 #include "Elements.hpp"
 
-Elements * Elements::singleton = nullptr;
+std::atomic<Elements *> Elements::singleton{nullptr};
+std::mutex Elements::myMutex;
 
 Elements::Elements()
 {
@@ -15,7 +16,11 @@ Elements::~Elements()
 Elements * Elements::instance (  )
 {
 	if (singleton == nullptr)
-		singleton = new Elements();
+	{
+		std::lock_guard<std::mutex> lock(myMutex);
+		if (singleton == nullptr)
+			singleton = new Elements();
+	}
 	
 	return singleton;
 }
@@ -162,11 +167,11 @@ void Elements::destroy (  )
 {
 	if (singleton)
 	{
-		std::map<EntityID, Entity *> entities = singleton->getAllEntities();
+		std::map<EntityID, Entity *> entities = instance()->getAllEntities();
 		for (std::pair<EntityID,Entity*> it: entities)
 			if (it.second)
 				delete it.second;
-		singleton->clearAll();
+		instance()->clearAll();
 
 		delete singleton;
 		singleton = nullptr;

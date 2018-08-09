@@ -26,6 +26,8 @@
 
 #include <vector>
 #include <map>
+#include <mutex>
+#include <atomic>
 
 #include "Entity.hpp"
 
@@ -65,7 +67,8 @@ class Elements
 	private:
 		SDL_Renderer * currRenderer;
 		std::map<EntityID, Entity *> entities;
-		static Elements * singleton;
+		static std::atomic<Elements *> singleton;
+		static std::mutex myMutex;
 		Elements();
 
 		void setCurrRenderer ( SDL_Renderer * renderer );

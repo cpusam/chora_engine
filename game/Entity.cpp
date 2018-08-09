@@ -627,10 +627,11 @@ bool Entity::collisionVer (  )
 			p.y += pos.y;
 			if (isSolid(p))
 			{
-				int y = (int(p.y) / level->get_tilesize() + 1) * level->get_tilesize();
+				int y = ((int(p.y) / level->get_tilesize()) + 1) * level->get_tilesize();
 				//tem que arrendondar o p.y para evitar bugs
 				//esse 5 não era pra estar aqui!
-				setCollPos(Vect(beforeX, y + 5));
+				setCollPos(Vect(beforeX, p.y + collRect.y + (y - p.y)));
+				//level->set_tile(beforeX, getCollPos().y, '.');
 				ret = true;
 				break;
 			}
@@ -652,7 +653,7 @@ bool Entity::collisionVer (  )
 			}
 		}
 
-		#if 0
+/*
 		//tenta colidir com algum tile one way
 		if (!ret && oneWayUpCollision())
 			ret = true;
@@ -679,7 +680,7 @@ bool Entity::collisionVer (  )
 						break;
 					}
 			}
-		#endif
+*/
 	}
 
 	return ret;
@@ -861,11 +862,9 @@ void Entity::moveX ( float add )
 {
 	bool damped = false;
 	//aplica aceleração
-	add *= FPSManager::instance()->get_delta_sec();
-	add += acc.x * FPSManager::instance()->get_delta_sec();
+	add = double(acc.x + add) * 1.0/double(FPSManager::instance()->get_fpsdef().rate);
 	vel.x += add;
 	
-
 	//se não está aplicando desaceleração e a aceleração for zero...
 	if (add == 0)
 	{
@@ -891,11 +890,8 @@ void Entity::moveY ( float add )
 {
 	bool damped = false;
 	//aplica aceleração
-	add *= FPSManager::instance()->get_delta_sec();
-	add += acc.y * FPSManager::instance()->get_delta_sec();
+	add = double(acc.y + add) * 1.0/double(FPSManager::instance()->get_fpsdef().rate);
 	vel.y += add;
-	
-	
 
 	//se não está aplicando desaceleração e a aceleração for zero...
 	if (add == 0)
