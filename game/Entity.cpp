@@ -127,6 +127,11 @@ Animation * Entity::getCurrAnim (  )
 	return currAnim;
 }
 
+std::string Entity::getAnimName ( std::string animName )
+{
+	return animName;
+}
+
 bool Entity::setCurrAnim ( std::string animName )
 {
 	std::map<std::string, Animation>::const_iterator it = anim.find(animName);
@@ -144,15 +149,19 @@ void Entity::changeAnim ( std::string animName, bool reset )
 {
 	if (anim.size() > 0)
 	{
+		animName = getAnimName(animName);
 		if (anim.find(animName) != anim.end())
 		{
 			currAnim = &anim[animName];
 		}
 		else
+		{
+			currAnim = nullptr;
 			std::cout<<"Entity->"<<getName()<<"::Não encontrou uma animação chamada "<<animName<<std::endl;
+		}
 	}
 
-	if (reset)
+	if (reset && currAnim)
 		currAnim->reset();
 }
 
@@ -931,7 +940,7 @@ void Entity::input ( SDL_Event & event )
 void Entity::draw ( SDL_Renderer * renderer, Camera * camera )
 {
 	if (isVisible() && currAnim)
-		currAnim->draw(renderer, pos.x, pos.y);
+		currAnim->draw(renderer, camera, pos.x, pos.y);
 }
 
 int Entity::update (  )

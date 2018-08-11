@@ -79,6 +79,9 @@ class Entity: public StateMachine, public Movable
 
 
 		Animation * getCurrAnim (  );
+		//retorna a animação atual dada um nome qualquer, 
+		//usada internamente por changeAnim
+		virtual std::string getAnimName ( std::string animName );
 		bool setCurrAnim ( std::string animName );//muda para uma animação já carregada de nome animName
 		virtual void changeAnim ( std::string animName, bool reset=false );
 		//atualiza a animação

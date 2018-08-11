@@ -30,6 +30,9 @@ SDL_Texture * Texturer::addTexture (SDL_Renderer * renderer, std::string path){
 }
 
 void Texturer::addTexture (SDL_Texture *tex, std::string name){
+	if (tex == nullptr)
+		throw IMG_GetError();
+	
 	for(unsigned int i = 0;i<textureID.size();i++){
 		if(textureID[i].texture == tex){
 			
