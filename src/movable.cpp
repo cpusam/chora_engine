@@ -26,6 +26,16 @@ void Movable::set_vel ( Vect v )
 	vel = v;
 }
 
+void Movable::set_vel_x ( float x )
+{
+	vel.x = x;
+}
+
+void Movable::set_vel_y ( float y )
+{
+	vel.y = y;
+}
+
 Vect Movable::get_vel (  )
 {
 	return vel;

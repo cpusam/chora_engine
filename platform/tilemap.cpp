@@ -68,7 +68,7 @@ int TileMap::get_tile ( int x, int y )
 	if (y * width + x < int(tileset.size()))
 	{
 		//if (x < width && y < height)
-		return tileset.at(y * width + x);
+		return tileset[y * width + x];
 	}
 
 	return -1;
@@ -89,7 +89,7 @@ Vect TileMap::get_tile_pos ( int i )
 int TileMap::get_tile ( int i )
 {
 	if (i > -1 && i < int(tileset.size()))
-		return tileset.at(i);
+		return tileset[i];
 
 	return -1;
 }

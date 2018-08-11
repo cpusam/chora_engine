@@ -1,27 +1,4 @@
-#include "collision.hpp"
-
-bool boundingbox ( SDL_Rect a, SDL_Rect b )
-{
-	if (a.x > b.x + b.w)	return false;
-	if (a.x + a.w < b.x)	return false;
-
-	if (a.y > b.y + b.h)	return false;
-	if (a.y + a.h < b.y)	return false;
-
-	return true;
-}
-
-bool pointbox ( Vect p, SDL_Rect b )
-{
-	if (p.x > b.x + b.w)	return false;
-	if (p.x < b.x)			return false;
-
-	if (p.y > b.y + b.h)	return false;
-	if (p.y < b.y)			return false;
-
-	return true;
-}
-
+#include "../include/collision.hpp"
 
 bool lineIntersects ( Vect a1, Vect a2, Vect b1, Vect b2, Vect * result )
 {

@@ -30,8 +30,44 @@ claim that you wrote the original software. If you use this software
 
 #include <vector>
 
-extern bool boundingbox ( SDL_Rect a, SDL_Rect b );
-extern bool pointbox ( Vect p, SDL_Rect b );
+
+/*
+		-1 up
+		+1 down
+		-2 left
+		+2 right
+		0 não colide
+*/
+enum RectSide
+{
+	NONE=0,
+	TOP=-1,
+	BOTTOM=1,
+	LEFT=-2,
+	RIGHT=2,
+};
+
+extern inline bool boundingbox ( SDL_Rect a, SDL_Rect b )
+{
+	if (a.x > b.x + b.w)	return false;
+	if (a.x + a.w < b.x)	return false;
+
+	if (a.y > b.y + b.h)	return false;
+	if (a.y + a.h < b.y)	return false;
+
+	return true;
+}
+
+extern inline bool pointbox ( Vect p, SDL_Rect b )
+{
+	if (p.x > b.x + b.w)	return false;
+	if (p.x < b.x)			return false;
+
+	if (p.y > b.y + b.h)	return false;
+	if (p.y < b.y)			return false;
+
+	return true;
+}
 
 extern bool lineIntersects (Vect a1, Vect a2, Vect b1, Vect b2, Vect *result=nullptr );
 

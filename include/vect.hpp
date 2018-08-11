@@ -131,12 +131,12 @@ struct Vect
 		return *this;
 	}
 
-	static Vect add (Vect a, Vect b)
+	inline static Vect add (Vect a, Vect b)
 	{
 		return Vect(a.x + b.x, a.y + b.y);
 	}
 
-	static Vect sub ( Vect a, Vect b )
+	inline static Vect sub ( Vect a, Vect b )
 	{
 		return Vect(a.x - b.x, a.y - b.y);
 	}
@@ -257,6 +257,11 @@ struct Vect
 		this->y = std::fabs(this->y);
 
 		return *this;
+	}
+
+	bool is_zero (  )
+	{
+		return x == 0 && y == 0;
 	}
 
 	void print()

@@ -53,6 +53,8 @@ class Movable
 		virtual Vect getPosition (  );
 
 		virtual void set_vel ( Vect v );
+		virtual void set_vel_x ( float x );
+		virtual void set_vel_y ( float y );
 
 		virtual Vect get_vel (  );
 		virtual float get_vel_x (  );
