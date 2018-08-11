@@ -1,3 +1,17 @@
+SET(COMPILE_TO_WINDOWS FALSE)
+SET(RELEASE FALSE)
+SET(DEBUG TRUE)
+IF (CMAKE_VERSION VERSION_LESS "3.1")
+	IF (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+		SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+	ENDIF (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+ELSE (CMAKE_VERSION VERSION_LESS "3.1")
+	SET (CMAKE_CXX_STANDARD 11)
+	SET(CMAKE_CXX_STANDARD_REQUIRED ON)
+	#add_compile_options("-std=c++11")
+ENDIF (CMAKE_VERSION VERSION_LESS "3.1")
+
+
 cmake_minimum_required(VERSION 2.8)
 PROJECT(chora CXX)
 
@@ -7,8 +21,6 @@ file(GLOB_RECURSE HDRS Chora.hpp sdl.hpp include/*.hpp game/*.hpp gui/*.hpp plat
 include_directories(. include)
 add_library(chora ${HDRS} ${SRCS})
 
-#nota para compilar com o mingw tem que usar o gnu++11
-add_definitions("-std=gnu++11")
 
 SET(COMPILE_TO_WINDOWS FALSE)
 
