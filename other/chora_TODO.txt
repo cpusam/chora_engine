@@ -16,7 +16,8 @@ Observações:
 	 diminuida na textura renderizada.
 	-tem que ocmpilar a SDL2 (e as outras libs) com o compilador mingw no linux 
 	 para poder compilar programas, dá erro de versão quando tenta compilar com o SDL2-*devel.
-
+	-NO MAC OS X tem que usar um compilador atual para compilar os jogos e a engine.
+	 Indicado no mínimo clang-7 e executar: cmake -DCMAKE_CXX_COMPILER="caminhio/do/compilador/clang++" .
 Observações para o GameEditor:
 	-agora entendo por que no scratch usa uma seta indicando a orientação do sprite, é porque 
 	 assim pode-se padronizar o movimento do sprite.

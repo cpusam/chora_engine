@@ -122,6 +122,11 @@ void Entity::setDamping ( Vect d )
 	damping = d;
 }
 
+void Entity::addAnim ( Animation anim, std::string name )
+{
+	this->anim[name] = anim;
+}
+
 Animation * Entity::getCurrAnim (  )
 {
 	return currAnim;

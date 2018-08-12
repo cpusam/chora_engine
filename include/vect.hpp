@@ -141,6 +141,14 @@ struct Vect
 		return Vect(a.x - b.x, a.y - b.y);
 	}
 
+	inline Vect & scale ( float s )
+	{
+		this->x *= s;
+		this->y *= s;
+		
+		return *this;
+	}
+
 	float length (  )
 	{
 		return sqrt(x * x + y * y);

@@ -47,6 +47,9 @@ void TileMapView::update_animation (  )
 
 int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 {
+	if (!texture)
+		return -1;
+
 	int i, j, t, ret = 0;
 	Vect pos = cam->get_position() - this->pos, pCam = cam->get_position() - this->pos;
 	SDL_Rect dest = {0,0,tilesize,tilesize};
@@ -56,6 +59,8 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 	Vect p;
 	p.x = int(pos.x) / tilesize;
 	p.y = int(pos.y) / tilesize;
+	dim.x = 0;
+	dim.y = 0;
 	dim.w /= tilesize;
 	dim.h /= tilesize;
 	int mod_x = int(pCam.x) % tilesize;
@@ -75,7 +80,7 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 				continue;
 			}
 
-			if (texture)
+			
 			{
 				src = source[t];
 				//é preciso parenteses extras para evitar bugs
@@ -95,6 +100,9 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 
 int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 {
+	if (!texture)
+		return -1;
+	
 	int i, j, t, ret = 0;
 	Vect pos = cam->get_position() - this->pos;
 	Vect p = cam->get_position() - this->pos;
@@ -143,7 +151,6 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 				animation[t].draw(renderer,cam,i * tilesize, j * tilesize);
 			}
 
-			if (texture)
 			{
 				src = source[t];
 				//é preciso parenteses extras para evitar bugs

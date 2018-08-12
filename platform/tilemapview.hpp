@@ -49,7 +49,7 @@ class TileMapView: public TileMap
 		SDL_Texture * texture;
 
 	public:
-		TileMapView ( int tilesize, SDL_Texture * t=0 ): TileMap(tilesize)
+		TileMapView ( int tilesize, SDL_Texture * t=nullptr ): TileMap(tilesize)
 		{
 			texture = t;
 		}
