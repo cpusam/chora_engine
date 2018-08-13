@@ -13,20 +13,11 @@ class CAnimatedTile: public Animation
 		CAnimatedTile (  )
 		{
 			tile = -1;
-			texture.push_back(0);
 		}
 
 		SDL_Texture * get_texture (  )
 		{
-			return texture[0];
-		}
-
-		void set_texture ( SDL_Texture * t, bool destroy=false )
-		{
-			if (destroy && texture[0] && texture[0] != t)
-				SDL_DestroyTexture(texture[0]);
-
-			texture[0] = t;
+			return get_curr_frame().get_texture();
 		}
 
 		int get_tile (  )
@@ -42,6 +33,9 @@ class CAnimatedTile: public Animation
 
 class TileMapView: public TileMap
 {
+	private:
+		std::vector<int> animatedTilesID;
+		std::vector<CAnimatedTile> animatedTiles;
 	protected:
 		std::map <int, SDL_Rect> source; // par <tile, rect_source>
 		std::map <int, CAnimatedTile> animation; // par <tile, animação de tile>

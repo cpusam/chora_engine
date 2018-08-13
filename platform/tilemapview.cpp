@@ -1,5 +1,7 @@
 #include "tilemapview.hpp"
 
+#include <algorithm>
+
 ////////////////////////////////////////////////////////////////////
 CAnimatedTile TileMapView::get_animation ( int tile )
 {
@@ -20,27 +22,44 @@ SDL_Rect TileMapView::get_source ( int tile )
 
 void TileMapView::add_animation ( CAnimatedTile a, int t )
 {
-	if (!texture)
-		throw "TileMapView: texture nula";
-	a.set_texture(texture);
+	//if (!texture)
+		//throw "TileMapView: texture nula";
+	//a.set_texture(texture);
 
 	a.set_tile(t);
 	add_tile(t);
+	#ifdef OLD_ANIMATED
 	animation[t] = a;
+	#else
+	if (!is_animated(t))
+	{
+		animatedTilesID.push_back(t);
+		animatedTiles.push_back(a);
+	}
+	#endif
 }
 
 bool TileMapView::is_animated (	int t )
 {
-	return (animation.count(t) > 0);
+	#ifdef OLD_ANIMATED
+	return (animation.find(t) != animation.end());
+	#else
+	return (std::find(animatedTilesID.begin(), animatedTilesID.end(), t) != animatedTilesID.end());
+	#endif
 }
 
 void TileMapView::update_animation (  )
 {
+	#ifdef OLD_ANIMATED
 	for (std::vector <int>::iterator i = tiles.begin(); i != tiles.end(); i++)
 	{
 		if (is_animated(*i))
 			animation[*i].update();
 	}
+	#else
+	for (auto & it: animatedTiles)
+		it.update();
+	#endif
 }
 
 
@@ -74,23 +93,27 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 			if (!has_tile(t))
 				continue;
 
+			dest.x = ((i - p.x) * tilesize + dim.x) - mod_x;
+			dest.y = ((j - p.y) * tilesize + dim.y) - mod_y; 
+			dest.w = tilesize;
+			dest.h = tilesize;
+
 			if (is_animated(t))
 			{
-				animation[t].draw(renderer, cam, i * tilesize, j * tilesize);
+				for (int k = 0; k < animatedTilesID.size(); k++)
+					if (animatedTilesID[k] == t)
+					{
+						src = animatedTiles[k].get_curr_frame().get_source();
+						//animation[t].draw(renderer, cam, i * tilesize, j * tilesize);
+						ret = SDL_RenderCopy(renderer, animatedTiles[k].get_texture(), &src, &dest);
+						break;
+					}
 				continue;
 			}
 
-			
-			{
-				src = source[t];
-				//é preciso parenteses extras para evitar bugs
-				dest.x = ((i - p.x) * tilesize + dim.x) - mod_x;
-				dest.y = ((j - p.y) * tilesize + dim.y) - mod_y; 
-				dest.w = tilesize;
-				dest.h = tilesize;
-				ret = SDL_RenderCopy(renderer, texture, &src, &dest);
-			}
-			
+			src = source[t];
+			ret = SDL_RenderCopy(renderer, texture, &src, &dest);
+		
 			if (ret < 0)
 				break;
 		}
