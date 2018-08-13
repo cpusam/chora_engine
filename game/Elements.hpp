@@ -46,7 +46,7 @@ class Elements
 		static void add ( Entity * e ); // adiciona uma entidade
 		static Entity * get ( EntityID id ); // pega uma entidade pelo id dela
 		static Entity * getByName ( std::string name ); // pega objeto pelo nome
-		static std::map<EntityID, Entity *> getAllEntities (  );
+		static std::vector<Entity *> getAllEntities (  );
 		//retorna todas entidades do group e sem nenhuma nulaou de id nulo
 		static std::vector<Entity *> getAllByGroup ( std::string group ); // pega objeto pelo grupo
 		static Entity * remove ( EntityID id ); //remove uma entity
@@ -66,7 +66,8 @@ class Elements
 	
 	private:
 		SDL_Renderer * currRenderer;
-		std::map<EntityID, Entity *> entities;
+		std::vector<EntityID> entitiesID;
+		std::vector<Entity *> entities;
 		static std::atomic<Elements *> singleton;
 		static std::mutex myMutex;
 		Elements();
@@ -74,7 +75,7 @@ class Elements
 		void setCurrRenderer ( SDL_Renderer * renderer );
 		SDL_Renderer * getCurrRenderer (  );
 		bool hasEntity ( Entity * e );
-		std::map<EntityID, Entity *> getEntities (  );
+		std::vector<Entity *> getEntities (  );
 		void addEntity ( Entity * e );
 		Entity * getEntity ( EntityID id );
 		Entity * getEntityByName ( std::string name );

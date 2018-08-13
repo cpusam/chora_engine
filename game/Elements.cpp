@@ -1,4 +1,5 @@
 #include "Elements.hpp"
+#include <algorithm>
 
 std::atomic<Elements *> Elements::singleton{nullptr};
 std::mutex Elements::myMutex;
@@ -35,20 +36,16 @@ SDL_Renderer * Elements::getCurrRenderer (  )
 	return currRenderer;
 }
 
-std::map<EntityID, Entity *> Elements::getEntities (  )
+std::vector<Entity *> Elements::getEntities (  )
 {
-	std::map<EntityID, Entity *> all;
-	for (auto & entity: entities)
-		if (entity.second)
-			all[entity.first] = entity.second;
-	return all;
+	return entities;
 }
 
 bool Elements::hasEntity ( Entity * e )
 {
 	if (e)
-		for (auto & it: entities)
-			if (e == it.second)
+		for (auto * it: entities)
+			if (e == it)
 				return true;
 	
 	return false;
@@ -60,50 +57,51 @@ void Elements::addEntity ( Entity * e )
 		return;
 	
 	std::cout<<"Elements::Adicionando "<<e->getId()<<" name = "<<e->getName()<<std::endl;
-	entities[e->getId()] = e;
+	entitiesID.push_back(e->getId());
+	entities.push_back(e);
 }
 
 Entity * Elements::getEntity ( EntityID id )
 {
-	return entities[id];
+	for (auto * entity: entities)
+		if (entity->getId() == id)
+			return entity;
+
+	return nullptr;
 }
 
 Entity * Elements::getEntityByName ( std::string name )
 {
-	for (auto & it: entities)
-		if (it.second && it.second->getName() == name)
-			return it.second;
+	for (auto * entity: entities)
+		if (entity->getName() == name)
+			return entity;
 	
 	return nullptr;
 }
 
 std::vector<Entity *> Elements::getAllEntityByGroup ( std::string group )
 {
-	std::vector<Entity*> entity;
-	for (auto & it: entities)
-		if (it.second && it.second->getGroup() == group)
-			entity.push_back(it.second);
+	std::vector<Entity*> ret;
+	for (auto * entity: entities)
+		if (entity->getGroup() == group)
+			ret.push_back(entity);
 	
-	return entity;
+	return ret;
 }
 
 
 Entity * Elements::remEntity ( EntityID id )
 {
-	std::map<EntityID,Entity *>::iterator it = entities.find(id);
-	
-	if (it == entities.end())
+	std::vector<EntityID>::iterator itID = std::find(entitiesID.begin(), entitiesID.end(), id);
+	if (itID == entitiesID.end())
 		return nullptr;
 	
-	if (it->second == nullptr)
-		return nullptr;
-
-	std::cout<<"Elements::Removendo "<<it->second->getId()<<" name = "<<it->second->getName()<<std::endl;
-
-	Entity * ret = entities[id];
-	//entidade anulada até que apague todas as entidades
-	//este id fica inutilizável temporariamente
-	entities[id] = nullptr;
+	Entity * ret = getEntity(id);
+	std::vector<Entity *>::iterator itEntity = std::find(entities.begin(), entities.end(), ret);
+	
+	std::cout<<"Elements::Removendo "<<ret->getId()<<" name = "<<ret->getName()<<std::endl;
+	entities.erase(itEntity);
+	entitiesID.erase(itID);
 
 	return ret;
 }
@@ -123,7 +121,7 @@ Entity * Elements::getByName ( std::string name )
 	return instance()->getEntityByName(name);
 }
 
-std::map<EntityID, Entity *> Elements::getAllEntities (  )
+std::vector<Entity *> Elements::getAllEntities (  )
 {
 	return instance()->getEntities();
 }
@@ -167,10 +165,10 @@ void Elements::destroy (  )
 {
 	if (singleton)
 	{
-		std::map<EntityID, Entity *> entities = instance()->getAllEntities();
-		for (std::pair<EntityID,Entity*> it: entities)
-			if (it.second)
-				delete it.second;
+		std::vector<Entity *> entities = instance()->getAllEntities();
+		for (Entity *it: entities)
+			if (it)
+				delete it;
 		instance()->clearAll();
 
 		delete singleton;
@@ -181,6 +179,7 @@ void Elements::destroy (  )
 void Elements::clearAll (  )
 {
 	entities.clear();
+	entitiesID.clear();
 }
 
 void Elements::notifyGroup ( Entity * sender, std::string mesg, std::string group )
@@ -189,18 +188,20 @@ void Elements::notifyGroup ( Entity * sender, std::string mesg, std::string grou
 	
 	if (group == "ALL")
 	{
-		std::map<EntityID, Entity*> all = instance()->getAllEntities();
-		for (auto it: all)
+		std::vector<Entity*> all = instance()->getAllEntities();
+		for (auto * it: all)
 		{
-			entities.push_back(it.second);
+			it->receive(sender, mesg);
 		}
 	}
 	else
+	{
 		entities = instance()->getAllByGroup(group);
 	
-	for (auto *entity: entities)
-		if (entity != sender)
-			entity->receive(sender,mesg);
+		for (auto *entity: entities)
+			if (entity != sender)
+				entity->receive(sender,mesg);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -221,19 +222,19 @@ void Elements::update (  )
 
 void Elements::inputEntities ( SDL_Event & event )
 {
-	std::map<EntityID,Entity*>::iterator it;
+	std::vector<Entity*>::iterator it;
 	for (it = entities.begin(); it != entities.end(); it++)
-		if (it->second)
-			it->second->input(event);
+		if (*it)
+			(*it)->input(event);
 }
 
 void Elements::drawEntities ( SDL_Renderer * renderer, Camera * camera )
 {
 	std::map<EntityID, std::vector<Entity*> > layers;
-	for (std::map<EntityID,Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
+	for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
 	{
-		if (it->second)
-			layers[it->second->getLayer()].push_back(it->second);
+		if (*it)
+			layers[(*it)->getLayer()].push_back(*it);
 	}
 	
 	for (auto & it: layers)
@@ -248,16 +249,16 @@ void Elements::drawEntities ( SDL_Renderer * renderer, Camera * camera )
 
 void Elements::updateEntities (  )
 {
-	for (auto & it: entities)
-		if (it.second)
-			it.second->update();
+	for (auto * it: entities)
+		if (it)
+			it->update();
 }
 
 void Elements::print (  )
 {
-	std::map<EntityID,Entity*>::iterator it = instance()->getEntities().begin(), end = instance()->getEntities().end();
+	std::vector<Entity*>::iterator it = instance()->getEntities().begin(), end = instance()->getEntities().end();
 	for (; it != end; it++)
-		if (it->second)
-			std::cout<<"id = "<<it->first<<"|"<<it->second->getName()<<std::endl;
+		if (*it)
+			std::cout<<"id = "<<(*it)->getId()<<"|"<<(*it)->getName()<<std::endl;
 	std::cout<< "Temos "<<instance()->getEntities().size()<<" entidades"<<std::endl;
 }
