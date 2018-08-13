@@ -16,14 +16,21 @@ Elements::~Elements()
 
 Elements * Elements::instance (  )
 {
-	if (singleton == nullptr)
-	{
-		std::lock_guard<std::mutex> lock(myMutex);
-		if (singleton == nullptr)
-			singleton = new Elements();
-	}
-	
-	return singleton;
+    Elements * tmp = singleton.load(std::memory_order_relaxed);
+    std::atomic_thread_fence(std::memory_order_acquire);
+    if (tmp == nullptr)
+		{
+        std::lock_guard<std::mutex> lock(myMutex);
+        tmp = singleton.load(std::memory_order_relaxed);
+        if (tmp == nullptr)
+				{
+            tmp = new Elements();
+            std::atomic_thread_fence(std::memory_order_release);
+            singleton.store(tmp, std::memory_order_relaxed);
+        }
+    }
+		
+    return tmp;
 }
 
 void Elements::setCurrRenderer ( SDL_Renderer * renderer )
@@ -44,8 +51,8 @@ std::vector<Entity *> Elements::getEntities (  )
 bool Elements::hasEntity ( Entity * e )
 {
 	if (e)
-		for (auto * it: entities)
-			if (e == it)
+		for (int i = 0; i < entities.size(); i++)
+			if (e == entities[i])
 				return true;
 	
 	return false;
@@ -182,6 +189,11 @@ void Elements::clearAll (  )
 	entitiesID.clear();
 }
 
+std::vector<EntityID> Elements::getIDs (  )
+{
+	return entitiesID;
+}
+
 void Elements::notifyGroup ( Entity * sender, std::string mesg, std::string group )
 {
 	std::vector<Entity *> entities;
@@ -223,9 +235,9 @@ void Elements::update (  )
 void Elements::inputEntities ( SDL_Event & event )
 {
 	std::vector<Entity*>::iterator it;
-	for (it = entities.begin(); it != entities.end(); it++)
-		if (*it)
-			(*it)->input(event);
+	for (int i = 0; i < entities.size(); i++)
+		if (entities[i])
+			entities[i]->input(event);
 }
 
 void Elements::drawEntities ( SDL_Renderer * renderer, Camera * camera )
@@ -249,16 +261,24 @@ void Elements::drawEntities ( SDL_Renderer * renderer, Camera * camera )
 
 void Elements::updateEntities (  )
 {
-	for (auto * it: entities)
-		if (it)
-			it->update();
+	if (entities.size())
+		for (int i = 0; i < entities.size(); i++)
+			if (entities[i])
+				entities[i]->update();
 }
 
 void Elements::print (  )
 {
-	std::vector<Entity*>::iterator it = instance()->getEntities().begin(), end = instance()->getEntities().end();
-	for (; it != end; it++)
-		if (*it)
-			std::cout<<"id = "<<(*it)->getId()<<"|"<<(*it)->getName()<<std::endl;
-	std::cout<< "Temos "<<instance()->getEntities().size()<<" entidades"<<std::endl;
+	for (int i = 0; i < instance()->getIDs().size(); i++)
+		printf("ID[%d] = %ld\n", i, (instance()->getIDs()[i]));
+	std::vector<Entity*> entities = instance()->getEntities();
+	std::cout<<"Temos "<<entities.size()<<" ENTIDADES\n";
+	for (int i = 0; i < instance()->getEntities().size(); i++)
+		if (entities[i])
+		{
+			std::cout<<"id = "<<entities[i]->getId()<<"|"
+			         <<entities[i]->getName()<<"|ptr="
+							 <<entities[i]<<std::endl;
+		}
+	std::cout<< "Temos "<<entities.size()<<" entidades"<<std::endl;
 }

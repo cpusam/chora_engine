@@ -82,6 +82,7 @@ class Elements
 		std::vector<Entity *> getAllEntityByGroup ( std::string group );
 		Entity * remEntity ( EntityID id );
 		void clearAll (  );
+		std::vector<EntityID> getIDs (  );
 
 		void inputEntities ( SDL_Event & event );
 		void drawEntities ( SDL_Renderer * renderer, Camera * camera );
