@@ -95,22 +95,23 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 
 			dest.x = ((i - p.x) * tilesize + dim.x) - mod_x;
 			dest.y = ((j - p.y) * tilesize + dim.y) - mod_y; 
-			dest.w = tilesize;
-			dest.h = tilesize;
 
 			if (is_animated(t))
 			{
 				for (int k = 0; k < animatedTilesID.size(); k++)
 					if (animatedTilesID[k] == t)
 					{
-						src = animatedTiles[k].get_curr_frame().get_source();
-						//animation[t].draw(renderer, cam, i * tilesize, j * tilesize);
-						ret = SDL_RenderCopy(renderer, animatedTiles[k].get_texture(), &src, &dest);
+						AnimationFrame frame = animatedTiles[k].get_curr_frame();
+						src = frame.get_source();
+						SDL_Point center = {src.w/2, src.h/2};
+						ret = SDL_RenderCopyEx(renderer, animatedTiles[k].get_texture(), &src, &dest, animatedTiles[k].get_angle(), &center, frame.get_flip());
 						break;
 					}
 				continue;
 			}
 
+			dest.w = tilesize;
+			dest.h = tilesize;
 			src = source[t];
 			ret = SDL_RenderCopy(renderer, texture, &src, &dest);
 		
