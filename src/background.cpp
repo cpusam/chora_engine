@@ -19,7 +19,7 @@ bool Background::set_texture ( SDL_Texture * t )
 	scrolling nos eixos x e y mas limitado pelas bordas da surface
 */
 
-void Background::draw ( Camera * cam, SDL_Renderer * renderer )
+void Background::draw ( SDL_Renderer * renderer, Camera * cam )
 {
 	Vect p;
 	SDL_Rect d, src;
@@ -68,227 +68,72 @@ void Background::draw ( Camera * cam, SDL_Renderer * renderer )
 	SDL_RenderCopy(renderer, texture, &src, &d);
 }
 // apenas um scrolling horizontal
-void Background::draw_hor ( Camera * cam, SDL_Renderer * renderer )
+void Background::draw_hor ( SDL_Renderer * renderer, Camera * cam )
 {
-	Vect p;
-	SDL_Rect d, dim, src;
-	int w, h;
-
 	if (!texture)
 		return;
-
+	
+	Vect p;
+	int w, h;
+	SDL_Rect dim = cam->get_dimension(), src, dest;
 	SDL_QueryTexture(texture, 0, 0, &w, &h);
 
-	p = cam->get_position() + pos;
-	d = dim = cam->get_dimension();
-	src = d;
+	Vect pCam = cam->get_position();
 
-	if (repeat == false)
+	src.x = static_cast<int>(pCam.x) % w;
+	src.w = w - src.x;
+	src.y = 0;
+	src.h = h;
+	dest.x = 0;
+	dest.y = 0;
+	dest.w = dim.w - static_cast<int>(pCam.x) % dim.w;
+	dest.h = dim.h;
+	SDL_RenderCopy(renderer, texture, &src, &dest);
+	if (dest.w < dim.w)
 	{
-		/*
-		#ifndef USE_SDL2
-			draw_surface(surface, pos.x, pos.y, cam, screen);
-		#else
-			draw_texture(texture, pos.x, pos.y, cam, renderer);
-		#endif
-
-		return;
-		*/
-
-		Vect cp = cam->get_position();
-
-		if (cp.x < pos.x)
-		{
-			src.x = 0;
-			if (dim.w - int(pos.x - cp.x) > 0)
-				src.w = dim.w - int(pos.x - cp.x);
-			else
-				return;
-
-			d.x = dim.x + (pos.x - cp.x);
-			d.w = src.w;
-		}
-		else if (cp.x + dim.w > pos.x + w)
-		{
-			src.x = w - (int(pos.x + w) - int(cp.x));
-
-			if (w - src.x > 0)
-				src.w = w - src.x;
-			else
-				return;
-
-			d.x = dim.x;
-			d.w = src.w;
-		}
-		else
-		{
-			src.x = int(cp.x - pos.x);
-			src.w = dim.w;
-
-			if (src.w > w)
-				src.w = w;
-			else if (src.w == 0)
-				return;
-
-			d.x = dim.x;
-			d.w = src.w;
-		}
-
-		if (cp.y < pos.y)
-		{
-			src.y = 0;
-			if (dim.h - int(pos.y - cp.y) > 0)
-				src.h = dim.h - int(pos.y - cp.y);
-			else
-				return;
-
-			d.y = dim.y + (pos.y - cp.y);
-			d.h = src.h;
-		}
-		else if (cp.y + dim.h > pos.y + h)
-		{
-			src.y = h - (int(pos.y + h) - int(cp.y));
-
-			if (h - src.y > 0)
-				src.h = h - src.y;
-			else
-				return;
-
-			d.y = dim.y;
-			d.h = src.h;
-		}
-		else
-		{
-			src.y = int(cp.y - pos.y);
-			src.h = dim.h;
-
-			if (src.h > h)
-				src.h = h;
-			else if (src.h == 0)
-				return;
-
-			d.y = dim.y;
-			d.h = src.h;
-		}
-
-		SDL_RenderCopy(renderer, texture, &src, &d);
-
-		return;
-	}
-
-	src.y = int(p.y);
-	if (p.y < 0)
-		src.y = 0;
-	else if (p.y + dim.h > h)
-		src.y = h - dim.h;
-
-
-
-	if (p.x < 0)
-	{
-		if (int(p.x) % w < -dim.w)
-		{
-			src.x = w + int(p.x) % w;
-			src.w = dim.w;
-			d.x = dim.x;
-		}
-		else
-		{
-			src.x = 0;
-			src.w = dim.w + int(p.x) % w;
-			d.x = dim.x - int(p.x) % w;
-		}
-		SDL_RenderCopy(renderer, texture, &src, &d);
-
-		src.x = w + int(p.x) % w;
-		src.w = dim.w;
-		d.x = dim.x;
-		SDL_RenderCopy(renderer, texture, &src, &d);
-	}
-	else
-	{
-		// para o destino a esquerda
-		src.x = int(p.x) % w;
-		src.w = w - int(p.x) % w;
-		d.x = dim.x;
-		d.w = src.w;
-		SDL_RenderCopy(renderer, texture, &src, &d);
-
-		if (int(p.x) % w > w - dim.w)
-		{
-			src.x = 0;
-			src.w = int(p.x) % w - (w - dim.w);
-			d.x = dim.x + w - int(p.x) % w;
-			d.w = src.w;
-			SDL_RenderCopy(renderer, texture, &src, &d);
-		}
+		src.x = 0;
+		src.w = static_cast<int>(pCam.x) % w;
+		dest.x = dest.w;
+		dest.y = 0;
+		dest.w = dim.w - dest.w;
+		dest.h = dim.h;
+		SDL_RenderCopy(renderer, texture, &src, &dest);
 	}
 }
 
 // NOTE: falta testar, precisa refazer
 // apenas um scrolling vertical
-void Background::draw_ver ( Camera * cam, SDL_Renderer * renderer )
+void Background::draw_ver ( SDL_Renderer * renderer, Camera * cam )
 {
-	Vect p;
-	SDL_Rect d, dim, src;
-	int w, h;
-
+	
 	if (!texture)
 		return;
-
+	
+	Vect p;
+	int w, h;
+	SDL_Rect dim = cam->get_dimension(), src, dest;
 	SDL_QueryTexture(texture, 0, 0, &w, &h);
 
-	p = cam->get_position() + pos;
-	d = dim = cam->get_dimension();
-	src = d;
+	Vect pCam = cam->get_position();
 
-	if (p.y < 0)
+	src.y = static_cast<int>(pCam.y) % h;
+	src.h = h - src.y;
+	src.x = 0;
+	src.w = w;
+	dest.x = 0;
+	dest.y = 0;
+	dest.h = dim.h - static_cast<int>(pCam.y) % dim.h;
+	dest.w = dim.w;
+	SDL_RenderCopy(renderer, texture, &src, &dest);
+	if (dest.h < dim.h)
 	{
-		src.x = int(p.x);
-		if (p.x < 0)
-			src.x = 0;
-		else if (p.x + dim.w > w)
-			src.w = w - dim.w;
-
-		if (int(p.y) % h < -dim.h)
-		{
-			src.y = h + int(p.y) % h;
-			src.h = dim.h;
-			d.y = dim.y;
-		}
-		else
-		{
-			src.y = 0;
-			src.h = dim.h + int(p.y) % h;
-			d.y = dim.y - int(p.x) % h;
-		}
-		SDL_RenderCopy(renderer, texture, &src, &d);
-
-		src.y = h + int(p.y) % h;
-		src.h = dim.h;
-		d.y = dim.y;
-		SDL_RenderCopy(renderer, texture, &src, &d);
-	}
-	else
-	{
-		src.x = int(p.x);
-		if (p.x < 0)
-			src.x = 0;
-		else if (p.x + dim.w > w)
-			src.x = w - dim.w;
-
-		src.y = int(p.y) % h;
-		src.h = dim.h;
-		d.y = dim.y;
-		SDL_RenderCopy(renderer, texture, &src, &d);
-
-		if (int(p.y) % h > h - dim.h)
-		{
-			src.y = 0;
-			src.h = int(p.y) % h - (h - dim.h);
-			d.y = dim.y + h - int(p.y) % h;
-			SDL_RenderCopy(renderer, texture, &src, &d);
-		}
+		src.y = 0;
+		src.h = static_cast<int>(pCam.y) % h;
+		dest.y = dest.h;
+		dest.x = 0;
+		dest.h = dim.h - dest.h;
+		dest.w = dim.w;
+		SDL_RenderCopy(renderer, texture, &src, &dest);
 	}
 }
 

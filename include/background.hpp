@@ -86,14 +86,14 @@ class Background
 			scrolling nos eixos x e y mas limitado pelas bordas da surface
 		*/
 
-		void draw ( Camera * cam, SDL_Renderer * renderer );
+		void draw ( SDL_Renderer * renderer, Camera * cam );
 
 		// apenas um scrolling horizontal
-		void draw_hor ( Camera * cam, SDL_Renderer * renderer );
+		void draw_hor ( SDL_Renderer * renderer, Camera * cam );
 
 		// NOTE: falta testar, precisa refazer
 		// apenas um scrolling vertical
-		void draw_ver ( Camera * cam, SDL_Renderer * renderer );
+		void draw_ver ( SDL_Renderer * renderer, Camera * cam );
 };
 
 class AnimatedBackground: private StateMachine
