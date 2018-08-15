@@ -72,7 +72,7 @@ class Entity: public StateMachine, public Movable
 		Direction getDir (  );
 		Vect getMinVel (  );
 		Vect getMaxVel (  );
-		void setMinVel ( Vect maxVel );
+		void setMinVel ( Vect minVel );
 		void setMaxVel ( Vect maxVel );
 		Vect getDamping (  );
 		void setDamping ( Vect d );

@@ -102,7 +102,7 @@ Vect Entity::getMaxVel (  )
 	return maxVel;
 }
 
-void Entity::setMinVel ( Vect maxVel )
+void Entity::setMinVel ( Vect minVel )
 {
 	this->minVel = minVel;
 }

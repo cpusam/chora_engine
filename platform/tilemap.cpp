@@ -47,9 +47,6 @@ void TileMap::set_tile ( int i, int t )
 
 int TileMap::get_tile ( int x, int y )
 {
-	x = int((x - pos.x) / tilesize);
-	y = int((y - pos.y) / tilesize);
-	
 	if (x < 0 || y < 0)
 	{
 		static int p = 0;
@@ -61,6 +58,9 @@ int TileMap::get_tile ( int x, int y )
 		//throw "TileMap: get_tile posições negativas!\n";
 		return -1;
 	}
+
+	x = int((x - pos.x) / tilesize);
+	y = int((y - pos.y) / tilesize);
 
 	if (y >= height || x >= width)
 		return -1;

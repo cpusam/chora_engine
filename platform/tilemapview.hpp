@@ -4,6 +4,8 @@
 #include "../include/animation.hpp"
 #include "tilemap.hpp"
 
+#define OLD_ANIMATED
+
 class CAnimatedTile: public Animation
 {
 	protected:

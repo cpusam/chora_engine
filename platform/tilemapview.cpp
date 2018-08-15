@@ -96,22 +96,28 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 			dest.x = ((i - p.x) * tilesize + dim.x) - mod_x;
 			dest.y = ((j - p.y) * tilesize + dim.y) - mod_y; 
 
+			dest.w = tilesize;
+			dest.h = tilesize;
+
 			if (is_animated(t))
 			{
+				#ifdef OLD_ANIMATED
+					animation[t].draw(renderer, dest.x, dest.y);
+				#else
 				for (int k = 0; k < animatedTilesID.size(); k++)
 					if (animatedTilesID[k] == t)
 					{
 						AnimationFrame frame = animatedTiles[k].get_curr_frame();
 						src = frame.get_source();
 						SDL_Point center = {src.w/2, src.h/2};
-						ret = SDL_RenderCopyEx(renderer, animatedTiles[k].get_texture(), &src, &dest, animatedTiles[k].get_angle(), &center, frame.get_flip());
+						SDL_Texture * textureAnim = animatedTiles[k].get_texture();
+						ret = SDL_RenderCopyEx(renderer, textureAnim, &src, &dest, animatedTiles[k].get_angle(), &center, frame.get_flip());
 						break;
 					}
+				#endif
 				continue;
 			}
 
-			dest.w = tilesize;
-			dest.h = tilesize;
 			src = source[t];
 			ret = SDL_RenderCopy(renderer, texture, &src, &dest);
 		
@@ -170,23 +176,42 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 			if (!has_tile(t))
 				continue;
 
+			//é preciso parenteses extras para evitar bugs
+			dest.x = ((i - pos.x) * tilesize + dim.x + x) - mod_x;
+			dest.y = ((j - pos.y) * tilesize + dim.y + y) - mod_y;
+
+			dest.w = tilesize;
+			dest.h = tilesize;
+
 			if (is_animated(t))
 			{
-				animation[t].draw(renderer,cam,i * tilesize, j * tilesize);
+				#ifdef OLD_ANIMATED
+					animation[t].draw(renderer, dest.x, dest.y);
+				#else
+				for (int k = 0; k < animatedTilesID.size(); k++)
+					if (animatedTilesID[k] == t)
+					{
+						AnimationFrame frame = animatedTiles[k].get_curr_frame();
+						src = frame.get_source();
+						SDL_Point center = {src.w/2, src.h/2};
+						SDL_Texture * textureAnim = animatedTiles[k].get_texture();
+						ret = SDL_RenderCopyEx(renderer, textureAnim, &src, &dest, animatedTiles[k].get_angle(), &center, frame.get_flip());
+						break;
+					}
+				#endif
+				continue;
 			}
 
 			{
 				src = source[t];
-				//é preciso parenteses extras para evitar bugs
-				dest.x = ((i - pos.x) * tilesize + dim.x + x) - mod_x;
-				dest.y = ((j - pos.y) * tilesize + dim.y + y) - mod_y;
-				dest.w = tilesize;
-				dest.h = tilesize;
 				ret = SDL_RenderCopy(renderer, texture, &src, &dest);
 			}
 			
 			if (ret < 0)
 				break;
+			
+				break;
+
 		}
 	
 	return ret;
@@ -194,6 +219,9 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 
 int TileMapView::draw ( SDL_Renderer * renderer, int x, int y )
 {
+	if (!texture)
+		return -1;
+	
 	int i, j, t, ret = 0;
 	Vect pos, p;
 	SDL_Rect dest = {0,0,tilesize,tilesize};
@@ -211,19 +239,35 @@ int TileMapView::draw ( SDL_Renderer * renderer, int x, int y )
 			t = get_tile(i * tilesize, j * tilesize);
 			if (!has_tile(t))
 				continue;
+			
+			dest.x += x;
+			dest.y += y;
 
+			dest.w = tilesize;
+			dest.h = tilesize;
+			
 			if (is_animated(t))
 			{
-				animation[t].draw(renderer, i * tilesize, j * tilesize);
+				#ifdef OLD_ANIMATED
+					animation[t].draw(renderer, dest.x, dest.y);
+				#else
+				for (int k = 0; k < animatedTilesID.size(); k++)
+					if (animatedTilesID[k] == t)
+					{
+						AnimationFrame frame = animatedTiles[k].get_curr_frame();
+						src = frame.get_source();
+						SDL_Point center = {src.w/2, src.h/2};
+						SDL_Texture * textureAnim = animatedTiles[k].get_texture();
+						ret = SDL_RenderCopyEx(renderer, textureAnim, &src, &dest, animatedTiles[k].get_angle(), &center, frame.get_flip());
+						break;
+					}
+				#endif
+				continue;
 			}
 
-			if (texture)
+			//if (texture)
 			{
 				src = source[t];
-				dest.x += x;
-				dest.y += y;
-				dest.w = tilesize;
-				dest.h = tilesize;
 				ret = SDL_RenderCopy(renderer, texture, &src, &dest);
 			}
 			
