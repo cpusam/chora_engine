@@ -24,7 +24,7 @@
 #ifndef CHORA_SDL_HPP
 #define CHORA_SDL_HPP
 
-#if _WIN32 || _WIN64
+#if defined(_WIN32) || defined(_WIN64)
 		#include "SDL.h"
 		#include "SDL_ttf.h"
 		#include "SDL_mixer.h"

@@ -100,8 +100,12 @@ class SoundFX: public StateMachine
 class SoundPlayer: public StateMachine
 {
 	private:
+		#if defined(WIN32) || defined(WIN64)
+		static SoundPlayer * singleton;
+		#else
 		static std::atomic<SoundPlayer *> singleton;
 		static std::mutex myMutex;
+		#endif
 		std::vector <SoundFX> sound;
 
 	protected:

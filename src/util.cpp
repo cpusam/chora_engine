@@ -1,21 +1,48 @@
 #include "util.hpp"
-#include <random>
+#if defined(WIN32) || defined(WIN64)
+	#include <ctime>
+#else
+	#include <random>
+#endif
+
 
 double Rand ( double min, double max )
 {
-	std::random_device rd;
-	std::mt19937 mt(rd());
-	std::uniform_real_distribution<double> dist(min, max);
-	return dist(mt);
+	
+	#if defined(WIN32) || defined(WIN64)
+		static bool inited = false;
+		if (!inited)
+		{
+			srand(time(nullptr));
+			inited = true;
+		}
+		return max * (double(rand()) / (RAND_MAX+1.0)) + min;
+	#else
+		std::random_device rd;
+		std::mt19937 mt(rd());
+		std::uniform_real_distribution<double> dist(min, max);
+
+		return dist(mt);
+	#endif
 }
 
 int RandInt ( int min, int max )
 {
-	std::random_device rd;
-	std::mt19937 mt(rd());
-	std::uniform_int_distribution<int> dist(min, max);
-	
-	return dist(mt);
+	#if defined(WIN32) || defined(WIN64)
+		static bool inited = false;
+		if (!inited)
+		{
+			srand(time(nullptr));
+			inited = true;
+		}
+		return max * (double(rand()) / (RAND_MAX+1.0)) + min;
+	#else
+		std::random_device rd;
+		std::mt19937 mt(rd());
+		std::uniform_int_distribution<int> dist(min, max);
+		
+		return dist(mt);
+	#endif
 }
 
 

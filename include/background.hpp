@@ -54,8 +54,6 @@ class Background
 
 		~Background (  )
 		{
-			if (texture)
-				SDL_DestroyTexture(texture);
 		}
 
 		void set_repeat ( bool r )

@@ -1,8 +1,12 @@
 #include "Elements.hpp"
 #include <algorithm>
 
-std::atomic<Elements *> Elements::singleton{nullptr};
-std::mutex Elements::myMutex;
+#if defined(WIN32) || defined(WIN64)
+	Elements * Elements::singleton;
+#else
+	std::atomic<Elements *> Elements::singleton{nullptr};
+	std::mutex Elements::myMutex;
+#endif
 
 Elements::Elements()
 {
@@ -16,6 +20,12 @@ Elements::~Elements()
 
 Elements * Elements::instance (  )
 {
+	#if defined(WIN32) || defined(WIN64)
+		if (singleton == nullptr)
+			singleton = new Elements();
+		
+		return singleton;
+	#else
     Elements * tmp = singleton.load(std::memory_order_relaxed);
     std::atomic_thread_fence(std::memory_order_acquire);
     if (tmp == nullptr)
@@ -31,6 +41,7 @@ Elements * Elements::instance (  )
     }
 		
     return tmp;
+	#endif
 }
 
 void Elements::setCurrRenderer ( SDL_Renderer * renderer )

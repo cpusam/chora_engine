@@ -200,9 +200,12 @@ void SoundFX::set_music ( std::string p )
 
 /////////////////////////////////////////////////////////////////
 
+#if defined(WIN32) || defined(WIN64)
+SoundPlayer * SoundPlayer::singleton = nullptr;
+#else
 std::atomic<SoundPlayer *> SoundPlayer::singleton{nullptr};
 std::mutex SoundPlayer::myMutex;
-
+#endif
 
 void SoundPlayer::free_sounds (  )
 {

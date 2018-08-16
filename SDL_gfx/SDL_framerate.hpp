@@ -76,8 +76,12 @@ class FPSManager
 		Uint32 lastticks;
 		Uint32 time_passed;
 	private:
+	#if defined(WIN32) || defined(WIN64)
+		static FPSManager * singleton;
+	#else
 		static std::atomic<FPSManager *> singleton;
 		static std::mutex myMutex;
+	#endif
 
 	protected:
 		FPSManager (  )
@@ -103,7 +107,6 @@ class FPSManager
 		{
 			if (!singleton)
 			{
-				std::lock_guard<std::mutex> lock(myMutex);
 				if (!singleton)
 					singleton = new FPSManager();
 			}

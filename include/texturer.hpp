@@ -32,8 +32,12 @@
 
 class Texturer{
 	std::vector<TextureID>	 textureID;
+	#if defined(WIN32) || defined(WIN64)
+	static Texturer * singleton;
+	#else
 	static std::atomic<Texturer *> singleton;
 	static std::mutex myMutex;
+	#endif
 
 	Texturer();
 	virtual ~Texturer();

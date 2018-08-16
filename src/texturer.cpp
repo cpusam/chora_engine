@@ -1,18 +1,20 @@
 #include "texturer.hpp"
 
+#if defined(WIN32) || defined(WIN64)
+	Texturer * Texturer::singleton = nullptr;
+#else
 std::atomic<Texturer *> Texturer::singleton{nullptr};
 std::mutex Texturer::myMutex;
+#endif
 
 Texturer::Texturer(){}
 
 Texturer::~Texturer(){}
 
 Texturer* Texturer::instance(){
-	if(!singleton){
-		std::lock_guard<std::mutex> lock(myMutex);
-		if (!singleton)
+	if(!singleton)
 			singleton = new Texturer();
-	}
+	
 	return singleton;
 }
 
