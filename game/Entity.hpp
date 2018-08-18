@@ -112,6 +112,7 @@ class Entity: public StateMachine, public Movable
 		void addOneWayUp ( int s );
 		bool remOneWayUp ( int s );
 		bool isSolid ( Vect p );
+		bool isSolidOneWayUp ( Vect p );
 		bool isLadder (  );
 		bool isTopLadder (  );
 		void catchLadder (  );
@@ -169,7 +170,8 @@ class Entity: public StateMachine, public Movable
 		std::string name;
 		std::string group; //grupo desta entidade
 
-		std::vector<int> upSolid;//tile one way sólido em cima
+		//tile one way sólido em cima
+		std::vector<int> upSolid;
 		std::vector<int> solid;//tiles sólidos
 		// cada lado tem collPoints de vertices de colisão
 		std::vector<Vect> rightSide,leftSide;//lateral direita e esquerda do corpo da entidade

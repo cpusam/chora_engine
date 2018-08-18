@@ -439,6 +439,19 @@ bool Entity::isSolid ( Vect p )
 	return std::find(solid.begin(), solid.end(), tile) != solid.end();
 }
 
+bool Entity::isSolidOneWayUp ( Vect p )
+{
+	if (level == nullptr)
+	{
+		throw Exception("Entity::isSolid level é nulo");
+	}
+
+	int tile = level->get_tile(p.x, p.y);
+	if (tile < 0)
+		return false;
+	
+	return std::find(upSolid.begin(), upSolid.end(), tile) != upSolid.end();
+}
 
 bool Entity::isGround (  )
 {	
@@ -446,9 +459,19 @@ bool Entity::isGround (  )
 		throw Exception("Entity::isGround level é nulo");
 
 	setSides(collRect, collPoints);
+
+	if (vel.y == 0 && upSolid.size() != 0)
+		for (auto p: downSide)
+		{
+			p = Vect::add(p, pos);
+			p.y += 1;
+			if (isSolidOneWayUp(p))
+				return true;
+		}
+
 	for (auto p: downSide)
 	{
-		p = p + pos;
+		p = Vect::add(p, pos);
 		p.y += 1; // 1 pixel abaixo
 		// verifica se é sólido
 		if (isSolid(p))
@@ -464,22 +487,6 @@ bool Entity::isGround (  )
 	int x2 = pos.x + collRect.x + collRect.w;
 	int y2 = y1;
 
-	
-
-	//colisão com plataforma
-	if (vel.y == 0)
-	{
-		for (auto p: downSide)
-		{
-			p = p + pos;
-			p.y += 1;
-
-			for (auto tile: upSolid)
-				if (tile == level->get_tile(p.x,p.y) && level->get_tile(p.x,p.y) > -1)
-					return true;
-		}
-	}
-
 	if (topLadderTile >= 0)
 	{
 		int levelY = (y1/level->get_tilesize())*level->get_tilesize();
@@ -487,67 +494,6 @@ bool Entity::isGround (  )
 		if ((y1 - levelY) <= topTileSize && (level->get_tile(x1,y1) == topLadderTile || level->get_tile(x2,y2) == topLadderTile))
 			if (vel.y == 0)
 				return true;
-	}
-
-	return false;
-}
-
-bool Entity::oneWayUpCollision ()
-{
-	if (!level)
-		throw Exception("Entity::Erro level é nulo");
-
-	Vect before = Vect(pos.x, pos.y);
-	Vect after = before;
-
-	if (vel.y <= 0)
-		return false;
-
-	before.y -= vel.y;
-
-	for (auto p: downSide)
-	{
-		Vect q = p;
-		Vect a = p + after;
-		Vect b = p + before;
-
-		bool jump = false;
-		for (auto tile: upSolid)
-			if (tile == level->get_tile(b.x,b.y))
-			{
-				jump = true;
-				break;
-			}
-
-
-		if (jump)
-		{
-			for (auto tile: upSolid)
-				if (tile == level->get_tile(a.x,a.y))
-				{
-					if (int(a.y)/level->get_tilesize() != int(b.y)/level->get_tilesize())
-					{
-						int y = int(a.y / level->get_tilesize()) * level->get_tilesize();
-						p.y = y - int(q.y) - 1;
-						setCollPos(p);
-						vel.y = 0;
-						return true;
-					}
-				}
-			continue;
-		}
-
-
-		p = a;
-		for (auto tile: upSolid)
-			if (tile == level->get_tile(p.x,p.y))
-			{
-				int y = int(p.y / level->get_tilesize()) * level->get_tilesize();
-				p.y = y - int(q.y) - 1;
-				setCollPos(p);
-				vel.y = 0;
-				return true;
-			}
 	}
 
 	return false;
@@ -621,6 +567,34 @@ bool Entity::moveInPath (Vect pos, std::vector<Vect> & path, float maxVel, bool 
 	return false;
 }
 
+
+bool Entity::oneWayUpCollision ()
+{
+	if (!level)
+		throw Exception("Entity::Erro level é nulo");
+
+	if (vel.y <= 0)
+		return false;
+
+	Vect collPos = pos;
+	for (auto p: downSide)
+	{
+		Vect before(Vect::add(collPos, p));
+		Vect after(before);
+
+		before.y -= vel.y;
+		if (isSolidOneWayUp(before) == false && isSolidOneWayUp(after))
+		{
+			int y = (int(after.y) / level->get_tilesize()) * level->get_tilesize();
+			after.y = y - collRect.h - 1;
+			setCollPos(after);
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool Entity::collisionVer (  )
 {
 	if (level == nullptr)
@@ -667,11 +641,12 @@ bool Entity::collisionVer (  )
 			}
 		}
 
-/*
-		//tenta colidir com algum tile one way
-		if (!ret && oneWayUpCollision())
-			ret = true;
 
+		//tenta colidir com algum tile one way, 
+		//colidir em cima do tile e embaixo de Entity
+		if (oneWayUpCollision())
+			ret = true;
+		/*
 		// colisão com a ponta da escada
 		// aqui é colisão "oneway" do lado de cima
 		if (!ret && topLadderTile > -1)
@@ -694,7 +669,7 @@ bool Entity::collisionVer (  )
 						break;
 					}
 			}
-*/
+		*/
 	}
 
 	return ret;
