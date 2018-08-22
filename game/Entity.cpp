@@ -587,6 +587,7 @@ bool Entity::oneWayUpCollision ()
 		{
 			int y = (int(after.y) / level->get_tilesize()) * level->get_tilesize();
 			after.y = y - collRect.h - 1;
+			after.x = collPos.x;
 			setCollPos(after);
 			return true;
 		}

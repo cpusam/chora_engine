@@ -204,10 +204,12 @@ struct Vect
 	float cos_theta ( Vect & b )
 	{
 		float d = (b.length() * (this)->length());
-		float c = ((*this) * b) / d;
-
-		if (d == 0 || std::isnan(c))
+		if (d == 0)
 			return 1.0f;
+		
+		float c = ((*this) * b) / d;
+		if (std::isnan(c))
+			return 1;
 
 		return c;
 	}
