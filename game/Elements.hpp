@@ -31,6 +31,8 @@
 
 #include "Entity.hpp"
 
+#define NO_THREAD_SAFE
+
 class Entity;
 
 class Elements
@@ -41,6 +43,8 @@ class Elements
 		static Elements * instance (  );
 		static void setRenderer ( SDL_Renderer * renderer );
 		static SDL_Renderer * getRenderer (  );
+		static Camera * getCamera (  );
+		static void setCamera ( Camera * cam );
 		
 		static bool has ( Entity * e );
 		static void add ( Entity * e ); // adiciona uma entidade
@@ -66,6 +70,7 @@ class Elements
 	
 	private:
 		SDL_Renderer * currRenderer;
+		Camera * currCamera;
 		std::vector<EntityID> entitiesID;
 		std::vector<Entity *> entities;
 		#if defined(WIN32) || defined(WIN64)
@@ -77,7 +82,10 @@ class Elements
 		Elements();
 
 		void setCurrRenderer ( SDL_Renderer * renderer );
+		void setCurrCamera ( Camera * cam );
 		SDL_Renderer * getCurrRenderer (  );
+		Camera * getCurrCamera (  );
+
 		bool hasEntity ( Entity * e );
 		std::vector<Entity *> getEntities (  );
 		void addEntity ( Entity * e );

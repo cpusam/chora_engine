@@ -20,7 +20,7 @@ Elements::~Elements()
 
 Elements * Elements::instance (  )
 {
-	#if defined(WIN32) || defined(WIN64)
+	#if defined(WIN32) || defined(WIN64) || defined(NO_THREAD_SAFE)
 		if (singleton == nullptr)
 			singleton = new Elements();
 		
@@ -53,6 +53,18 @@ SDL_Renderer * Elements::getCurrRenderer (  )
 {
 	return currRenderer;
 }
+
+Camera * Elements::getCurrCamera (  )
+{
+	return currCamera;
+}
+
+void Elements::setCurrCamera ( Camera * cam )
+{
+	if (cam)
+		currCamera = cam;
+}
+
 
 std::vector<Entity *> Elements::getEntities (  )
 {
@@ -162,6 +174,16 @@ SDL_Renderer * Elements::getRenderer (  )
 		printf("Elements::Erro renderer não definido\n");
 	
 	return renderer;
+}
+
+Camera * Elements::getCamera (  )
+{
+	return instance()->getCurrCamera();
+}
+
+void Elements::setCamera ( Camera * cam )
+{
+	instance()->setCurrCamera(cam);
 }
 
 bool Elements::has ( Entity * e )
