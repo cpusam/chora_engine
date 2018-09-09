@@ -711,7 +711,7 @@ bool Entity::collisionHor (  )
 			if (isSolid(p))
 			{
 				int x = (int(p.x) / level->get_tilesize()) * level->get_tilesize();
-				p.x = x - collRect.w - 1;
+				p.x = int(x - collRect.w - 1);
 				setCollPos(Vect(p.x,beforeY));
 				ret = true;
 				break;
@@ -874,6 +874,8 @@ void Entity::moveX ( float add )
 	}
 	
 	pos.x += vel.x;
+	//arredonda para evitar tremores no eixo X
+	pos.x = int(pos.x);
 }
 
 void Entity::moveY ( float add )
@@ -901,6 +903,8 @@ void Entity::moveY ( float add )
 		vel.y -= vel.y * damping.y;
 	}
 	pos.y += vel.y;
+	//arredonda para evitar tremores no eixo Y
+	pos.y = int(pos.y);
 }
 
 std::string Entity::getStateString (  )
