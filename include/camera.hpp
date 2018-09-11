@@ -49,16 +49,16 @@ class Camera
 		Camera ( SDL_Renderer * renderer, int x, int y, int vpW, int vpH, int dimW, int dimH, SDL_Rect l );
 		Camera ( SDL_Renderer * renderer, int x, int y, int vpW, int vpH, SDL_Rect l );
 		Camera ( SDL_Rect d, SDL_Rect l );
-		
+		virtual ~Camera (){}
 
-		void adjustViewport(SDL_Renderer * renderer, SDL_Rect v);
+		virtual void adjustViewport(SDL_Renderer * renderer, SDL_Rect v);
 		SDL_Rect getViewport (  );
 		// atualiza o viewport para o renderer
 		// fazer isso antes de desenhar na camera
 		// chamar antes de desenhar as imagens, 
 		// para assim jogar na viewport alvo da camera
-		void updateViewport ( SDL_Renderer * renderer );
-		void lookat ( Vect p );
+		virtual void updateViewport ( SDL_Renderer * renderer );
+		virtual void lookat ( Vect p );
 		Vect get_position (  );
 		Vect get_focus (  );
 		SDL_Rect get_view (  ); // retorna posição da camera junto com suas dimensões

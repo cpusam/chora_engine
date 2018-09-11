@@ -872,10 +872,11 @@ void Entity::moveX ( float add )
 	{
 		vel.x -= vel.x * damping.x;
 	}
-	
+
 	pos.x += vel.x;
+
 	//arredonda para evitar tremores no eixo X
-	pos.x = int(pos.x);
+	pos.x = roundf(pos.x);
 }
 
 void Entity::moveY ( float add )
@@ -904,7 +905,7 @@ void Entity::moveY ( float add )
 	}
 	pos.y += vel.y;
 	//arredonda para evitar tremores no eixo Y
-	pos.y = int(pos.y);
+	pos.y = roundf(pos.y);
 }
 
 std::string Entity::getStateString (  )
