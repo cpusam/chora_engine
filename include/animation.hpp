@@ -175,6 +175,7 @@ class AnimationFrame
 		Vect get_orientation (  );
 
 		float get_angle (  );
+		void set_angle ( float rad );
 
 		// rotaciona a imagem em 'a' radianos
 		void rotate ( float a );
@@ -200,7 +201,7 @@ class Animation: public StateMachine
 		bool use_center; // usar centro do frame como posição do blit
 		bool repeat;
 		float angle; // em radianos
-		Vect orientation;
+		Vect orientation, center;
 		std::vector <AnimationFrame> frames;
 	
 	public:
@@ -252,6 +253,7 @@ class Animation: public StateMachine
 		Vect get_orientation (  );
 
 		float get_angle (  );
+		void set_angle ( float rad );
 
 		void rotate ( float a );
 
@@ -260,8 +262,9 @@ class Animation: public StateMachine
 		bool get_use_rot (  );
 
 		void set_use_center ( bool u );
-
 		bool get_use_center (  );
+
+		void set_center ( Vect center );
 		
 		SDL_RendererFlip get_flip (  );
 		

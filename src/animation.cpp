@@ -54,6 +54,11 @@ float AnimationFrame::get_angle (  )
 	return angle;
 }
 
+void AnimationFrame::set_angle ( float rad )
+{
+	angle = rad;
+}
+
 void AnimationFrame::rotate ( float a )
 {
 	angle += a;
@@ -176,6 +181,15 @@ float Animation::get_angle (  )
 	return angle;
 }
 
+void Animation::set_angle ( float rad )
+{
+	for (auto & frame: frames)
+	{
+		frame.set_angle(rad);
+	}
+}
+
+
 void Animation::rotate ( float a )
 {
 	if (use_rot == false)
@@ -205,6 +219,11 @@ void Animation::set_use_center ( bool u )
 bool Animation::get_use_center (  )
 {
 	return use_center;
+}
+
+void Animation::set_center ( Vect center )
+{
+	this->center = center;
 }
 
 void Animation::flip ( SDL_RendererFlip f )
@@ -405,7 +424,14 @@ int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 		}
 		else
 		{
-			SDL_Point center = {frames[index].get_source().w/2, frames[index].get_source().h/2};
+			SDL_Point center;
+			if (use_center)
+				center = {frames[index].get_source().w/2, frames[index].get_source().h/2};
+			else if (use_rot)
+			{
+				center.x = this->center.x;
+				center.y = this->center.y;
+			}
 			ret = SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
 		}
 	}
@@ -456,6 +482,11 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int d
 		else
 		{
 			SDL_Point center = {dest.w/2, dest.h/2};
+			if (use_center == false && use_rot)
+			{
+				center.x = this->center.x;
+				center.y = this->center.y;
+			}
 
 			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
 		}
@@ -505,6 +536,11 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 		else
 		{
 			SDL_Point center = {dest.w/2, dest.h/2};
+			if (use_center == false && use_rot)
+			{
+				center.x = this->center.x;
+				center.y = this->center.y;
+			}
 
 			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
 		}
