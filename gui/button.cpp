@@ -54,22 +54,25 @@ GuiButton::~GuiButton (  )
 		delete label;
 }
 
-void GuiButton::doPress (  )
+void GuiButton::press (  )
 {
 	if (get_state() != State::PRESSED)
 		set_state(State::PRESSED);
 }
 
-void GuiButton::doSelect (  )
+void GuiButton::select (  )
 {
 	if (get_state() != State::SELECTED)
 		set_state(State::SELECTED);
 }
 
-void GuiButton::doRelease (  )
+void GuiButton::release (  )
 {
 	if (get_state() != State::RELEASED)
+	{
 		set_state(State::RELEASED);
+		run_release = false;
+	}
 }
 
 void GuiButton::set_texture ( SDL_Texture * texture )
@@ -122,6 +125,7 @@ void GuiButton::set_label ( GuiLabel * l )
 	{
 		rem_child(label);
 		delete label;
+		label = nullptr;
 	}
 
 
@@ -186,13 +190,12 @@ void GuiButton::input ( SDL_Event & event )
 		default:
 			break;
 	}
+
+	child_input(event);
 }
 
 int GuiButton::update (  )
 {
-	if (!visible)
-		return -1;
-
 	switch (get_state())
 	{
 		case State::NORMAL: // normal
@@ -210,13 +213,19 @@ int GuiButton::update (  )
 
 			if (pointbox(p, dim) && !run_release)
 				set_state(State::SELECTED);
-
-			run_release = false;
+			
+			if (get_state() == State::RELEASED && callback && !run_release)
+			{
+				callback(this);
+				run_release = true;
+			}
 			break;
 		}
 		default:
 			break;
 	}
+
+	child_update();
 	
 	return get_state();
 }

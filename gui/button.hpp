@@ -61,10 +61,10 @@ class GuiButton: public Widget
 		~GuiButton (  );
 
 		//ações
-		void doPress (  );
-		void doSelect (  );
-		void doRelease (  );
-		
+		void press (  );
+		void select (  );
+		void release (  );
+
 		void set_texture ( SDL_Texture * texture );
 		void set_sources ( SDL_Rect src[3] );
 		SDL_Texture * get_texture (  );
