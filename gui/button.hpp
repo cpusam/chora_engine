@@ -33,9 +33,21 @@
 */
 class GuiButton: public Widget
 {
+	public:
+		enum State
+		{
+			NORMAL,
+			PRESSED,
+			SELECTED,
+			RELEASED,
+		};
+	private:
+		bool run_release;
 	protected:
 		void (* callback) ( Widget * b );
 		GuiLabel * label;
+		SDL_Texture * texture;
+		SDL_Rect src[3];
 
 	public:
 		SDL_Color color1; // cor normal
@@ -43,38 +55,19 @@ class GuiButton: public Widget
 		SDL_Color color3; // cor de pressionado
 
 	public:
-		GuiButton ( SDL_Rect d )
-		{
-			label = 0;
-			callback = 0;
-			color1 = (SDL_Color){0xFF, 0xFF, 0x00, 0xFF};
-			color2 = (SDL_Color){0x00, 0xFF, 0xFF, 0xFF};
-			color3 = (SDL_Color){0xFF, 0x00, 0x00, 0xFF};
-			pos.x = d.x, pos.y = d.y;
-			// dimensão padrão
-			dim = d;
-			set_state(1);
-		}
+		GuiButton ( SDL_Rect d );
+		GuiButton ( SDL_Rect d, std::string str );
+		GuiButton ( SDL_Rect d, std::string str, SDL_Rect * src=nullptr, SDL_Texture * texture=nullptr );
+		~GuiButton (  );
 
-		GuiButton ( SDL_Rect d, std::string str )
-		{
-			label = 0;
-			callback = 0;
-			color1 = (SDL_Color){0xFF, 0xFF, 0x00, 0xFF};
-			color2 = (SDL_Color){0x00, 0xFF, 0xFF, 0xFF};
-			color3 = (SDL_Color){0xFF, 0x00, 0x00, 0xFF};
-			pos.x = d.x, pos.y = d.y;
-			// dimensão padrão
-			dim = d;
-			set_label(new GuiLabel(str, (SDL_Color){0,0,0,0})); // por padrão na cor preta
-			set_state(1);
-		}
-
-		~GuiButton (  )
-		{
-			if (label)
-				delete label;
-		}
+		//ações
+		void doPress (  );
+		void doSelect (  );
+		void doRelease (  );
+		
+		void set_texture ( SDL_Texture * texture );
+		void set_sources ( SDL_Rect src[3] );
+		SDL_Texture * get_texture (  );
 
 		virtual void set_callback ( void (* c) ( Widget * b ) );
 
