@@ -65,6 +65,8 @@ class Widget: public StateMachine
 				child[i] = w.get_child(i);
 		}
 
+		void destroy (  );
+
 		void set_id ( std::string new_id );
 
 		std::string get_id (  );

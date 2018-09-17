@@ -1,5 +1,15 @@
 #include "widget.hpp"
 
+void Widget::destroy (  )
+{
+	for (auto * it: child)
+		if (it)
+		{
+			it->destroy();
+			delete it;
+		}
+}
+
 void Widget::set_id ( std::string new_id )
 {
 	id = new_id;
@@ -19,7 +29,7 @@ void Widget::set_pos ( Vect p )
 	dim.x = int(p.x), dim.y = int(p.y);
 
 	for (std::vector <Widget *>::iterator i = child.begin(); i != child.end(); i++)
-		(*i)->set_pos((*i)->get_rel_pos() + pos);
+		(*i)->set_pos(Vect::add((*i)->get_rel_pos(), pos));
 }
 
 Vect Widget::get_pos (  )

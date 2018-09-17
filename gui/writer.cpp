@@ -179,12 +179,12 @@ SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, 
 	SDL_Surface * surf = 0;
 	int line = 0;
 
-	for (unsigned int i(0); i < text.size(); i++)
+	for (unsigned int i(0); i < text.length(); i++)
 	{
-		if (text[i] == '\n' || i + 1 == text.size())
+		if (text[i] == '\n' || i + 1 == text.length())
 		{
 			line++;
-			if (i + 1 == text.size())
+			if (i + 1 == text.length())
 			{
 				str.push_back(text[i]);
 				str.push_back('\0');
@@ -226,10 +226,12 @@ SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, 
 			str.push_back(text[i]);
 	}
 
-	if (line == 1)
+	if (line <= 1)
 	{
 		if (tmp.size() == 1)
+		{
 			return tmp.back();
+		}
 		else
 			throw Exception("Writer::Erro ao criar surface");
 	}
@@ -241,8 +243,6 @@ SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, 
 		if (tmp[i]->w > w)
 			w = tmp[i]->w;
 	}
-
-	
 
 	surf = SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
 	if(surf == nullptr)

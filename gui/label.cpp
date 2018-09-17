@@ -109,10 +109,10 @@ void GuiLabel::draw ( SDL_Renderer * renderer )
 	if (!visible)
 		return;
 
+	child_draw(renderer);
 	SDL_Rect d = {int(pos.x),int(pos.y),dim.w,dim.h};
 	if (texture)
 		SDL_RenderCopy(renderer, texture, nullptr, &d);
-	child_draw(renderer);
 }
 
 ///////////////////////////////////////////////////////////
