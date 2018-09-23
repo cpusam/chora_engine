@@ -74,7 +74,7 @@ std::vector<Entity *> Elements::getEntities (  )
 bool Elements::hasEntity ( Entity * e )
 {
 	if (e)
-		for (int i = 0; i < entities.size(); i++)
+		for (size_t i = 0; i < entities.size(); i++)
 			if (e == entities[i])
 				return true;
 	
@@ -268,7 +268,7 @@ void Elements::update (  )
 void Elements::inputEntities ( SDL_Event & event )
 {
 	std::vector<Entity*>::iterator it;
-	for (int i = 0; i < entities.size(); i++)
+	for (size_t i = 0; i < entities.size(); i++)
 		if (entities[i])
 			entities[i]->input(event);
 }
@@ -295,18 +295,18 @@ void Elements::drawEntities ( SDL_Renderer * renderer, Camera * camera )
 void Elements::updateEntities (  )
 {
 	if (entities.size())
-		for (int i = 0; i < entities.size(); i++)
+		for (size_t i = 0; i < entities.size(); i++)
 			if (entities[i])
 				entities[i]->update();
 }
 
 void Elements::print (  )
 {
-	for (int i = 0; i < instance()->getIDs().size(); i++)
-		printf("ID[%d] = %ld\n", i, (instance()->getIDs()[i]));
+	for (size_t i = 0; i < instance()->getIDs().size(); i++)
+		printf("ID[%zd] = %ld\n", i, (instance()->getIDs()[i]));
 	std::vector<Entity*> entities = instance()->getEntities();
 	std::cout<<"Temos "<<entities.size()<<" ENTIDADES\n";
-	for (int i = 0; i < instance()->getEntities().size(); i++)
+	for (size_t i = 0; i < instance()->getEntities().size(); i++)
 		if (entities[i])
 		{
 			std::cout<<"id = "<<entities[i]->getId()<<"|"

@@ -106,7 +106,8 @@ class Entity: public StateMachine, public Movable
 		//verifica se é sólido nos pontos laterias, ou no ponto lateral 'i'
 		bool isSolidSide ( std::string side, SDL_Rect other, int i=-1 );
 		// colisão
-		std::vector<int>& getSolids (  );
+		std::vector<int> getSolids (  );
+		std::vector<int> getOneWayUp (  );
 		void addSolid ( int s );
 		bool remSolid ( int s );
 		void addOneWayUp ( int s );
