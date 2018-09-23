@@ -382,6 +382,16 @@ bool Entity::isSolidSide ( std::string side, SDL_Rect other, int i )
 	return false;
 }
 
+void Entity::setSolids ( std::vector<int> solids )
+{
+	solid = solids;
+}
+
+void Entity::setOneWayUp ( std::vector<int> oneWayUp )
+{
+	upSolid = oneWayUp;
+}
+
 std::vector<int> Entity::getSolids (  )
 {
 	return solid;
