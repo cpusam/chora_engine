@@ -86,6 +86,9 @@ void Elements::addEntity ( Entity * e )
 	if (e == nullptr)
 		return;
 	
+	if (hasEntity(e))
+		return;
+	
 	std::cout<<"Elements::Adicionando "<<e->getId()<<" name = "<<e->getName()<<std::endl;
 	entitiesID.push_back(e->getId());
 	entities.push_back(e);
@@ -208,7 +211,10 @@ void Elements::destroy (  )
 		std::vector<Entity *> entities = instance()->getAllEntities();
 		for (Entity *it: entities)
 			if (it)
+			{
+				instance()->remEntity(it->getId());
 				delete it;
+			}
 		instance()->clearAll();
 
 		delete singleton;
