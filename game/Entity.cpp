@@ -476,14 +476,17 @@ bool Entity::isGround (  )
 	setSides(collRect, collPoints);
 
 	if (vel.y == 0 && upSolid.size() != 0)
+	{
+		Vect q;
 		for (auto p: downSide)
 		{
 			p = Vect::add(p, pos);
+			q.set(p.x, p.y-1);
 			p.y += 1;
-			if (isSolidOneWayUp(p))
+			if (isSolidOneWayUp(p) && isSolidOneWayUp(q) == false)
 				return true;
 		}
-
+	}
 	for (auto p: downSide)
 	{
 		p = Vect::add(p, pos);
