@@ -19,7 +19,7 @@ Entity::Entity()
 	level = nullptr;
 	collPoints = 3;
 	topLadderTile = -1;
-	topTileSize = 10;//mesmo valor que velMax;
+	topTileSize = 10;//mesmo valor que maxVel;
 	collRect = (SDL_Rect){0,0,0,0};//retangulo de colisão
 	texture = nullptr;
 	currAnim = nullptr;

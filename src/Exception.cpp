@@ -1,7 +1,12 @@
 #include "Exception.hpp"
 #include <iostream>
 
-Exception::Exception(std::string e)
+Exception::Exception(const std::string e): std::runtime_error(e)
+{
+	mesg = e;
+}
+
+Exception::Exception(const char * e): std::runtime_error(e)
 {
 	mesg = e;
 }

@@ -25,17 +25,17 @@
 #define EXCEPTION_HPP
 
 #include <string>
-#include <exception>
+#include <stdexcept>
 
-class Exception: public std::exception
+class Exception: public std::runtime_error
 {
 	public:
-		Exception(std::string e);
+		Exception(const std::string e);
+		Exception(const char * e);
 		virtual ~Exception() throw (){}
 		virtual const char * what (  );
 	protected:
 		std::string mesg;
-	private:
 };
 
 #endif // EXCEPTION_HPP
