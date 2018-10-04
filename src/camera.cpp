@@ -82,19 +82,6 @@ void Camera::lookat ( Vect p )
 		position.y = limit.y;
 	else if (position.y + dimension.h > limit.x + limit.h)
 		position.y = (limit.y + limit.h) - dimension.h;
-	
-	SDL_Rect d = action_area;
-	if (d.w > dimension.w)
-		d.x = position.x - ((d.w/2) - (dimension.w/2));
-	else if (d.w < dimension.w)
-		d.x = position.x - ((dimension.w/2) - (d.w/2));
-	
-	if (d.h > dimension.h)
-		d.y = position.y - ((d.h/2) - (dimension.h/2));
-	else if (d.h < dimension.h)
-		d.y = position.y - ((dimension.h/2) - (d.h/2));
-	
-	setActionArea(d);
 }
 
 Vect Camera::get_position (  )
@@ -163,12 +150,14 @@ void Camera::set_limit ( SDL_Rect l )
 
 bool Camera::inAction ( Vect p )
 {
-	return pointbox(p, action_area);
+	SDL_Rect rect = {action_area.x + int(position.x), action_area.y + int(position.y), action_area.w, action_area.h};
+	return pointbox(p, rect);
 }
 
 bool Camera::inAction ( SDL_Rect d )
 {
-	return boundingbox(d, action_area);
+	SDL_Rect rect = {action_area.x + int(position.x), action_area.y + int(position.y), action_area.w, action_area.h};
+	return boundingbox(d, rect);
 }
 
 void Camera::setActionArea ( SDL_Rect d )
