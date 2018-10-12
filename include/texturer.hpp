@@ -25,14 +25,16 @@
 #define CHORA_TEXTURER_HPP
 
 #include <vector>
-#include <atomic>
-#include <mutex>
+#ifndef NO_ATOMIC
+	#include <atomic>
+	#include <mutex>
+#endif
 #include "textureid.hpp"
 
 
 class Texturer{
 	std::vector<TextureID>	 textureID;
-	#if defined(WIN32) || defined(WIN64)
+	#if defined(WIN32) || defined(WIN64) || defined(NO_ATOMIC)
 	static Texturer * singleton;
 	#else
 	static std::atomic<Texturer *> singleton;

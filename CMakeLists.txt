@@ -19,6 +19,8 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g")
 file(GLOB_RECURSE SRCS src/*.cpp game/*.cpp gui/*.cpp platform/*.cpp SDL_gfx/*.cpp sound/*.cpp)
 file(GLOB_RECURSE HDRS Chora.hpp sdl.hpp include/*.hpp game/*.hpp gui/*.hpp platform/*.hpp SDL_gfx/*.hpp sound/*.hpp)
 
+add_compile_definitions("NO_ATOMIC")
+
 include_directories(. include)
 add_library(chora ${HDRS} ${SRCS})
 

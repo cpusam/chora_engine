@@ -1,7 +1,7 @@
 #include "Elements.hpp"
 #include <algorithm>
 
-#if defined(WIN32) || defined(WIN64)
+#if defined(WIN32) || defined(WIN64) || defined(NO_ATOMIC)
 	Elements * Elements::singleton;
 #else
 	std::atomic<Elements *> Elements::singleton{nullptr};
@@ -20,7 +20,7 @@ Elements::~Elements()
 
 Elements * Elements::instance (  )
 {
-	#if defined(WIN32) || defined(WIN64) || defined(NO_THREAD_SAFE)
+	#if defined(WIN32) || defined(WIN64) || defined(NO_ATOMIC)
 		if (singleton == nullptr)
 			singleton = new Elements();
 		

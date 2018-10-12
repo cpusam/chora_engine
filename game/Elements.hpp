@@ -26,8 +26,10 @@
 
 #include <vector>
 #include <map>
-#include <mutex>
-#include <atomic>
+#ifndef NO_ATOMIC
+	#include <atomic>
+	#include <mutex>
+#endif
 
 #include "Entity.hpp"
 
@@ -73,7 +75,7 @@ class Elements
 		Camera * currCamera;
 		std::vector<EntityID> entitiesID;
 		std::vector<Entity *> entities;
-		#if defined(WIN32) || defined(WIN64)
+		#if defined(WIN32) || defined(WIN64) || NO_ATOMIC
 		static Elements * singleton;
 		#else
 		static std::atomic<Elements *> singleton;
