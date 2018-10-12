@@ -16,8 +16,8 @@ ELSE (CMAKE_VERSION VERSION_LESS "3.1")
 ENDIF (CMAKE_VERSION VERSION_LESS "3.1")
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g")
-file(GLOB_RECURSE SRCS src/*.cpp game/*.cpp gui/*.cpp platform/*.cpp SDL_gfx/*.cpp sound/*.cpp)
-file(GLOB_RECURSE HDRS Chora.hpp sdl.hpp include/*.hpp game/*.hpp gui/*.hpp platform/*.hpp SDL_gfx/*.hpp sound/*.hpp)
+file(GLOB_RECURSE SRCS src/*.cpp game/*.cpp gui/*.cpp platform/*.cpp SDL_gfx/*.cpp sound/*.cpp src/renderer/*.cpp)
+file(GLOB_RECURSE HDRS Chora.hpp sdl.hpp include/*.hpp game/*.hpp gui/*.hpp platform/*.hpp SDL_gfx/*.hpp sound/*.hpp include/renderer/*.hpp)
 
 add_compile_definitions("NO_ATOMIC")
 
