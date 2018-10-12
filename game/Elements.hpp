@@ -26,7 +26,7 @@
 
 #include <vector>
 #include <map>
-#ifndef NO_ATOMIC
+#ifndef NO_THREAD_SAFE
 	#include <atomic>
 	#include <mutex>
 #endif
@@ -75,7 +75,7 @@ class Elements
 		Camera * currCamera;
 		std::vector<EntityID> entitiesID;
 		std::vector<Entity *> entities;
-		#if defined(WIN32) || defined(WIN64) || NO_ATOMIC
+		#if defined(WIN32) || defined(WIN64) || NO_THREAD_SAFE
 		static Elements * singleton;
 		#else
 		static std::atomic<Elements *> singleton;

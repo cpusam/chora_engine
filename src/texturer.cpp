@@ -1,6 +1,6 @@
 #include "texturer.hpp"
 
-#if defined(WIN32) || defined(WIN64) || defined(NO_ATOMIC)
+#if defined(WIN32) || defined(WIN64) || defined(NO_THREAD_SAFE)
 	Texturer * Texturer::singleton = nullptr;
 #else
 std::atomic<Texturer *> Texturer::singleton{nullptr};
