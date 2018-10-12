@@ -200,7 +200,7 @@ void SoundFX::set_music ( std::string p )
 
 /////////////////////////////////////////////////////////////////
 
-#if defined(WIN32) || defined(WIN64)
+#if defined(WIN32) || defined(WIN64) || defined(NO_ATOMIC)
 SoundPlayer * SoundPlayer::singleton = nullptr;
 #else
 std::atomic<SoundPlayer *> SoundPlayer::singleton{nullptr};
