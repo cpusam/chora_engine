@@ -877,7 +877,7 @@ void Entity::moveX ( float add )
 	if (add == 0)
 	{
 		//então aplique a desaceleração
-		vel.x -= vel.x * damping.x;	
+		vel.x -= vel.x * damping.x;
 		damped = true;
 	}
 	
