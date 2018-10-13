@@ -33,8 +33,6 @@
 
 #include "Entity.hpp"
 
-#define NO_THREAD_SAFE
-
 class Entity;
 
 class Elements
