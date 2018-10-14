@@ -80,19 +80,37 @@ void Background::draw_hor ( SDL_Renderer * renderer, Camera * cam )
 
 	Vect pCam = cam->get_position();
 
-	src.x = static_cast<int>(SDL_fabs(pCam.x + pos.x)) % w;
-	src.w = w - src.x;
+	float ratioW = float(static_cast<int>(roundf(pCam.x + pos.x)) % dim.w) / float(dim.w);
+	//src a direita
+	if (w == dim.w)
+	{
+		src.x = static_cast<int>(SDL_fabs(pCam.x + pos.x)) % w;
+		src.w = w - src.x;
+	}
+	else
+	{
+		src.x = int(w * ratioW);
+		src.w = w - int(w * ratioW);
+	}
 	src.y = 0;
 	src.h = h;
+
+	//destino a esquerda
 	dest.x = 0;
 	dest.y = 0;
-	dest.w = dim.w - static_cast<int>(SDL_fabs(pCam.x + pos.x)) % dim.w;
+	dest.w = dim.w - static_cast<int>(roundf(pCam.x + pos.x)) % dim.w;
 	dest.h = dim.h;
 	SDL_RenderCopy(renderer, texture, &src, &dest);
 	if (dest.w < dim.w)
 	{
+		//src a direita
 		src.x = 0;
-		src.w = static_cast<int>(pCam.x + pos.x) % w;
+		if (w == dim.w)
+			src.w = static_cast<int>(pCam.x + pos.x) % w;
+		else
+			src.w = w * ratioW;
+		
+		//destino a direita
 		dest.x = dest.w;
 		dest.y = 0;
 		dest.w = dim.w - dest.w;
@@ -116,19 +134,31 @@ void Background::draw_ver ( SDL_Renderer * renderer, Camera * cam )
 
 	Vect pCam = cam->get_position();
 
-	src.y = static_cast<int>(SDL_fabs(pCam.y + pos.y)) % h;
-	src.h = h - src.y;
+	float ratioH = float(static_cast<int>(roundf(pCam.y + pos.y)) % h) / float(dim.h);
+	if (h == dim.h)
+	{
+		src.y = static_cast<int>(SDL_fabs(pCam.y + pos.y)) % h;
+		src.h = h - src.y;
+	}
+	else
+	{
+		src.y = h * ratioH;
+		src.h = h - src.y;
+	}
 	src.x = 0;
 	src.w = w;
 	dest.x = 0;
 	dest.y = 0;
-	dest.h = dim.h - static_cast<int>(SDL_fabs(pCam.y + pos.y)) % dim.h;
+	dest.h = dim.h - static_cast<int>(roundf(pCam.y + pos.y)) % dim.h;
 	dest.w = dim.w;
 	SDL_RenderCopy(renderer, texture, &src, &dest);
 	if (dest.h < dim.h)
 	{
 		src.y = 0;
-		src.h = static_cast<int>(pCam.y) % h;
+		if (h == dim.h)
+			src.h = static_cast<int>(pCam.y) % h;
+		else
+			src.h = h * ratioH;
 		dest.y = dest.h;
 		dest.x = 0;
 		dest.h = dim.h - dest.h;

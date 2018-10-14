@@ -327,8 +327,11 @@ int TileMap::read_from_xpm ( std::string filename )
 			return 0;
 		}
 
-		colors[b] = rgb;
-		tiles.push_back(static_cast<int>(b));
+		if (pattern == 'c')
+		{
+			colors[b] = rgb;
+			tiles.push_back(static_cast<int>(b));
+		}
 	}
 
 	for (size_t i = data[0] + 1, sizeH = tokens.size(); i < sizeH; i++)
