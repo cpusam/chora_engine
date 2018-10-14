@@ -26,6 +26,7 @@ Adicionar:
 	-Adicionar os códigos do Entity, Exception, Key, Elements na chora engine. Eles estão na pasta do projeto SuperMarioBros
 
 Tarefas:
+	-[RESOLVIDO]fazer leitura de um mapa de tiles no formato de imagem XPM do kolourpaint
 	-refazer os singletons copiando da classe Elements, função instance()
 	-[RESOLVIDO]refatorar as funções Rand e RandInt do util.hpp para usar qualquer tipo.
 	 digo, fazer elas com templates.

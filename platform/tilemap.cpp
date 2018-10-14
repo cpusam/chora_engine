@@ -249,4 +249,96 @@ int TileMap::read ( std::string filename )
 	return 1;
 }
 
+int TileMap::read_from_xpm ( std::string filename )
+{
+	FILE * file = fopen(filename.c_str(), "r");
+
+	if (!file)
+	{
+		printf("TileMap::Erro ao ler XPM\n");
+		return 0;
+	}
+
+	int state = 0;
+	int c = 0;
+	std::string str;
+	std::vector<std::string> tokens;
+	for (; !feof(file);)
+	{
+		if (state == 0)
+		{
+			c = fgetc(file);
+			if (feof(file))
+				break;
+			
+			if (c == '\"')
+				state = 1;
+		}
+		else if (state == 1)
+		{
+			str = "";
+			do
+			{
+				c = fgetc(file);
+				if (c != '\"')
+					str.push_back(c);
+			} while (c != '\"' && !feof(file));
+
+			if (c == '\"')
+			{
+				str.push_back('\0');
+				tokens.push_back(str);
+				state = 0;
+			}
+			else
+			{
+				printf("TileMap::Erro ao fazer parsing no arquivo XPM\n");
+				return 0;
+			}
+		}
+	}
+	fclose(file);
+
+	#ifdef _DEBUG_
+	int i = 0;
+	for (auto & str: tokens)
+	{
+		printf("token[%d] = %s\n",i,str.c_str());
+		i++;
+	}
+	#endif
+
+	char b = 0, pattern = 0;
+	int data[4];
+	unsigned int rgb = 0;
+	std::map<char, unsigned int> colors;
+	if (sscanf(tokens[0].c_str(), "%d %d %d %d", &width, &height, &data[0], &data[1]) != 4)
+	{
+		printf("TileMap::sscanf falhou na copnversão da string tokens[0]\n");
+		return 0;
+	}
+
+	for (int i = 1; i < 1 + data[0]; i++)
+	{
+		int value = sscanf(tokens[i].c_str(), "%c %c #%x", &b, &pattern, &rgb);
+		if (value < 2)
+		{
+			printf("TileMap::sscanf falhou na copnversão da string tokens[%d] com value = %d\n",i, value);
+			return 0;
+		}
+
+		colors[b] = rgb;
+		tiles.push_back(static_cast<int>(b));
+	}
+
+	for (size_t i = data[0] + 1, sizeH = tokens.size(); i < sizeH; i++)
+	{
+		for (size_t j = 0, sizeW = tokens[i].length(); j < sizeW; j++)
+		{
+			tileset.push_back(static_cast<int>(tokens[i][j]));
+		}
+	}
+
+	return 1;
+}
 

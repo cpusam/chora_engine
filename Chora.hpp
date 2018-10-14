@@ -24,6 +24,8 @@
 #ifndef CHORA_HPP
 #define CHORA_HPP
 
+#define NO_THREAD_SAFE
+
 #include "sdl.hpp"
 #include "include/statemachine.hpp"
 #include "include/vect.hpp"

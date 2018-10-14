@@ -107,6 +107,9 @@ class TileMap
 		int read ( int * t, int size );
 
 		int read ( std::string filename );
+
+		//lê um mapa de um xpm
+		int read_from_xpm ( std::string filename );
 };
 
 
