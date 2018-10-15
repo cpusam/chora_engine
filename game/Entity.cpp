@@ -392,6 +392,12 @@ void Entity::setOneWayUp ( std::vector<int> oneWayUp )
 	upSolid = oneWayUp;
 }
 
+void Entity::setSlopeUp ( std::vector<int> slopeUp, std::map<int, std::vector<Vect> > angles )
+{
+	upSolidSlope = slopeUp;
+	upSolidSlopeAngles = angles;
+}
+
 std::vector<int> Entity::getSolids (  )
 {
 	return solid;
@@ -404,6 +410,9 @@ std::vector<int> Entity::getOneWayUp (  )
 
 void Entity::addSolid ( int s )
 {
+	for (auto i: solid)
+		if (i == s)
+			return;
 	solid.push_back(s);
 }
 
@@ -440,6 +449,29 @@ bool Entity::remOneWayUp ( int s )
 	return bef != upSolid.size();
 }
 
+void Entity::addSlopeUp ( int s, Vect a, Vect b )
+{
+	for (auto i: upSolidSlope)
+		if (i == s)
+			return;
+	upSolidSlope.push_back(s);
+	upSolidSlopeAngles[s].push_back(a);
+	upSolidSlopeAngles[s].push_back(b);
+}
+
+bool Entity::remSlopeUp ( int s )
+{
+	unsigned int bef = upSolidSlope.size();
+	std::vector<int> aux;
+	for (auto i: upSolidSlope)
+		if (i != s)
+			aux.push_back(i);
+
+	upSolidSlope = aux;
+	upSolidSlopeAngles.erase(s);
+	return bef != upSolid.size();
+}
+
 bool Entity::isSolid ( Vect p )
 {
 	if (level == nullptr)
@@ -468,6 +500,30 @@ bool Entity::isSolidOneWayUp ( Vect p )
 	return std::find(upSolid.begin(), upSolid.end(), tile) != upSolid.end();
 }
 
+bool Entity::isSolidSlopeUp ( Vect p )
+{
+	if (level == nullptr)
+		throw Exception("Entity::isSolidSlope level é nulo");
+
+	
+	int tile = level->get_tile(p.x, p.y);
+	if (tile < 0)
+		return false;
+
+	if (upSolidSlopeAngles.find(tile) != upSolidSlopeAngles.end())
+	{
+		int tilesize = level->get_tilesize();
+		Vect c = getCollCenter();
+		Vect center[2] = {Vect(c.x, c.y - collRect.h / 2), Vect(c.x, c.y + collRect.h / 2)};
+		Vect slopePos(int(p.x / tilesize) * tilesize, int(p.y / tilesize) * tilesize);
+		Vect aux[2] = {upSolidSlopeAngles[tile][0], upSolidSlopeAngles[tile][1]};
+		if (lineIntersects(Vect::add(slopePos, aux[0]), Vect::add(slopePos, aux[1]), center[0], center[1]))
+			return true;
+	}
+
+	return false;
+}
+
 bool Entity::isGround (  )
 {	
 	if (level == nullptr)
@@ -475,21 +531,32 @@ bool Entity::isGround (  )
 
 	setSides(collRect, collPoints);
 
+	for (auto p: downSide)
+	{
+		p.x += pos.x;
+		p.y += pos.y;
+		if (isSolidSlopeUp(p))
+			return true;
+	}
+
 	if (vel.y == 0 && upSolid.size() != 0)
 	{
 		Vect q;
 		for (auto p: downSide)
 		{
-			p = Vect::add(p, pos);
+			p.x += pos.x;
+			p.y += pos.y;
 			q.set(p.x, p.y-1);
 			p.y += 1;
 			if (isSolidOneWayUp(p) && isSolidOneWayUp(q) == false)
 				return true;
 		}
 	}
+
 	for (auto p: downSide)
 	{
-		p = Vect::add(p, pos);
+		p.x += pos.x;
+		p.y += pos.y;
 		p.y += 1; // 1 pixel abaixo
 		// verifica se é sólido
 		if (isSolid(p))

@@ -81,30 +81,4 @@ extern SDL_Rect rectIntersect ( SDL_Rect a, SDL_Rect b );
 //
 extern bool pointtile ( TileMap & map, std::vector <int> & coll_tile, Vect & pos );
 
-// NOTA: REMOVER ESSAS FUNÇÕES QUE NÃO FUNCIONAM!!!!
-enum ECollisionMove
-{
-	NO_MOVE=0,
-	MOVE_TO_UP, // mover pos para cima
-	MOVE_TO_RIGHT, // mover pos para a direita
-	MOVE_TO_DOWN, // mover pos para baixo
-	MOVE_TO_LEFT, // mover pos para a esquerda
-};
-
-enum ECollisionTileSide
-{
-	NO_COLLISION=0,
-	UP_SIDE,
-	RIGHT_SIDE,
-	DOWN_SIDE,
-	LEFT_SIDE,
-};
-
-extern ECollisionTileSide tile_collision ( TileMap & map, std::vector <int> coll_tile, Vect & pos, std::vector <Vect> c_point, Vect & vel, ECollisionMove move );
-
-// colisão horizontal nos coll_tile, aqui é processada colisão no eixo X
-extern int collision_hor ( TileMap & map, std::vector <int> coll_tile, Vect & pos, std::vector <Vect> c_point, Vect & vel );
-
-// colisão vertical nos coll_tile, aqui é processada colisão no eixo Y
-extern int collision_ver ( TileMap & map, std::vector <int> coll_tile, Vect & pos, std::vector <Vect> c_point, Vect & vel );
 #endif

@@ -108,14 +108,21 @@ class Entity: public StateMachine, public Movable
 		// colisão
 		void setSolids ( std::vector<int> solids );
 		void setOneWayUp ( std::vector<int> oneWayUp );
+		void setSlopeUp ( std::vector<int> slopeUp, std::map<int, std::vector<Vect> > angles );
 		std::vector<int> getSolids (  );
 		std::vector<int> getOneWayUp (  );
 		void addSolid ( int s );
 		bool remSolid ( int s );
+		//adiciona ou remove OneWay que colide em baixo e move pra cima
 		void addOneWayUp ( int s );
 		bool remOneWayUp ( int s );
+		//adiciona ou remove rampa que colide em baixo e move pra cima
+		//'a' e 'b' fazem uma angulação
+		void addSlopeUp ( int s, Vect a, Vect b );
+		bool remSlopeUp ( int s );
 		bool isSolid ( Vect p );
 		bool isSolidOneWayUp ( Vect p );
+		bool isSolidSlopeUp ( Vect p );
 		bool isLadder (  );
 		bool isTopLadder (  );
 		void catchLadder (  );
@@ -175,7 +182,10 @@ class Entity: public StateMachine, public Movable
 
 		//tile one way sólido em cima
 		std::vector<int> upSolid;
+		std::vector<int> upSolidSlope;
 		std::vector<int> solid;//tiles sólidos
+		//angulos dos slopes
+		std::map<int, std::vector<Vect> > upSolidSlopeAngles;
 		// cada lado tem collPoints de vertices de colisão
 		std::vector<Vect> rightSide,leftSide;//lateral direita e esquerda do corpo da entidade
 		std::vector<Vect> upSide, downSide;//leteral de cima e em baixo do corpo da entidade
