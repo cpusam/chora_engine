@@ -257,7 +257,7 @@ void fill_rect ( SDL_Renderer * renderer, SDL_Color color, SDL_Rect r )
 	SDL_RenderFillRect(renderer, &r);
 }
 
-int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, int x, int y )
+int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, int x, int y, int sizeW, int sizeH )
 {
 	if (!texture || !cam || !renderer)
 	{
@@ -265,6 +265,7 @@ int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture
 	}
 
 	int w = 0, h = 0;
+	
 	SDL_QueryTexture(texture, 0, 0, &w, &h);
 	SDL_Rect dest, source;
 
@@ -338,21 +339,47 @@ int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture
 		dest.y = dest.y - pos.y;
 	}
 
-	dest.w = source.w;
-	dest.h = source.h;
+	if (sizeH == 0 || sizeW == 0)
+	{
+		dest.w = source.w;
+		dest.h = source.h;
+	}
+	else
+	{
+		dest.w = sizeW;
+		dest.h = sizeH;
+	}
 
 	return SDL_RenderCopy(renderer, texture, &source, &dest);
 }
 
-int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, SDL_Rect & src, SDL_Rect & dst, double angle, SDL_Point * center, SDL_RendererFlip flip )
+int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, const SDL_Rect * src, const SDL_Rect * dst, double angle, SDL_Point * center, SDL_RendererFlip flip )
 {
 	if (!texture || !cam || !renderer)
 	{
 		return -1;
 	}
 
-	SDL_Rect dest = dst;
-	SDL_Rect source = src;
+	SDL_Rect dest;
+	SDL_Rect source;
+
+	if (dst)
+		dest = *dst;
+	else
+	{
+		dest.x = 0;
+		dest.y = 0;
+		SDL_QueryTexture(texture, nullptr, nullptr, &dest.w, &dest.h);
+	}
+
+	if (src)
+		source = *src;
+	else
+	{
+		source.x = 0;
+		source.y = 0;
+		SDL_QueryTexture(texture, nullptr, nullptr, &source.w, &source.h);
+	}
 
 	if (source.w <= 0 || source.h <= 0)
 	{

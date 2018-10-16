@@ -69,17 +69,10 @@ class Elements
 
 	
 	private:
-		SDL_Renderer * currRenderer;
-		Camera * currCamera;
-		std::vector<EntityID> entitiesID;
-		std::vector<Entity *> entities;
-		#if defined(WIN32) || defined(WIN64) || defined(NO_THREAD_SAFE)
-		static Elements * singleton;
-		#else
-		static std::atomic<Elements *> singleton;
-		static std::mutex myMutex;
-		#endif
 		Elements();
+		void inputEntities ( SDL_Event & event );
+		void drawEntities ( SDL_Renderer * renderer, Camera * camera );
+		void updateEntities (  );
 
 		void setCurrRenderer ( SDL_Renderer * renderer );
 		void setCurrCamera ( Camera * cam );
@@ -94,11 +87,20 @@ class Elements
 		std::vector<Entity *> getAllEntityByGroup ( std::string group );
 		Entity * remEntity ( EntityID id );
 		void clearAll (  );
-		std::vector<EntityID> getIDs (  );
+		const std::map<int, std::vector<Entity *> > & getEntitiesLayers (  );
 
-		void inputEntities ( SDL_Event & event );
-		void drawEntities ( SDL_Renderer * renderer, Camera * camera );
-		void updateEntities (  );
+		std::map<int, std::vector<Entity *> > layers;
+		std::vector<EntityID> getIDs (  );
+		SDL_Renderer * currRenderer;
+		Camera * currCamera;
+		std::vector<EntityID> entitiesID;
+		std::vector<Entity *> entities;
+		#if defined(WIN32) || defined(WIN64) || defined(NO_THREAD_SAFE)
+		static Elements * singleton;
+		#else
+		static std::atomic<Elements *> singleton;
+		static std::mutex myMutex;
+		#endif
 };
 
 #endif // ELEMENTS_HPP

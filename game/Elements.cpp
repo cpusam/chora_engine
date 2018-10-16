@@ -92,6 +92,7 @@ void Elements::addEntity ( Entity * e )
 	std::cout<<"Elements::Adicionando "<<e->getId()<<" name = "<<e->getName()<<std::endl;
 	entitiesID.push_back(e->getId());
 	entities.push_back(e);
+	layers[e->getLayer()].push_back(e);
 }
 
 Entity * Elements::getEntity ( EntityID id )
@@ -135,6 +136,10 @@ Entity * Elements::remEntity ( EntityID id )
 	std::cout<<"Elements::Removendo "<<ret->getId()<<" name = "<<ret->getName()<<std::endl;
 	entities.erase(itEntity);
 	entitiesID.erase(itID);
+	
+	itEntity = std::find(layers[ret->getLayer()].begin(), layers[ret->getLayer()].end(), ret);
+	if (itEntity != layers[ret->getLayer()].end())
+		layers[ret->getLayer()].erase(itEntity);
 
 	return ret;
 }
@@ -228,6 +233,11 @@ void Elements::clearAll (  )
 	entitiesID.clear();
 }
 
+const std::map<int, std::vector<Entity *> > & Elements::getEntitiesLayers (  )
+{
+	return layers;
+}
+
 std::vector<EntityID> Elements::getIDs (  )
 {
 	return entitiesID;
@@ -235,23 +245,19 @@ std::vector<EntityID> Elements::getIDs (  )
 
 void Elements::notifyGroup ( Entity * sender, std::string mesg, std::string group )
 {
-	std::vector<Entity *> entities;
-	
 	if (group == "ALL")
 	{
 		std::vector<Entity*> all = instance()->getAllEntities();
 		for (auto * it: all)
-		{
 			it->receive(sender, mesg);
-		}
 	}
 	else
 	{
-		entities = instance()->getAllByGroup(group);
+		std::vector<Entity *> entities = instance()->getAllByGroup(group);
 	
 		for (auto *entity: entities)
 			if (entity != sender)
-				entity->receive(sender,mesg);
+				entity->receive(sender, mesg);
 	}
 }
 
@@ -281,29 +287,28 @@ void Elements::inputEntities ( SDL_Event & event )
 
 void Elements::drawEntities ( SDL_Renderer * renderer, Camera * camera )
 {
-	std::map<EntityID, std::vector<Entity*> > layers;
-	for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
-	{
-		if (*it)
-			layers[(*it)->getLayer()].push_back(*it);
-	}
+	std::map<int, std::vector<Entity*> > layers = instance()->getEntitiesLayers();
 	
 	for (auto & it: layers)
-	{
 		for (auto * entity: it.second)
-		{
-			if (entity && renderer && camera)
+			if (entity && renderer && camera && entity->isVisible())
 				entity->draw(renderer, camera);
-		}
-	}
 }
 
 void Elements::updateEntities (  )
 {
 	if (entities.size())
-		for (size_t i = 0; i < entities.size(); i++)
+		for (size_t i = 0, size = entities.size(); i < size; i++)
 			if (entities[i])
+			{
+				#ifdef DEBUG_ELEMENTS
+				printf("Atualizando %s\n", entities[i]->getName().c_str());
+				#endif
 				entities[i]->update();
+				#ifdef DEBUG_ELEMENTS
+				printf("Atualizado %s\n\n", entities[i]->getName().c_str());
+				#endif
+			}
 }
 
 void Elements::print (  )
