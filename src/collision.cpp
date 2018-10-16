@@ -136,3 +136,42 @@ bool pointtile ( TileMap & map, std::vector <int> & coll_tile, Vect &  pos )
 
 	return false;
 }
+
+std::vector<Entity *> boundingboxEx ( Entity * e, std::vector<Entity *> entities, bool checkVisible )
+{
+	std::vector<Entity *> vet;
+	std::vector<Entity *> touched;
+	SDL_Rect box = e->getCollRect();
+	//colisão eixo X
+	for (Entity * entity: entities)
+	{
+		if (entity->isVisible() != checkVisible)
+			continue;
+		
+		SDL_Rect rect = entity->getCollRect();
+		
+		if (box.x > rect.x + rect.w)
+			continue;
+		if (box.x + box.w < rect.x)
+			continue;
+		
+		touched.push_back(entity);
+	}
+
+	if (touched.size())
+	{
+		//colisão eixo Y
+		for (Entity * entity: touched)
+		{
+			SDL_Rect rect = entity->getCollRect();
+			if (box.y > rect.y + rect.h)
+				continue;
+			if (box.y + box.h < rect.y)
+				continue;
+			
+			vet.push_back(entity);
+		}
+	}
+
+	return vet;
+}

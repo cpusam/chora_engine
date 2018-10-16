@@ -109,6 +109,8 @@ class Entity: public StateMachine, public Movable
 		void setSolids ( std::vector<int> solids );
 		void setOneWayUp ( std::vector<int> oneWayUp );
 		void setSlopeUp ( std::vector<int> slopeUp, std::map<int, std::vector<Vect> > angles );
+		std::vector<int> getSlopeUpTiles (  );
+		std::map<int, std::vector<Vect> > getSlopeUpAngles (  );
 		std::vector<int> getSolids (  );
 		std::vector<int> getOneWayUp (  );
 		void addSolid ( int s );
@@ -122,11 +124,12 @@ class Entity: public StateMachine, public Movable
 		bool remSlopeUp ( int s );
 		bool isSolid ( Vect p );
 		bool isSolidOneWayUp ( Vect p );
-		bool isSolidSlopeUp ( Vect p );
+		bool isSolidSlopeUp ( Vect p, Vect * result=nullptr );
 		bool isLadder (  );
 		bool isTopLadder (  );
 		void catchLadder (  );
 		bool oneWayUpCollision (  );
+		bool slopeUpCollision (  );
 		virtual bool isGround (  );
 
 		bool moveToPosition (Vect pos, float maxVel );

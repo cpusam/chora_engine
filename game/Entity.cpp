@@ -398,6 +398,16 @@ void Entity::setSlopeUp ( std::vector<int> slopeUp, std::map<int, std::vector<Ve
 	upSolidSlopeAngles = angles;
 }
 
+std::vector<int> Entity::getSlopeUpTiles (  )
+{
+	return upSolidSlope;
+}
+
+std::map<int, std::vector<Vect> > Entity::getSlopeUpAngles (  )
+{
+	return upSolidSlopeAngles;
+}
+
 std::vector<int> Entity::getSolids (  )
 {
 	return solid;
@@ -500,7 +510,7 @@ bool Entity::isSolidOneWayUp ( Vect p )
 	return std::find(upSolid.begin(), upSolid.end(), tile) != upSolid.end();
 }
 
-bool Entity::isSolidSlopeUp ( Vect p )
+bool Entity::isSolidSlopeUp ( Vect p, Vect * result )
 {
 	if (level == nullptr)
 		throw Exception("Entity::isSolidSlope level é nulo");
@@ -517,7 +527,7 @@ bool Entity::isSolidSlopeUp ( Vect p )
 		Vect center[2] = {Vect(c.x, c.y - collRect.h / 2), Vect(c.x, c.y + collRect.h / 2)};
 		Vect slopePos(int(p.x / tilesize) * tilesize, int(p.y / tilesize) * tilesize);
 		Vect aux[2] = {upSolidSlopeAngles[tile][0], upSolidSlopeAngles[tile][1]};
-		if (lineIntersects(Vect::add(slopePos, aux[0]), Vect::add(slopePos, aux[1]), center[0], center[1]))
+		if (lineIntersects(Vect::add(slopePos, aux[0]), Vect::add(slopePos, aux[1]), center[0], center[1], result))
 			return true;
 	}
 
@@ -531,10 +541,11 @@ bool Entity::isGround (  )
 
 	setSides(collRect, collPoints);
 
-	for (auto p: downSide)
+	float centerX = pos.x + collRect.x + collRect.w / 2;
+	for (auto p: leftSide)
 	{
-		p.x += pos.x;
-		p.y += pos.y;
+		p.x += centerX;
+		p.y += pos.y + 1;
 		if (isSolidSlopeUp(p))
 			return true;
 	}
@@ -674,6 +685,31 @@ bool Entity::oneWayUpCollision ()
 			after.y = y - collRect.h - 1;
 			after.x = collPos.x;
 			setCollPos(after);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool Entity::slopeUpCollision (  )
+{
+	if (vel.y <= 0)
+		return false;
+	
+	Vect result;
+	float centerX = pos.x + collRect.x + collRect.w / 2;
+	for (auto p: leftSide)
+	{
+		p.x += centerX;
+		p.y += pos.y;
+	
+		if (isSolidSlopeUp(p, &result))
+		{
+			//move pra fora do slope
+			result.y -= collRect.h;
+			result.x = pos.x + collRect.x;
+			setCollPos(result);
 			return true;
 		}
 	}

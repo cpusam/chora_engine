@@ -15,13 +15,17 @@ ELSE (CMAKE_VERSION VERSION_LESS "3.1")
 	#add_compile_options("-std=c++11")
 ENDIF (CMAKE_VERSION VERSION_LESS "3.1")
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g")
-file(GLOB_RECURSE SRCS src/*.cpp game/*.cpp gui/*.cpp platform/*.cpp SDL_gfx/*.cpp sound/*.cpp src/renderer/*.cpp)
-file(GLOB_RECURSE HDRS Chora.hpp sdl.hpp include/*.hpp game/*.hpp gui/*.hpp platform/*.hpp SDL_gfx/*.hpp sound/*.hpp include/renderer/*.hpp)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+if (DEBUG)
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+endif (DEBUG)
+
+file(GLOB_RECURSE SRCS "src/*.cpp" "game/*.cpp" "gui/*.cpp" "platform/*.cpp" "SDL_gfx/*.cpp" "sound/*.cpp" "src/renderer/*.cpp")
+file(GLOB_RECURSE HDRS "Chora.hpp" "sdl.hpp" "include/*.hpp" "game/*.hpp" "gui/*.hpp" "platform/*.hpp" "SDL_gfx/*.hpp" "sound/*.hpp" "include/renderer/*.hpp")
 
 #add_definitions("-DNO_THREAD_SAFE")
 
-include_directories(. include)
+include_directories(. include game platform gui sound SDL_gfx)
 add_library(chora ${HDRS} ${SRCS})
 
 

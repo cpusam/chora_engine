@@ -26,7 +26,8 @@ claim that you wrote the original software. If you use this software
 
 #include "sdl.hpp"
 #include "vect.hpp"
-#include "platform/tilemap.hpp"
+#include "../platform/tilemap.hpp"
+#include "../game/Entity.hpp"
 
 #include <vector>
 
@@ -80,5 +81,8 @@ extern SDL_Rect rectIntersect ( SDL_Rect a, SDL_Rect b );
 
 //
 extern bool pointtile ( TileMap & map, std::vector <int> & coll_tile, Vect & pos );
+
+class Entity;
+extern std::vector<Entity *> boundingboxEx ( Entity * e, std::vector<Entity *> entities, bool checkVisible=true );
 
 #endif
