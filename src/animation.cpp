@@ -404,11 +404,14 @@ AnimationFrame Animation::get_curr_frame (  )
 int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 {
 	int ret = 0;
-	SDL_Rect dest, source;
-	dest = frames.at(index).get_destiny();
-	dest.x += x;
-	dest.y += y;
-	source = frames.at(index).get_source();
+	static SDL_Rect dest, source;
+	{
+		dest = frames.at(index).get_destiny();
+		source = frames.at(index).get_source();
+	}
+
+	dest.x = dest.x + x;
+	dest.y = dest.y + y;
 
 	if (use_center)
 	{
@@ -424,7 +427,7 @@ int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 		}
 		else
 		{
-			SDL_Point center;
+			static SDL_Point center;
 			if (use_center)
 				center = {frames[index].get_source().w/2, frames[index].get_source().h/2};
 			else if (use_rot)
@@ -444,17 +447,21 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int d
 {
 	int ret = 0;
 	SDL_Rect dest, source;
-	dest = frames.at(index).get_destiny();
+	//if (get_state() == CHANGE_FRAME)
+	{
+		dest = frames.at(index).get_destiny();
+		source = frames.at(index).get_source();
+	}
+
 	dest.w = destW;
 	dest.h = destH;
-	source = frames.at(index).get_source();
 
 	Vect pos = cam->get_position();
 	SDL_Rect dim = cam->get_dimension();
 	//SDL_Rect view = cam->get_view();
 
-	dest.x += x;
-	dest.y += y;
+	dest.x = dest.x + x;
+	dest.y = dest.y + y;
 
 	if (use_center)
 	{
@@ -481,7 +488,7 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int d
 			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, 0, 0, frames[index].get_flip());
 		else
 		{
-			SDL_Point center = {dest.w/2, dest.h/2};
+			static SDL_Point center = {dest.w/2, dest.h/2};
 			if (use_center == false && use_rot)
 			{
 				center.x = this->center.x;

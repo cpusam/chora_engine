@@ -44,7 +44,7 @@ void TileMap::set_tile ( int i, int t )
 			tiles.push_back(t);
 	}
 }
-
+/*
 int TileMap::get_tile ( int x, int y )
 {
 	if (x < 0 || y < 0)
@@ -73,6 +73,7 @@ int TileMap::get_tile ( int x, int y )
 
 	return -1;
 }
+*/
 
 Vect TileMap::get_tile_pos ( int i )
 {
