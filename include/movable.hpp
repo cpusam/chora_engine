@@ -61,8 +61,12 @@ class Movable
 		virtual float get_vel_y (  );
 
 		virtual void set_acc ( Vect a );
+		virtual void set_acc_x ( float x );
+		virtual void set_acc_y ( float y );
 
 		virtual Vect get_acc (  );
+		virtual float get_acc_x (  );
+		virtual float get_acc_y (  );
 
 		virtual void set_dim ( SDL_Rect d );
 

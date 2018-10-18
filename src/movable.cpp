@@ -56,9 +56,29 @@ void Movable::set_acc ( Vect a )
 	acc = a;
 }
 
+void Movable::set_acc_x ( float x )
+{
+	acc.x = x;
+}
+
+void Movable::set_acc_y ( float y )
+{
+	acc.y = y;
+}
+
 Vect Movable::get_acc (  )
 {
 	return acc;
+}
+
+float Movable::get_acc_x (  )
+{
+	return acc.x;
+}
+
+float Movable::get_acc_y (  )
+{
+	return acc.y;
 }
 
 void Movable::set_dim ( SDL_Rect d )
