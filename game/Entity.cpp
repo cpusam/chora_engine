@@ -21,7 +21,6 @@ Entity::Entity()
 	collPoints = 3;
 	topLadderTile = -1;
 	topTileSize = 10;//mesmo valor que maxVel;
-	collRect = (SDL_Rect){0,0,0,0};//retangulo de colisão
 	texture = nullptr;
 	currAnim = nullptr;
 	name = "";
@@ -32,7 +31,7 @@ Entity::Entity()
 	//máximo de desaceleração, pará bruscamente quando não movendo
 	damping.set(1.0,1.0);
 	//
-	setCollRect((SDL_Rect){0,0,3,3}, 3);
+	setCollRect((SDL_Rect){0,0,3,3}, collPoints);
 }
 
 Entity::~Entity()

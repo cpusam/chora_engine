@@ -1,4 +1,5 @@
 #include "tilemap.hpp"
+#include <algorithm>
 
 void TileMap::set_tilesize ( int ts )
 {
@@ -126,11 +127,7 @@ SDL_Rect TileMap::get_dimension (  )
 
 bool TileMap::has_tile ( int t )
 {
-	for (unsigned int i = 0, end = tiles.size(); i < end; i++)
-		if (t == tiles[i])
-			return true;
-
-	return false;
+	return std::find(tileset.begin(), tileset.end(), t) != tileset.end();
 }
 
 bool TileMap::add_tile ( int t )

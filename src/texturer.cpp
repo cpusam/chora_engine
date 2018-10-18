@@ -1,4 +1,5 @@
 #include "texturer.hpp"
+#include "Exception.hpp"
 
 #if defined(WIN32) || defined(WIN64) || defined(NO_THREAD_SAFE)
 	Texturer * Texturer::singleton = nullptr;
@@ -79,8 +80,8 @@ SDL_Texture *Texturer::getTexture(std::string name) {
 
 	}
 
-	std::cout << "[Texture Manager] Error : Texture \"" << name << "\" não encontrado!\n" << std::endl;
-	return 0;
+	throw Exception("[Texture Manager] Error : Texture \"" + name + "\" não encontrada");
+	return nullptr;
 }
 
 void Texturer::destroyAll() {
