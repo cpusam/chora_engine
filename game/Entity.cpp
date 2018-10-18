@@ -16,6 +16,7 @@ Entity::Entity()
 	dir = NONE_DIR;
 	visible = true;
 
+	ground = false;
 	level = nullptr;
 	collPoints = 3;
 	topLadderTile = -1;
@@ -535,7 +536,13 @@ bool Entity::isSolidSlopeUp ( Vect p, Vect * result )
 }
 
 bool Entity::isGround (  )
-{	
+{
+	if (ground)
+	{
+		ground = false;
+		return true;
+	}
+
 	if (level == nullptr)
 		throw Exception("Entity::isGround level é nulo");
 
@@ -593,6 +600,15 @@ bool Entity::isGround (  )
 	}
 
 	return false;
+}
+
+void Entity::setGround ( bool g )
+{
+	//evita bug de quando algum objeto usa setGround primeiro
+	if (ground && g == false)
+		return;
+	
+	ground = g;
 }
 
 bool Entity::moveToPosition (Vect pos, float maxVel )

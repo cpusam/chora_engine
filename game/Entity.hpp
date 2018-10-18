@@ -131,6 +131,7 @@ class Entity: public StateMachine, public Movable
 		bool oneWayUpCollision (  );
 		bool slopeUpCollision (  );
 		virtual bool isGround (  );
+		virtual void setGround ( bool g );
 
 		bool moveToPosition (Vect pos, float maxVel );
 		void setCountPath ( int count );
@@ -165,6 +166,8 @@ class Entity: public StateMachine, public Movable
 		virtual int update (  );
 
 	protected:
+		//definido apenas uma vez, depois volta para false
+		bool ground;//se é chão definido por setGround
 		Vect damping;//desaceleração (de 0 ao 1)
 		Vect maxVel, minVel;
 		int layer;//camada de desenho, quanto meno primeiro desenha
