@@ -31,6 +31,8 @@ Entity::Entity()
 	maxVel.set(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
 	//máximo de desaceleração, pará bruscamente quando não movendo
 	damping.set(1.0,1.0);
+	//
+	setCollRect((SDL_Rect){0,0,3,3}, 3);
 }
 
 Entity::~Entity()
@@ -604,7 +606,7 @@ bool Entity::isGround (  )
 
 void Entity::setGround ( bool g )
 {
-	//evita bug de quando algum objeto usa setGround primeiro
+	//evita bug quando algum objeto usa setGround primeiro
 	if (ground && g == false)
 		return;
 	
