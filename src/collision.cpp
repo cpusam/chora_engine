@@ -137,7 +137,7 @@ bool pointtile ( TileMap & map, std::vector <int> & coll_tile, Vect &  pos )
 	return false;
 }
 
-std::vector<Entity *> boundingboxEx ( Entity * e, std::vector<Entity *> entities, bool checkVisible )
+std::vector<Entity *> boundingboxEx ( Entity * e, const std::vector<Entity *> & entities, bool checkVisible )
 {
 	std::vector<Entity *> vet;
 	std::vector<Entity *> touched;
@@ -145,7 +145,7 @@ std::vector<Entity *> boundingboxEx ( Entity * e, std::vector<Entity *> entities
 	//colisão eixo X
 	for (Entity * entity: entities)
 	{
-		if (entity->isVisible() != checkVisible)
+		if (!entity || entity->isVisible() != checkVisible)
 			continue;
 		
 		SDL_Rect rect = entity->getCollRect();
@@ -173,5 +173,64 @@ std::vector<Entity *> boundingboxEx ( Entity * e, std::vector<Entity *> entities
 		}
 	}
 
+	return vet;
+}
+
+std::vector<Entity *> pointboxEx ( const Vect & pos, const std::vector<Vect> & points, float addX, float addY, std::vector<Entity *> & entities, bool checkVisible )
+{
+	std::vector<Entity *> vet, touched;
+	Vect p;
+	size_t size = points.size();
+	SDL_Rect rect;
+
+	//colisão no eixo X
+	for (Entity * entity: entities)
+	{
+		if (!entity || entity->isVisible() != checkVisible)
+			continue;
+		
+		rect = entity->getCollRect();
+		for (size_t i = 0; i < size; ++i)
+		{
+			p.x = pos.x + points[i].x + addX;
+			p.y = pos.y + points[i].y;
+
+			if (p.x > rect.x + rect.w)
+				goto endFOR;
+			
+			if (p.x < rect.x)
+				goto endFOR;
+			
+			break;
+		}
+
+		touched.push_back(entity);
+		endFOR:
+		continue;
+	}
+
+	//colisão no eixo Y
+	if (touched.size())
+		for (Entity * entity: touched)
+		{
+			rect = entity->getCollRect();
+			for (size_t i = 0; i < size; ++i)
+			{
+				p.x = pos.x + points[i].x;
+				p.y = pos.y + points[i].y + addY;
+
+				if (p.y > rect.y + rect.h)
+					goto endFOR2;
+				
+				if (p.y < rect.y)
+					goto endFOR2;
+				break;
+			}
+			
+			vet.push_back(entity);
+			endFOR2:
+			continue;
+		}
+	
 	return vet;
 }

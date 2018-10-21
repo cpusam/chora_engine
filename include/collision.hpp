@@ -83,6 +83,10 @@ extern SDL_Rect rectIntersect ( SDL_Rect a, SDL_Rect b );
 extern bool pointtile ( TileMap & map, std::vector <int> & coll_tile, Vect & pos );
 
 class Entity;
-extern std::vector<Entity *> boundingboxEx ( Entity * e, std::vector<Entity *> entities, bool checkVisible=true );
+
+//funções de colisão mais rápidas para muitas Entity
+extern std::vector<Entity *> boundingboxEx ( Entity * e, const std::vector<Entity *> & entities, bool checkVisible=true );
+extern std::vector<Entity *> pointboxEx ( const Vect & pos, const std::vector<Vect> & points, float addX, float addY, std::vector<Entity *> & entities, bool checkVisible=true );
+
 
 #endif
