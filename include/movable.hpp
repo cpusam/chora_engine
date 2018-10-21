@@ -71,9 +71,6 @@ class Movable
 		virtual void set_dim ( SDL_Rect d );
 
 		virtual SDL_Rect get_dim (  );
-		
-		virtual void moveX (  );
-		virtual void moveY (  );
 };
 
 #endif

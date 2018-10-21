@@ -279,8 +279,7 @@ void Elements::update (  )
 
 void Elements::inputEntities ( SDL_Event & event )
 {
-	std::vector<Entity*>::iterator it;
-	for (size_t i = 0; i < entities.size(); i++)
+	for (size_t i = 0, size = entities.size(); i < size; ++i)
 		if (entities[i])
 			entities[i]->input(event);
 }

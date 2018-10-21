@@ -91,16 +91,3 @@ SDL_Rect Movable::get_dim (  )
 	return dim;
 }
 
-void Movable::moveX (  )
-{
-	vel.x = acc.x * FPSManager::instance()->get_delta() / 1000.0f;
-	pos.x += vel.x;
-}
-
-void Movable::moveY (  )
-{
-	vel.y = acc.y * FPSManager::instance()->get_delta() / 1000.0f;
-	pos.y += vel.y;
-}
-
-

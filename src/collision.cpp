@@ -180,7 +180,7 @@ std::vector<Entity *> pointboxEx ( const Vect & pos, const std::vector<Vect> & p
 {
 	std::vector<Entity *> vet, touched;
 	Vect p;
-	size_t size = points.size();
+	size_t size = points.size(), i;
 	SDL_Rect rect;
 
 	//colisão no eixo X
@@ -190,23 +190,21 @@ std::vector<Entity *> pointboxEx ( const Vect & pos, const std::vector<Vect> & p
 			continue;
 		
 		rect = entity->getCollRect();
-		for (size_t i = 0; i < size; ++i)
+		for (i = 0; i < size; ++i)
 		{
 			p.x = pos.x + points[i].x + addX;
 			p.y = pos.y + points[i].y;
 
 			if (p.x > rect.x + rect.w)
-				goto endFOR;
+				continue;
 			
 			if (p.x < rect.x)
-				goto endFOR;
-			
+				continue;
 			break;
 		}
 
-		touched.push_back(entity);
-		endFOR:
-		continue;
+		if (i != size)
+			touched.push_back(entity);
 	}
 
 	//colisão no eixo Y
@@ -214,22 +212,21 @@ std::vector<Entity *> pointboxEx ( const Vect & pos, const std::vector<Vect> & p
 		for (Entity * entity: touched)
 		{
 			rect = entity->getCollRect();
-			for (size_t i = 0; i < size; ++i)
+			for (i = 0; i < size; ++i)
 			{
 				p.x = pos.x + points[i].x;
 				p.y = pos.y + points[i].y + addY;
 
 				if (p.y > rect.y + rect.h)
-					goto endFOR2;
+					continue;
 				
 				if (p.y < rect.y)
-					goto endFOR2;
+					continue;
 				break;
 			}
 			
-			vet.push_back(entity);
-			endFOR2:
-			continue;
+			if (i != size)
+				vet.push_back(entity);
 		}
 	
 	return vet;

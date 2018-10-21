@@ -30,10 +30,9 @@
 class Exception: public std::runtime_error
 {
 	public:
-		Exception(const std::string e);
-		Exception(const char * e);
+		Exception(const std::string e): std::runtime_error(e.c_str()) {}
+		Exception(const char * e): std::runtime_error(e) {}
 		virtual ~Exception() throw (){}
-		virtual const char * what (  );
 	protected:
 		std::string mesg;
 };
