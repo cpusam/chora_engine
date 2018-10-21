@@ -43,8 +43,8 @@ class TileMap
 		int tilesize;
 		Vect pos;
 		SDL_Rect dimension;
-		std::vector <int> tileset;
-		std::vector <int> tiles;
+		std::vector <int> tileset;//conjunto de tiles do mapa
+		std::vector <int> tiles;//tiles neste mapa
 
 	public:
 		TileMap ( int ts )

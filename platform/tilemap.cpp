@@ -127,7 +127,7 @@ SDL_Rect TileMap::get_dimension (  )
 
 bool TileMap::has_tile ( int t )
 {
-	return std::find(tileset.begin(), tileset.end(), t) != tileset.end();
+	return std::find(tiles.begin(), tiles.end(), t) != tiles.end();
 }
 
 bool TileMap::add_tile ( int t )
@@ -328,7 +328,10 @@ int TileMap::read_from_xpm ( std::string filename )
 		if (pattern == 'c')
 		{
 			colors[b] = rgb;
-			tiles.push_back(static_cast<int>(b));
+			if (tokens[i].find("None") == std::string::npos)
+				tiles.push_back(static_cast<int>(rgb));
+			else
+				tiles.push_back(static_cast<int>(b));
 		}
 	}
 
@@ -336,7 +339,7 @@ int TileMap::read_from_xpm ( std::string filename )
 	{
 		for (size_t j = 0, sizeW = tokens[i].length(); j < sizeW; j++)
 		{
-			tileset.push_back(static_cast<int>(tokens[i][j]));
+			tileset.push_back(static_cast<int>(colors[tokens[i][j]]));
 		}
 	}
 
