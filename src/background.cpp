@@ -96,7 +96,7 @@ void Background::draw_hor ( SDL_Renderer * renderer, Camera * cam )
 	src.h = h;
 
 	//destino a esquerda
-	dest.x = 0;
+	dest.x = dim.x;
 	dest.y = 0;
 	dest.w = dim.w - static_cast<int>(roundf(pCam.x + pos.x)) % dim.w;
 	dest.h = dim.h;

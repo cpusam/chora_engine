@@ -84,12 +84,36 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 	dim.h /= tilesize;
 	int mod_x = int(pCam.x) % tilesize;
 	int mod_y = int(pCam.y) % tilesize;
+	int maxHor = p.x + dim.w + 1;
+	int maxVer = p.y + dim.h + 1;
 
-	for (i = p.x - 1; i <= p.x + dim.w + 1; i++)
-		for (j = p.y - 1; j <= p.y + dim.h + 1; j++)
+	//para o caso do mapa ser menor que as dimensões da camera
+	if (width < dim.w + 1)
+	{
+		mod_x = 0;
+		maxHor -= 1;
+	}
+
+	if (height < dim.h + 1)
+	{
+		mod_y = 0;
+		maxVer -= 1;
+	}
+	if (!tileset.size())
+	{
+		std::cout<<"TileMapView::Error não tem tiles\n";
+		return -1;
+	}
+
+	for (i = p.x - 1; i <= maxHor; i++)
+		for (j = p.y - 1; j <= maxVer; j++)
 		{
-			//t = tileset.at(i * width + j); <- BUGADO!
-			t = get_tile(i * tilesize, j * tilesize);
+			int index = j * width + i;
+			if (index < 0 || index >= int(tileset.size()))
+				continue;
+			
+			t = tileset[index];
+			//t = get_tile(i * tilesize, j * tilesize);
 			if (!has_tile(t))
 				continue;
 

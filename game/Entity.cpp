@@ -743,7 +743,7 @@ bool Entity::collisionVer (  )
 	
 	bool ret = false;
 	float beforeX = getCollPos().x;
-	setSides(collRect, collPoints);
+	//setSides(collRect, collPoints);
 
 	if (vel.y < 0)
 	{
@@ -822,7 +822,7 @@ bool Entity::collisionHor (  )
 		return false;
 	bool ret = false;
 	float beforeY = getCollPos().y;
-	setSides(collRect, collPoints);
+	//setSides(collRect, collPoints);
 
 	if (vel.x < 0)
 	{
