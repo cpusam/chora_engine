@@ -29,7 +29,7 @@ Entity::Entity()
 	//coloca a velocidade máxima... ao máximo
 	maxVel.set(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
 	//máximo de desaceleração, pará bruscamente quando não movendo
-	damping.set(1.0,1.0);
+	damping.set(0.0,0.0);
 	//
 	setCollRect((SDL_Rect){0,0,3,3}, collPoints);
 }
@@ -612,7 +612,7 @@ void Entity::setGround ( bool g )
 	ground = g;
 }
 
-bool Entity::moveToPosition (Vect pos, float maxVel )
+bool Entity::moveToPosition ( Vect pos, float maxVel )
 {
 	Vect diff;
 	diff.x = pos.x - this->pos.x;
@@ -620,7 +620,7 @@ bool Entity::moveToPosition (Vect pos, float maxVel )
 
 	double hipo = sqrt(diff.x*diff.x + diff.y*diff.y);
 
-	if (hipo < maxVel*2 || std::isnan(hipo))
+	if (hipo < maxVel || std::isnan(hipo))
 		return true;
 
 	diff.x /= hipo;

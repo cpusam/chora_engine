@@ -99,6 +99,7 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 		mod_y = 0;
 		maxVer -= 1;
 	}
+	
 	if (!tileset.size())
 	{
 		std::cout<<"TileMapView::Error não tem tiles\n";

@@ -66,7 +66,7 @@ class Entity: public StateMachine, public Movable
 		void setGroup ( std::string g );
 		std::string getGroup (  );
 		EntityID getId (  );
-		void show ( bool s );
+		virtual void show ( bool s );
 		bool isVisible (  );
 		void setDir ( Direction d );
 		Direction getDir (  );
@@ -133,9 +133,9 @@ class Entity: public StateMachine, public Movable
 		virtual bool isGround (  );
 		virtual void setGround ( bool g );
 
-		bool moveToPosition (Vect pos, float maxVel );
-		void setCountPath ( int count );
-		bool moveInPath ( Vect startPos, std::vector<Vect> & path, float maxVel, bool back );
+		virtual bool moveToPosition (Vect pos, float maxVel );
+		virtual void setCountPath ( int count );
+		virtual bool moveInPath ( Vect startPos, std::vector<Vect> & path, float maxVel, bool back );
 		virtual bool collisionVer (  );
 		virtual bool collisionHor (  );
 		

@@ -141,14 +141,14 @@ std::vector<Entity *> boundingboxEx ( Entity * e, const std::vector<Entity *> & 
 {
 	std::vector<Entity *> vet;
 	std::vector<Entity *> touched;
-	SDL_Rect box = e->getCollRect();
+	SDL_Rect box = e->getCollRect(), rect;
 	//colisão eixo X
 	for (Entity * entity: entities)
 	{
 		if (!entity || entity->isVisible() != checkVisible)
 			continue;
 		
-		SDL_Rect rect = entity->getCollRect();
+		rect = entity->getCollRect();
 		
 		if (box.x > rect.x + rect.w)
 			continue;
@@ -163,7 +163,7 @@ std::vector<Entity *> boundingboxEx ( Entity * e, const std::vector<Entity *> & 
 		//colisão eixo Y
 		for (Entity * entity: touched)
 		{
-			SDL_Rect rect = entity->getCollRect();
+			rect = entity->getCollRect();
 			if (box.y > rect.y + rect.h)
 				continue;
 			if (box.y + box.h < rect.y)
