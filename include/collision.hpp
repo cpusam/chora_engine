@@ -86,7 +86,7 @@ class Entity;
 
 //funções de colisão mais rápidas para muitas Entity
 extern std::vector<Entity *> boundingboxEx ( Entity * e, const std::vector<Entity *> & entities, bool checkVisible=true );
-extern std::vector<Entity *> pointboxEx ( const Vect & pos, const std::vector<Vect> & points, float addX, float addY, std::vector<Entity *> & entities, bool checkVisible=true );
+extern std::vector<Entity *> pointboxEx ( const Vect & pos, const std::vector<Vect> & points, float addX, float addY, const std::vector<Entity *> & entities, bool checkVisible=true );
 
 
 #endif

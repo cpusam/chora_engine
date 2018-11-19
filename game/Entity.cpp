@@ -620,7 +620,7 @@ bool Entity::moveToPosition ( Vect pos, float maxVel )
 
 	double hipo = sqrt(diff.x*diff.x + diff.y*diff.y);
 
-	if (hipo < maxVel || std::isnan(hipo))
+	if (hipo < maxVel*2 || std::isnan(hipo))
 		return true;
 
 	diff.x /= hipo;

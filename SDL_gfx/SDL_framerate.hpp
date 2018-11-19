@@ -31,10 +31,6 @@ Andreas Schiffler -- aschiffler at ferzkopp dot net
 #define CHORA_SDL_framerate_h
 
 #include "sdl.hpp"
-#ifndef NO_THREAD_SAFE
-	#include <atomic>
-	#include <mutex>
-#endif
 
 /* --------- Definitions */
 
@@ -78,155 +74,31 @@ class FPSManager
 		Uint32 lastticks;
 		Uint32 time_passed;
 	private:
-	#if defined(WIN32) || defined(WIN64) || defined(NO_THREAD_SAFE)
 		static FPSManager * singleton;
-	#else
-		static std::atomic<FPSManager *> singleton;
-		static std::mutex myMutex;
-	#endif
 
 	protected:
-		FPSManager (  )
-		{
-			time_passed = 0;
-			init_framerate();
-		}
+		FPSManager (  );
 
-		~FPSManager (  )
-		{
-
-		}
-
-		void init_framerate (  )
-		{
-			lastticks = baseticks = get_ticks();
-		}
+		void init_framerate (  );
 
 	public:
+		static FPSManager * instance (  );
 
+		static void destroy (  );
 
-		static FPSManager * instance (  )
-		{
-			if (!singleton)
-			{
-				if (!singleton)
-					singleton = new FPSManager();
-			}
+		Uint32 get_ticks (  );
 
-			return singleton;
-		}
+		int set_framerate ( Uint32 rate );
 
-		static void destroy (  )
-		{
-			if (singleton)
-			{
-				delete singleton;
-				singleton = nullptr;
-			}
-		}
+		FPSDef get_fpsdef (  );
 
-		Uint32 get_ticks (  )
-		{
-			Uint32 ticks = SDL_GetTicks();
+		bool set_fpsdef ( FPSDef d );
 
-			/*
-			* Since baseticks!=0 is used to track initialization
-			* we need to ensure that the tick count is always >0
-			* since SDL_GetTicks may not have incremented yet and
-			* return 0 depending on the timing of the calls.
-			*/
-			if (ticks == 0)
-			{
-				return 1;
-			}
-			else
-			{
-				return ticks;
-			}
-		}
-
-		int set_framerate ( Uint32 rate )
-		{
-			if ((rate >= FPS_LOWER_LIMIT) && (rate <= FPS_UPPER_LIMIT))
-			{
-				fpsdef.framecount = 0;
-				fpsdef.rate = rate;
-				fpsdef.rateticks = (1000.0f / (float) rate);
-				return (0);
-			}
-
-			return (-1);
-		}
-
-		FPSDef get_fpsdef (  )
-		{
-			return fpsdef;
-		}
-
-		bool set_fpsdef ( FPSDef d )
-		{
-			if (set_framerate(d.rate) > -1)
-			{
-				fpsdef = d;
-				return true;
-			}
-
-			return false;
-		}
-
-		Uint32 get_delta (  )
-		{
-			return time_passed;
-		}
+		Uint32 get_delta (  );
 		
-		double get_delta_sec (  )
-		{
-			return double(time_passed)/1000.0;
-		}
+		double get_delta_sec (  );
 
-		Uint32 update (  )
-		{
-			Uint32 current_ticks;
-			Uint32 target_ticks;
-			Uint32 the_delay;
-			Uint32 delta_time = 0;
-
-			/*
-			* Initialize uninitialized manager
-			*/
-			if (baseticks == 0)
-			{
-				init_framerate();
-			}
-
-			/*
-			* Next frame
-			*/
-			fpsdef.framecount++;
-
-			/*
-			* Get/calc ticks
-			*/
-			current_ticks = get_ticks();
-			delta_time = current_ticks - lastticks;
-			lastticks = current_ticks;
-			target_ticks = baseticks + (Uint32) ((float) fpsdef.framecount * fpsdef.rateticks);
-
-			if (current_ticks <= target_ticks)
-			{
-				the_delay = target_ticks - current_ticks;
-				SDL_Delay(the_delay);
-			}
-			else
-			{
-				fpsdef.framecount = 0;
-				baseticks = get_ticks();
-			}
-
-			time_passed = delta_time;
-
-			return time_passed;
-		}
+		Uint32 update (  );
 };
 
 #endif				/* _SDL_framerate_h */

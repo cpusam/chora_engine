@@ -176,7 +176,7 @@ std::vector<Entity *> boundingboxEx ( Entity * e, const std::vector<Entity *> & 
 	return vet;
 }
 
-std::vector<Entity *> pointboxEx ( const Vect & pos, const std::vector<Vect> & points, float addX, float addY, std::vector<Entity *> & entities, bool checkVisible )
+std::vector<Entity *> pointboxEx ( const Vect & pos, const std::vector<Vect> & points, float addX, float addY, const std::vector<Entity *> & entities, bool checkVisible )
 {
 	std::vector<Entity *> vet, touched;
 	Vect p;

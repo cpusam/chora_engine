@@ -71,26 +71,10 @@ class Writer
 		SDL_Renderer * renderer;
 		static Writer * singleton;
 
-		Writer (  )
-		{
-			//font = 0;
-			size = 0;
-			renderer = 0;
-
-	#ifndef __clang__
-			if (!TTF_WasInit())
-				throw "Writer: SDL_ttf não inicializada\n";
-	#endif
-		}
+		Writer (  );
 
 	public:
-		static Writer * instance (  )
-		{
-			if (!singleton)
-				singleton = new Writer();
-
-			return singleton;
-		}
+		static Writer * instance (  );
 		
 		virtual ~Writer (  );
 

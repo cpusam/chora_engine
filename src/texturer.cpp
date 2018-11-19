@@ -1,12 +1,7 @@
 #include "texturer.hpp"
 #include "Exception.hpp"
 
-#if defined(WIN32) || defined(WIN64) || defined(NO_THREAD_SAFE)
-	Texturer * Texturer::singleton = nullptr;
-#else
-std::atomic<Texturer *> Texturer::singleton{nullptr};
-std::mutex Texturer::myMutex;
-#endif
+Texturer * Texturer::singleton = nullptr;
 
 Texturer::Texturer(){}
 

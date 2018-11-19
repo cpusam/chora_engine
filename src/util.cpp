@@ -1,5 +1,5 @@
 #include "util.hpp"
-#if defined(WIN32) || defined(WIN64)
+#if defined(WIN32) || defined(_WIN64)
 	#include <ctime>
 #else
 	#include <random>
@@ -9,7 +9,7 @@
 double Rand ( double min, double max )
 {
 	
-	#if defined(WIN32) || defined(WIN64)
+	#if defined(WIN32) || defined(_WIN64)
 		static bool inited = false;
 		if (!inited)
 		{
@@ -28,7 +28,7 @@ double Rand ( double min, double max )
 
 int RandInt ( int min, int max )
 {
-	#if defined(WIN32) || defined(WIN64)
+	#if defined(WIN32) || defined(_WIN64)
 		static bool inited = false;
 		if (!inited)
 		{

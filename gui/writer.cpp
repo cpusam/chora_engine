@@ -1,10 +1,28 @@
 #include "writer.hpp"
 
-Writer * Writer::singleton = 0;
+Writer * Writer::singleton = nullptr;
+
+Writer::Writer (  )
+{
+	//font = 0;
+	size = 0;
+	renderer = 0;
+
+	if (!TTF_WasInit())
+		throw "Writer: SDL_ttf não inicializada\n";
+}
 
 Writer::~Writer (  )
 {
 	
+}
+
+Writer * Writer::instance()
+{
+	if (!singleton)
+		singleton = new Writer();
+
+	return singleton;
 }
 
 void Writer::free_fonts (  )

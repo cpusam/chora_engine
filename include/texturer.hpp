@@ -25,21 +25,12 @@
 #define CHORA_TEXTURER_HPP
 
 #include <vector>
-#ifndef NO_THREAD_SAFE
-	#include <atomic>
-	#include <mutex>
-#endif
 #include "textureid.hpp"
 
 
 class Texturer{
 	std::vector<TextureID>	 textureID;
-	#if defined(WIN32) || defined(WIN64) || defined(NO_THREAD_SAFE)
 	static Texturer * singleton;
-	#else
-	static std::atomic<Texturer *> singleton;
-	static std::mutex myMutex;
-	#endif
 
 	Texturer();
 	virtual ~Texturer();

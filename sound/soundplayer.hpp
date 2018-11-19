@@ -26,10 +26,6 @@
 
 #include <string>
 #include <vector>
-#ifndef NO_THREAD_SAFE
-	#include <atomic>
-	#include <mutex>
-#endif
 
 #include "../sdl.hpp"
 #include "../include/statemachine.hpp"
@@ -102,12 +98,7 @@ class SoundFX: public StateMachine
 class SoundPlayer: public StateMachine
 {
 	private:
-		#if defined(WIN32) || defined(WIN64) || defined(NO_THREAD_SAFE)
 		static SoundPlayer * singleton;
-		#else
-		static std::atomic<SoundPlayer *> singleton;
-		static std::mutex myMutex;
-		#endif
 		std::vector <SoundFX> sound;
 
 	protected:
