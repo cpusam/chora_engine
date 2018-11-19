@@ -612,27 +612,31 @@ void Entity::setGround ( bool g )
 	ground = g;
 }
 
-bool Entity::moveToPosition ( Vect pos, float maxVel )
+bool Entity::moveToPosition ( Vect pos, float maxVelNow )
 {
-	Vect diff;
-	diff.x = pos.x - this->pos.x;
-	diff.y = pos.y - this->pos.y;
+	Vect diff(pos.x - this->pos.x, pos.y - this->pos.y);
 
-	double hipo = sqrt(diff.x*diff.x + diff.y*diff.y);
+	float seconds = FPSManager::instance()->get_delta_sec();
 
-	if (hipo < maxVel*2 || std::isnan(hipo))
-		return true;
+	diff.normalize();
+	vel.x = maxVelNow * diff.x * seconds;
+	vel.y = maxVelNow * diff.y * seconds;
 
-	diff.x /= hipo;
-	diff.y /= hipo;
+	this->pos.x += vel.x;
+	this->pos.y += vel.y;
 
-	this->vel.x = maxVel * diff.x;
-	this->pos.x += this->vel.x;
-
-	this->vel.y = maxVel * diff.y;
-	this->pos.y += this->vel.y;
-
-	return false;
+	bool changeX = false, changeY = false;
+	if (vel.x < 0)
+		changeX = int(this->pos.x) < int(pos.x);
+	else if (vel.x > 0)
+		changeX = int(this->pos.x) > int(pos.x);
+	
+	if (vel.y < 0)
+		changeY = int(this->pos.y) < int(pos.y);
+	else if (vel.y > 0)
+		changeY = int(this->pos.y) > int(pos.y);
+	
+	return changeX && changeY;
 }
 
 //move num caminho realtivo à posição do corpo
