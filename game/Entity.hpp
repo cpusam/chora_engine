@@ -150,6 +150,9 @@ class Entity: public StateMachine, public Movable
 		// define as laterais do corpo baseado num retangulo usando numPoints por lateral
 		void setSides ( SDL_Rect rect, int numPoints );
 		void drawSides ( SDL_Renderer * renderer, Camera * camera );
+		
+		//pega os hash para colisão, usado em alguns poucos casos
+		std::vector<int> getTilesHash (  );
 
 		//aplica impulso
 		void applyImpulse ( Vect impulse );

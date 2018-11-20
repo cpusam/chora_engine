@@ -985,6 +985,64 @@ void Entity::drawSides ( SDL_Renderer * renderer, Camera * camera )
 
 }
 
+std::vector<int> Entity::getTilesHash (  )
+{
+	std::vector<int> ret;
+
+	if (!level)
+	{
+		std::cout<<"Entity::Erro level é nulo\n";
+		return ret;
+	}
+
+	int tilesize = level->get_tilesize();
+	int width = level->get_width();
+
+	
+	if (leftSide.size())
+	{
+		int x = (leftSide[0].x + pos.x) / tilesize;
+		for (int i = leftSide.size() - 1; i > -1; i--)
+		{
+			int y = (leftSide[i].y + pos.y) / tilesize;
+			ret.push_back(y * width + x);
+		}
+	}
+
+	
+	if (rightSide.size())
+	{
+		int x = (rightSide[0].x + pos.x) / tilesize;
+		for (int i = int(rightSide.size() - 1); i > -1; i--)
+		{
+			int y = (rightSide[i].y + pos.y) / tilesize;
+			ret.push_back(y * width + x);
+		}
+	}
+	
+	if (downSide.size())
+	{
+		int y = (downSide[0].y + pos.y) / tilesize;
+		for (int i = int(downSide.size() - 1); i > -1; i--)
+		{
+			int x = (downSide[i].y + pos.y) / tilesize;
+			ret.push_back(y * width + x);
+		}
+	}
+
+	if (upSide.size())
+	{
+		int y = (upSide[0].y + pos.y) / tilesize;
+		for (int i = int(upSide.size() - 1); i > -1; i--)
+		{
+			int x = (upSide[i].y + pos.y) / tilesize;
+			ret.push_back(y * width + x);
+		}
+	}
+
+	return ret;
+}
+
 void Entity::applyImpulse ( Vect impulse )
 {
 	vel = Vect::add(vel, impulse);
