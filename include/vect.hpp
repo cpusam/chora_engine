@@ -274,6 +274,16 @@ struct Vect
 		return x == 0 && y == 0;
 	}
 
+	Vect & negative (  )
+	{
+		if (this->x > 0)
+			this->x = -this->x;
+		if (this->y > 0)
+			this->y = -this->y;
+
+		return *this;
+	}
+
 	void print()
 	{
 		printf("vect{x=%f, y=%f}\n",this->x,this->y);

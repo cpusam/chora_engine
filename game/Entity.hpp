@@ -153,6 +153,8 @@ class Entity: public StateMachine, public Movable
 		
 		//pega os hash para colisão, usado em alguns poucos casos
 		std::vector<int> getTilesHash (  );
+		//faz espelhar as animações
+		void flipAnim ( bool hor, bool ver );
 
 		//aplica impulso
 		void applyImpulse ( Vect impulse );

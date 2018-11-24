@@ -604,11 +604,7 @@ bool Entity::isGround (  )
 }
 
 void Entity::setGround ( bool g )
-{
-	//evita bug quando algum objeto usa setGround primeiro
-	if (ground && g == false)
-		return;
-	
+{	
 	ground = g;
 }
 
@@ -637,6 +633,12 @@ bool Entity::moveToPosition ( Vect pos, float maxVelNow )
 		changeY = int(this->pos.y) > int(pos.y);
 	
 	return changeX && changeY;
+}
+
+void Entity::flipAnim ( bool hor, bool ver )
+{
+	for (auto & it: anim)
+		it.second.flip(hor, ver);
 }
 
 //move num caminho realtivo à posição do corpo
