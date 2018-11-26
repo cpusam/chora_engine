@@ -212,14 +212,14 @@ void SoundPlayer::free_sounds (  )
 
 bool SoundPlayer::has_sound ( std::string id )
 {
-	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
-		if (id == it->get_id())
+	for (SoundFX & it: sound)
+		if (id == it.get_id())
 			return true;
 
 	return false;
 }
 
-bool SoundPlayer::add_sound ( SoundFX s )
+bool SoundPlayer::add_sound ( SoundFX & s )
 {
 	if (has_sound(s.get_id()))
 		return false;
@@ -230,8 +230,8 @@ bool SoundPlayer::add_sound ( SoundFX s )
 
 bool SoundPlayer::playing ( std::string id )
 {
-	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
-		if (it->get_id() == id && it->get_state() == PLAYING_SOUND)
+	for (SoundFX & it: sound)
+		if (it.get_id() == id && it.get_state() == PLAYING_SOUND)
 			return true;
 
 	return false;
@@ -241,9 +241,13 @@ bool SoundPlayer::pause_sound ( std::string id )
 {
 	bool ret = false;
 
-	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
-		if (id == it->get_id())
-			it->pause();
+	for (SoundFX & it: sound)
+		if (id == it.get_id())
+		{
+			it.pause();
+			ret = true;
+			break;
+		}
 
 	return ret;
 }
@@ -252,13 +256,13 @@ bool SoundPlayer::resume_sound ( std::string id )
 {
 	bool ret = false;
 
-	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
-		if (id == it->get_id())
+	for (SoundFX & it: sound)
+		if (id == it.get_id())
 		{
-			switch (it->get_type())
+			switch (it.get_type())
 			{
 			case CHUNK_SOUND:
-				Mix_Resume(it->get_channel());
+				Mix_Resume(it.get_channel());
 				ret = true;
 				break;
 			case MUSIC_SOUND:
@@ -269,7 +273,7 @@ bool SoundPlayer::resume_sound ( std::string id )
 
 			if (ret)
 			{
-				it->set_state(PLAYING_SOUND);
+				it.set_state(PLAYING_SOUND);
 				break;
 			}
 		}
@@ -280,17 +284,17 @@ bool SoundPlayer::resume_sound ( std::string id )
 bool SoundPlayer::play_sound ( std::string id, int channel, int loops )
 {
 	bool ret = false;
-	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
-		if (id == it->get_id())
+	for (SoundFX & it: sound)
+		if (id == it.get_id())
 		{
-			if (it->get_state() == PAUSED_SOUND)
+			if (it.get_state() == PAUSED_SOUND)
 			{
-				it->resume();
+				it.resume();
 				ret = true;
 			}
 			else
-				ret = it->play(channel, loops);
-			it->set_state(PLAYING_SOUND);
+				ret = it.play(channel, loops);
+			it.set_state(PLAYING_SOUND);
 
 			if (ret)
 				return true;
@@ -303,13 +307,13 @@ bool SoundPlayer::halt_sound ( std::string id )
 {
 	bool ret = false;
 
-	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
-		if (id == it->get_id())
+	for (SoundFX & it: sound)
+		if (id == it.get_id() || id == "all")
 		{
-			switch (it->get_type())
+			switch (it.get_type())
 			{
 			case CHUNK_SOUND:
-				Mix_HaltChannel(it->get_channel());
+				Mix_HaltChannel(it.get_channel());
 				ret = true;
 				break;
 			case MUSIC_SOUND:
@@ -320,13 +324,9 @@ bool SoundPlayer::halt_sound ( std::string id )
 
 			if (ret)
 			{
-				it->set_state(INACTIVE_SOUND);
+				it.set_state(INACTIVE_SOUND);
 				break;
 			}
-		}
-		else if (id == "all")
-		{
-
 		}
 
 	return ret;
@@ -334,24 +334,24 @@ bool SoundPlayer::halt_sound ( std::string id )
 
 int SoundPlayer::update (  )
 {
-	for (std::vector <SoundFX>::iterator it = sound.begin(); it != sound.end(); it++)
-		switch (it->get_type())
+	for (SoundFX & it: sound)
+		switch (it.get_type())
 		{
-		case CHUNK_SOUND:
-			if (Mix_Playing(it->get_channel()))
-				it->set_state(PLAYING_SOUND);
-			else if (it->get_state() != PAUSED_SOUND)
-				it->set_state(INACTIVE_SOUND);
-			break;
+			case CHUNK_SOUND:
+				if (Mix_Playing(it.get_channel()))
+					it.set_state(PLAYING_SOUND);
+				else if (it.get_state() != PAUSED_SOUND)
+					it.set_state(INACTIVE_SOUND);
+				break;
 
-		case MUSIC_SOUND:
-			if (Mix_PlayingMusic())
-				it->set_state(PLAYING_SOUND);
-			else if (it->get_state() != PAUSED_SOUND)
-				it->set_state(INACTIVE_SOUND);
-			break;
-		default:
-			break;
+			case MUSIC_SOUND:
+				if (Mix_PlayingMusic())
+					it.set_state(PLAYING_SOUND);
+				else if (it.get_state() != PAUSED_SOUND)
+					it.set_state(INACTIVE_SOUND);
+				break;
+			default:
+				break;
 		}
 
 	return get_state();

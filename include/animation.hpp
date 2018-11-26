@@ -271,10 +271,10 @@ class Animation: public StateMachine
 		void flip ( SDL_RendererFlip f );
 		void flip ( bool hor, bool ver );
 
-		virtual void add_frame ( SDL_Texture * t, AnimationFrame f );
-		virtual void add_frame ( SDL_Texture * t, SDL_Rect src, int d );
+		virtual void add_frame ( SDL_Texture * t, AnimationFrame & f );
+		virtual void add_frame ( SDL_Texture * t, SDL_Rect const & src, int d );
 		// remover esse destiny e adicionar um w,h no draw como na libgdx
-		virtual void add_frame ( SDL_Texture * t, SDL_Rect src, SDL_Rect dst, int d );
+		virtual void add_frame ( SDL_Texture * t, SDL_Rect const & src, SDL_Rect const & dst, int d );
 
 		SDL_Texture * get_texture ( int i );
 

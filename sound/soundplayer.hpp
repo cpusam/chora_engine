@@ -131,7 +131,7 @@ class SoundPlayer: public StateMachine
 
 		bool has_sound ( std::string id );
 
-		bool add_sound ( SoundFX s );
+		bool add_sound ( SoundFX & s );
 
 		bool playing ( std::string id );
 

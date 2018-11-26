@@ -248,7 +248,7 @@ SDL_RendererFlip Animation::get_flip (  )
 	return frames.at(0).get_flip();
 }
 
-void Animation::add_frame ( SDL_Texture * t, SDL_Rect src, int d )
+void Animation::add_frame ( SDL_Texture * t, SDL_Rect const & src, int d )
 {
 	index = 0;
 	texture.push_back(t);
@@ -262,7 +262,7 @@ void Animation::add_frame ( SDL_Texture * t, SDL_Rect src, int d )
 	frames.push_back(static_cast<AnimationFrame>(f));
 }
 
-void Animation::add_frame ( SDL_Texture * t, SDL_Rect src, SDL_Rect dst, int d )
+void Animation::add_frame ( SDL_Texture * t, SDL_Rect const & src, SDL_Rect const & dst, int d )
 {
 	index = 0;
 	texture.push_back(t);
@@ -276,7 +276,7 @@ void Animation::add_frame ( SDL_Texture * t, SDL_Rect src, SDL_Rect dst, int d )
 	frames.push_back(f);
 }
 
-void Animation::add_frame ( SDL_Texture * t, AnimationFrame f )
+void Animation::add_frame ( SDL_Texture * t, AnimationFrame & f )
 {
 	index = 0;
 	texture.push_back(t);
@@ -339,8 +339,8 @@ bool Animation::has_texture ( SDL_Texture * t )
 	if (!t)
 		return false;
 
-	for (int i(0); i < int(texture.size()); i++)
-		if (t == texture.at(i))
+	for (size_t i(0), size = texture.size(); i < size; ++i)
+		if (t == texture[i])
 			return true;
 
 	return false;

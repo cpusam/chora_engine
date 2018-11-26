@@ -81,7 +81,7 @@ Entity * Elements::getEntity ( EntityID id )
 	return nullptr;
 }
 
-Entity * Elements::getEntityByName ( std::string name )
+Entity * Elements::getEntityByName ( const std::string & name )
 {
 	for (auto * entity: entities)
 		if (entity->getName() == name)
@@ -90,7 +90,7 @@ Entity * Elements::getEntityByName ( std::string name )
 	return nullptr;
 }
 
-std::vector<Entity *> Elements::getAllEntityByGroup ( std::string group )
+std::vector<Entity *> Elements::getAllEntityByGroup ( const std::string & group )
 {
 	std::vector<Entity*> ret;
 	for (auto * entity: entities)
@@ -131,7 +131,7 @@ Entity * Elements::get ( EntityID id )
 	return instance()->getEntity(id);
 }
 
-Entity * Elements::getByName ( std::string name )
+Entity * Elements::getByName ( const std::string & name )
 {
 	return instance()->getEntityByName(name);
 }
@@ -141,7 +141,7 @@ std::vector<Entity *> Elements::getAllEntities (  )
 	return instance()->getEntities();
 }
 
-std::vector<Entity *> Elements::getAllByGroup ( std::string group )
+std::vector<Entity *> Elements::getAllByGroup ( const std::string & group )
 {
 	return instance()->getAllEntityByGroup(group);
 }
@@ -220,7 +220,7 @@ std::vector<EntityID> Elements::getIDs (  )
 	return entitiesID;
 }
 
-void Elements::notifyGroup ( Entity * sender, std::string mesg, std::string group )
+void Elements::notifyGroup ( Entity * sender, const std::string & mesg, const std::string & group )
 {
 	if (group == "ALL")
 	{

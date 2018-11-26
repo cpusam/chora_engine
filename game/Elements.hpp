@@ -49,16 +49,16 @@ class Elements
 		static bool has ( Entity * e );
 		static void add ( Entity * e ); // adiciona uma entidade
 		static Entity * get ( EntityID id ); // pega uma entidade pelo id dela
-		static Entity * getByName ( std::string name ); // pega objeto pelo nome
+		static Entity * getByName ( const std::string & name ); // pega objeto pelo nome
 		static std::vector<Entity *> getAllEntities (  );
 		//retorna todas entidades do group e sem nenhuma nulaou de id nulo
-		static std::vector<Entity *> getAllByGroup ( std::string group ); // pega objeto pelo grupo
+		static std::vector<Entity *> getAllByGroup ( const std::string & group ); // pega objeto pelo grupo
 		static Entity * remove ( EntityID id ); //remove uma entity
 		static void clear (  );
 		static void destroy (  );
 
 		//se group == "ALL" notifica todo mundo
-		static void notifyGroup ( Entity *sender, std::string mesg, std::string group );
+		static void notifyGroup ( Entity *sender, const std::string & mesg, const std::string & group );
 		
 		static void input ( SDL_Event & event );
 		static void draw ( SDL_Renderer * renderer, Camera * camera );
@@ -83,8 +83,8 @@ class Elements
 		std::vector<Entity *> getEntities (  );
 		void addEntity ( Entity * e );
 		Entity * getEntity ( EntityID id );
-		Entity * getEntityByName ( std::string name );
-		std::vector<Entity *> getAllEntityByGroup ( std::string group );
+		Entity * getEntityByName ( const std::string & name );
+		std::vector<Entity *> getAllEntityByGroup ( const std::string & group );
 		Entity * remEntity ( EntityID id );
 		void clearAll (  );
 		const std::map<int, std::vector<Entity *> > & getEntitiesLayers (  );

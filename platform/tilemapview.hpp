@@ -66,7 +66,7 @@ class TileMapView: public TileMap
 			source[k] = f;
 		}
 
-		void add_animation ( CAnimatedTile a, int t );
+		void add_animation ( CAnimatedTile & a, int t );
 
 		bool is_animated ( int t );
 

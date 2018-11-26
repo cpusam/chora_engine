@@ -20,7 +20,7 @@ SDL_Rect TileMapView::get_source ( int tile )
 	return (SDL_Rect){0,0,-1,-1};
 }
 
-void TileMapView::add_animation ( CAnimatedTile a, int t )
+void TileMapView::add_animation ( CAnimatedTile & a, int t )
 {
 	//if (!texture)
 		//throw "TileMapView: texture nula";
