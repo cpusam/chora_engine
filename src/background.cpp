@@ -169,7 +169,7 @@ void Background::draw_ver ( SDL_Renderer * renderer, Camera * cam )
 
 /////////////////////////////////////////////////////////////
 
-void AnimatedBackground::add_frame ( SDL_Texture *t, SDL_Rect f, int d )
+void AnimatedBackground::add_frame ( SDL_Texture *t, SDL_Rect & f, int d )
 {
 	anim[0].add_frame(t, f, d);
 	anim[1].add_frame(t, f, d);
@@ -192,7 +192,7 @@ int AnimatedBackground::update (  )
 	return ret;
 }
 
-void AnimatedBackground::draw ( Camera * cam, SDL_Renderer * renderer )
+void AnimatedBackground::draw ( SDL_Renderer * renderer, Camera * cam )
 {
 	Vect p;
 	SDL_Rect d, src;
@@ -231,7 +231,7 @@ void AnimatedBackground::draw ( Camera * cam, SDL_Renderer * renderer )
 	SDL_RenderCopy(renderer, anim[0].get_texture(0), &src, &d);
 }
 
-void AnimatedBackground::draw_hor ( Camera * cam, SDL_Renderer * renderer )
+void AnimatedBackground::draw_hor ( SDL_Renderer * renderer, Camera * cam )
 {
 	Vect p;
 	SDL_Rect d, dim, src, surf;

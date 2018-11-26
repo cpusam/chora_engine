@@ -89,7 +89,7 @@ class Background
 		// apenas um scrolling horizontal
 		void draw_hor ( SDL_Renderer * renderer, Camera * cam );
 
-		// NOTE: falta testar, precisa refazer
+		// TODO: falta testar, precisa refazer
 		// apenas um scrolling vertical
 		void draw_ver ( SDL_Renderer * renderer, Camera * cam );
 };
@@ -110,14 +110,13 @@ class AnimatedBackground: private StateMachine
 			anim[0].destroy_textures();
 		}
 
-		void add_frame ( SDL_Texture *t, SDL_Rect f, int d );
+		void add_frame ( SDL_Texture *t, SDL_Rect & f, int d );
 
+		int update (  ) override;
 
-		int update (  );
+		void draw ( SDL_Renderer * renderer, Camera * cam );
 
-		void draw ( Camera * cam, SDL_Renderer * renderer );
-
-		void draw_hor ( Camera * cam, SDL_Renderer * renderer );
+		void draw_hor ( SDL_Renderer * renderer, Camera * cam );
 };
 
 #endif
