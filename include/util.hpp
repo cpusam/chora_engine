@@ -30,7 +30,7 @@
 #include "sdl.hpp"
 #include "camera.hpp"
 
-extern double Rand ( double min, double max );
+extern double Rand ( double min=0.0, double max=1.0 );
 extern int RandInt ( int min, int max );
 
 extern void print_video_driver (  );
