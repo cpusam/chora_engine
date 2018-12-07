@@ -56,7 +56,6 @@ class GuiButton: public Widget
 
 	public:
 		GuiButton ( SDL_Rect d );
-		GuiButton ( SDL_Rect d, std::string str );
 		GuiButton ( SDL_Rect d, std::string str, SDL_Rect * src=nullptr, SDL_Texture * texture=nullptr );
 		~GuiButton (  );
 

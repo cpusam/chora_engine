@@ -15,22 +15,6 @@ GuiButton::GuiButton ( SDL_Rect d )
 	texture = nullptr;
 }
 
-GuiButton::GuiButton ( SDL_Rect d, std::string str )
-{
-	label = 0;
-	callback = 0;
-	color1 = (SDL_Color){0xFF, 0xFF, 0x00, 0xFF};
-	color2 = (SDL_Color){0x00, 0xFF, 0xFF, 0xFF};
-	color3 = (SDL_Color){0xFF, 0x00, 0x00, 0xFF};
-	pos.x = d.x, pos.y = d.y;
-	// dimensão padrão
-	dim = d;
-	set_label(new GuiLabel(str, (SDL_Color){0,0,0,0})); // por padrão na cor preta
-	set_state(State::NORMAL);
-	run_release = false;
-	texture = nullptr;
-}
-
 GuiButton::GuiButton ( SDL_Rect d, std::string str, SDL_Rect * src, SDL_Texture * texture )
 {
 	label = 0;
@@ -43,8 +27,10 @@ GuiButton::GuiButton ( SDL_Rect d, std::string str, SDL_Rect * src, SDL_Texture 
 	dim = d;
 	set_label(new GuiLabel(str, (SDL_Color){0,0,0,0})); // por padrão na cor preta
 	set_state(State::NORMAL);
-	set_texture(texture);
-	set_sources(src);
+	if (texture)
+		set_texture(texture);
+	if (src)
+		set_sources(src);
 	run_release = false;
 }
 

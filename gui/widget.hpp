@@ -105,6 +105,7 @@ class Widget: public StateMachine
 
 		Widget * get_child ( int index );
 
+		//NOTE: precisa testar com wigets que tenha filhos
 		const std::vector<Widget *> get_children();
 
 		int child_size (  );

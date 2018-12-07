@@ -1,4 +1,5 @@
 #include "widget.hpp"
+#include <algorithm>
 
 void Widget::destroy (  )
 {
@@ -170,8 +171,19 @@ Widget * Widget::get_child ( int index )
 	return 0;
 }
 
-const std::vector<Widget *> Widget::get_children(){
-	return child;
+const std::vector<Widget *> Widget::get_children()
+{
+	std::vector<Widget *> all = this->child;
+	
+	for (size_t i = 0, end = all.size(); i < end; ++i)
+	{
+		std::vector<Widget *> children = all[i]->get_children();
+		for (Widget * child: children)
+			if (child && std::find(all.begin(), all.end(), child) == all.end())
+				all.push_back(child);
+	}
+	
+	return all;
 }
 
 int Widget::child_size (  )
