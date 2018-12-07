@@ -144,6 +144,8 @@ SDL_Texture * Writer::render_text ( std::string name, std::string text, SDL_Colo
 		throw Exception("Writer: nenhum renderer usado\n");
 
 	SDL_Surface * surface = render_text_surface(name, text, c, type);
+	if (!surface)
+		throw Exception("Writer::erro ao criar surface auxiliar");
 	SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface);
 
@@ -186,6 +188,7 @@ SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, 
 	if (text == "")
 	{
 		SDL_Surface * surface = SDL_CreateRGBSurface(0, 1,1,32, rmask, gmask, bmask, amask);
+		printf("Writer[0]::%s\n", SDL_GetError());
 		if (!surface)
 			throw Exception("Writer: Erro ao criar surface vazia");
 		
@@ -213,9 +216,11 @@ SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, 
 			{
 				case SOLID_TEXT:
 					surface = TTF_RenderText_Solid(font, str.c_str(), c);
+					printf("Writer[1]::%s\n", SDL_GetError());
 					break;
 				case UTF8_TEXT:
 					surface = TTF_RenderUTF8_Solid(font, str.c_str(), c);
+					printf("Writer[2]::%s\n", SDL_GetError());
 					break;
 			#ifndef EMSCRIPTEN
 				case UNICODE_TEXT:
@@ -227,11 +232,13 @@ SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, 
 					s[length] = 0x0;
 					surface = TTF_RenderUNICODE_Solid(font, s, c);
 					free(s);
+					printf("Writer[3]::%s\n", SDL_GetError());
 				}
 				break;
 			#endif
 				default:
 					surface = TTF_RenderText_Solid(font, str.c_str(), c);
+					printf("Writer[4]::%s\n", SDL_GetError());
 					break;
 			}
 
@@ -263,6 +270,7 @@ SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, 
 	}
 
 	surf = SDL_CreateRGBSurface(0, w, h, 32, rmask, gmask, bmask, amask);
+	printf("Writer[5]::%s\n", SDL_GetError());
 	if(surf == nullptr)
 	{
 		printf("Error Surface: %s\n",SDL_GetError());

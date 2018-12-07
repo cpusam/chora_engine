@@ -1,31 +1,53 @@
 #include "label.hpp"
 #include "writer.hpp"
 
+GuiLabel::GuiLabel ( std::string s, SDL_Color c, const std::string fontName )
+{
+	str = "";
+	color = c;
+	texture = nullptr;
+	/*
+		if (s != "")
+			set_str(s);
+		else
+			str = "";
+		*/
+	if (s == "")
+		s = " ";
+	str_to_surface(s,fontName);
+	this->fontName = fontName;
+	if (s != "" && !texture)
+			throw Exception("GuiLabel::erro ao setar texture");
+	
+	printf("Texture ptr = %p\n", texture);
+}
+
+GuiLabel::~GuiLabel (  )
+{
+	if (texture)
+		SDL_DestroyTexture(texture);
+	texture = nullptr;
+}
+
 void GuiLabel::str_to_surface ( std::string s, std::string fontName )
 {
 	int w, h;
 	if (texture)
 		SDL_DestroyTexture(texture);
 
-	if (s != "")
-	{
-		try {
+	texture = nullptr;
+	try {
 		texture = Writer::instance()->render_text(fontName, s, color, SOLID_TEXT);
-		} catch(Exception & e){
-			e.what();
-		}
-	}
-	else
-	{
-		texture = 0;
-		return;
+	} catch(Exception & e){
+		e.what();
+		abort();
 	}
 
 	if (!texture)
 	{
 		char * e = new char[256];
 		sprintf(e, "GuiLabel: erro %s\n", SDL_GetError());
-		throw (char *)e; // c++ esquisito
+		throw Exception(e);
 	}
 
 	SDL_QueryTexture(texture, 0, 0, &w, &h);
@@ -44,7 +66,7 @@ void GuiLabel::set_color ( SDL_Color c )
 
 void GuiLabel::set_str ( std::string s, std::string fontName )
 {
-	if (s == str)
+	if (s == str && texture)
 		return;
 
 	str = s;

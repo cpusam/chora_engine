@@ -25,7 +25,7 @@
 #define CHORA_LABEL_HPP
 
 #include "widget.hpp"
-
+#include "include/Exception.hpp"
 
 #include <sstream>
 
@@ -46,33 +46,12 @@ class GuiLabel: public Widget
 			{
 				0,0,0,255
 			};
-			texture = 0;
+			texture = nullptr;
 		}
 
 	public:
-		GuiLabel ( std::string s, SDL_Color c, std::string fontName="=>default" )
-		{
-			color = c;
-
-			texture = 0;
-			/*
-				if (s != "")
-					set_str(s);
-				else
-					str = "";
-				*/
-			if (s == "")
-				s = " ";
-
-			set_str(s,fontName);
-			this->fontName = fontName;
-		}
-
-		~GuiLabel (  )
-		{
-			if (texture)
-				SDL_DestroyTexture(texture);
-		}
+		GuiLabel ( std::string s, SDL_Color c, const std::string fontName="=>default" );
+		~GuiLabel (  );
 
 	protected:
 		void str_to_surface ( std::string s, std::string fontName="=>default" );

@@ -9,6 +9,7 @@ void Widget::destroy (  )
 			it->destroy();
 			delete it;
 		}
+	child.clear();
 }
 
 void Widget::set_id ( std::string new_id )
@@ -215,7 +216,7 @@ int Widget::child_update (  )
 
 void Widget::child_draw ( SDL_Renderer * renderer )
 {
-	for (std::vector <Widget *>::iterator i = child.begin(); i != child.end(); i++)
+	for (std::vector <Widget *>::iterator i = child.begin(), end = child.end(); i != end; i++)
 		if ((*i)->is_visible() && visible)
 			(*i)->draw(renderer);
 }

@@ -2,8 +2,9 @@
 
 GuiButton::GuiButton ( SDL_Rect d )
 {
-	label = 0;
-	callback = 0;
+	label = nullptr;
+	callback = nullptr;
+	this->texture = nullptr;
 	color1 = (SDL_Color){0xFF, 0xFF, 0x00, 0xFF};
 	color2 = (SDL_Color){0x00, 0xFF, 0xFF, 0xFF};
 	color3 = (SDL_Color){0xFF, 0x00, 0x00, 0xFF};
@@ -15,29 +16,27 @@ GuiButton::GuiButton ( SDL_Rect d )
 	texture = nullptr;
 }
 
-GuiButton::GuiButton ( SDL_Rect d, std::string str, SDL_Rect * src, SDL_Texture * texture )
+GuiButton::GuiButton ( SDL_Rect d, std::string str, std::string fontName, SDL_Rect * src, SDL_Texture * texture )
 {
-	label = 0;
-	callback = 0;
+	label = nullptr;
+	callback = nullptr;
 	color1 = (SDL_Color){0xFF, 0xFF, 0x00, 0xFF};
 	color2 = (SDL_Color){0x00, 0xFF, 0xFF, 0xFF};
 	color3 = (SDL_Color){0xFF, 0x00, 0x00, 0xFF};
 	pos.x = d.x, pos.y = d.y;
 	// dimensão padrão
 	dim = d;
-	set_label(new GuiLabel(str, (SDL_Color){0,0,0,0})); // por padrão na cor preta
+	set_label(new GuiLabel(str, (SDL_Color){0,0,0,255}, fontName)); // por padrão na cor preta
 	set_state(State::NORMAL);
-	if (texture)
-		set_texture(texture);
-	if (src)
-		set_sources(src);
+	this->texture = nullptr;
+	set_texture(texture);
+	set_sources(src);
 	run_release = false;
 }
 
 GuiButton::~GuiButton (  )
 {
-	if (label)
-		delete label;
+	//widget::destroy trata de dar conta de label, que foi adicionada com add_child
 }
 
 void GuiButton::press (  )
@@ -63,14 +62,28 @@ void GuiButton::release (  )
 
 void GuiButton::set_texture ( SDL_Texture * texture )
 {
+	if (this->texture)
+	{
+		SDL_DestroyTexture(this->texture);
+		this->texture = nullptr;
+	}
 	this->texture = texture;
 }
 
 void GuiButton::set_sources ( SDL_Rect src[3] )
 {
-	this->src[0] = src[0];
-	this->src[1] = src[1];
-	this->src[2] = src[2];
+	if (src)
+	{
+		this->src[0] = src[0];
+		this->src[1] = src[1];
+		this->src[2] = src[2];
+	}
+	else
+	{
+		this->src[0] = (SDL_Rect){0,0,1,1};
+		this->src[1] = this->src[0];
+		this->src[2] = this->src[0];
+	}
 }
 
 SDL_Texture * GuiButton::get_texture (  )
@@ -78,6 +91,10 @@ SDL_Texture * GuiButton::get_texture (  )
 	return texture;
 }
 
+GuiLabel * GuiButton::get_label (  )
+{
+	return label;
+}
 
 void GuiButton::set_callback ( void (* c) ( Widget * b ) )
 {
@@ -107,11 +124,12 @@ void GuiButton::set_label ( GuiLabel * l )
 	if (!l)
 		return;
 
-	if (label)
+	if (label && label != l)
 	{
 		rem_child(label);
 		delete label;
 		label = nullptr;
+		throw 1;
 	}
 
 
@@ -142,15 +160,26 @@ void GuiButton::input ( SDL_Event & event )
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT)
 			{
-				if (get_state() == State::SELECTED)
-					if (event.button.state == SDL_PRESSED)
-						set_state(PRESSED);
+				p.set(event.button.x, event.button.y);
+				if (get_state() == State::SELECTED || get_state() == State::NORMAL)
+				{
+					if (event.button.state == SDL_PRESSED && pointbox(p, get_dim()))
+						set_state(State::PRESSED);
+				}
+				else if (get_state() == State::RELEASED)
+				{
+					if (!run_release && pointbox(p, get_dim()))
+					{
+						set_state(State::PRESSED);
+					}	
+				}
 			}
 			break;
 			
 		case SDL_MOUSEBUTTONUP:
 			if (event.button.button == SDL_BUTTON_LEFT)
 			{
+				p.set(event.button.x, event.button.y);
 				if (get_state() == State::PRESSED)
 					if (event.button.state == SDL_RELEASED)
 					{
@@ -165,7 +194,7 @@ void GuiButton::input ( SDL_Event & event )
 			p.y = event.motion.y;
 			if (pointbox(p, dim))
 			{
-				if (get_state() == State::NORMAL)
+				if (get_state() == State::NORMAL || get_state() == State::RELEASED)
 					set_state(State::SELECTED);
 			}
 			else
@@ -182,6 +211,11 @@ void GuiButton::input ( SDL_Event & event )
 
 int GuiButton::update (  )
 {
+	int x, y;
+	Vect p;
+	SDL_GetMouseState(&x, &y);
+	p.x = x, p.y = y;
+
 	switch (get_state())
 	{
 		case State::NORMAL: // normal
@@ -192,19 +226,16 @@ int GuiButton::update (  )
 			break;
 		case State::RELEASED: // solto depois de pressionado
 		{
-			int x, y;
-			Vect p;
-			SDL_GetMouseState(&x, &y);
-			p.x = x, p.y = y;
-
-			if (pointbox(p, dim) && !run_release)
-				set_state(State::SELECTED);
-			
-			if (get_state() == State::RELEASED && callback && !run_release)
+			if (get_state() == run_release)
 			{
-				callback(this);
-				run_release = true;
+				if (callback)
+					callback(this);
+				run_release = false;
 			}
+			if (pointbox(p, get_dim()))
+				set_state(State::SELECTED);
+			else
+				set_state(State::NORMAL);
 			break;
 		}
 		default:
@@ -239,7 +270,9 @@ void GuiButton::draw ( SDL_Renderer * renderer )
 				SDL_SetRenderDrawColor(renderer, color1.r, color1.b, color1.g, color1.a);
 				break;
 		}
+
 		SDL_RenderFillRect(renderer, &rect);
+		child_draw(renderer);
 		return;
 	}
 	

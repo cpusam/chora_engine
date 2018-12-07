@@ -56,7 +56,7 @@ class GuiButton: public Widget
 
 	public:
 		GuiButton ( SDL_Rect d );
-		GuiButton ( SDL_Rect d, std::string str, SDL_Rect * src=nullptr, SDL_Texture * texture=nullptr );
+		GuiButton ( SDL_Rect d, std::string str, std::string fontName="=>default", SDL_Rect * src=nullptr, SDL_Texture * texture=nullptr );
 		~GuiButton (  );
 
 		//ações
@@ -67,6 +67,7 @@ class GuiButton: public Widget
 		void set_texture ( SDL_Texture * texture );
 		void set_sources ( SDL_Rect src[3] );
 		SDL_Texture * get_texture (  );
+		GuiLabel * get_label (  );
 
 		virtual void set_callback ( void (* c) ( Widget * b ) );
 

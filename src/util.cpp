@@ -8,8 +8,8 @@
 
 double Rand ( double min, double max )
 {
-	
-	#if defined(WIN32) || defined(_WIN64)
+	//removido suporte a std::random por enquanto
+	#if defined(WIN32) || defined(_WIN64) || 1
 		static bool inited = false;
 		if (!inited)
 		{
