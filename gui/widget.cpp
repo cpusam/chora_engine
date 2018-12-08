@@ -172,7 +172,7 @@ Widget * Widget::get_child ( int index )
 	return 0;
 }
 
-const std::vector<Widget *> Widget::get_children()
+const std::vector<Widget *> Widget::get_all_children()
 {
 	std::vector<Widget *> all = this->child;
 	
@@ -185,6 +185,11 @@ const std::vector<Widget *> Widget::get_children()
 	}
 	
 	return all;
+}
+
+const std::vector<Widget *> & Widget::get_children (  )
+{
+	return child;
 }
 
 int Widget::child_size (  )
