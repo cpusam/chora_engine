@@ -5,7 +5,7 @@ Elements * Elements::singleton = nullptr;
 
 Elements::Elements()
 {
-	//ctor
+	currCamera = nullptr;
 }
 
 Elements::~Elements()
@@ -15,9 +15,10 @@ Elements::~Elements()
 
 Elements * Elements::instance (  )
 {
-	if (singleton == nullptr)
-		singleton = new Elements();
+	if (singleton)
+		return singleton;
 	
+	singleton = new Elements();
 	return singleton;
 }
 
