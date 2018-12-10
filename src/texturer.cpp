@@ -66,7 +66,7 @@ void Texturer::remTexture (std::string name){
 	}
 }
 
-SDL_Texture *Texturer::getTexture(std::string name) {
+SDL_Texture *Texturer::getTexture(std::string name, bool throwOnError) {
 	//std::cout << name << "\n";
 	for (unsigned int i = 0, end = textureID.size(); i < end; i++){
 		if(textureID[i].name == name){
@@ -75,7 +75,9 @@ SDL_Texture *Texturer::getTexture(std::string name) {
 
 	}
 
-	throw Exception("[Texture Manager] Error : Texture \"" + name + "\" não encontrada");
+	if (throwOnError)
+		throw Exception("[Texture Manager] Error : Texture \"" + name + "\" não encontrada");
+	std::cerr << "[Texture Manager] Error : Texture \"" + name + "\" não encontrada";
 	return nullptr;
 }
 
@@ -112,9 +114,9 @@ void Texturer::rem ( std::string name )
 	instance()->remTexture(name);
 }
 
-SDL_Texture* Texturer::get ( std::string name )
+SDL_Texture* Texturer::get ( std::string name, bool throwOnError )
 {
-	return instance()->getTexture(name);
+	return instance()->getTexture(name, throwOnError);
 }
 
 std::vector<TextureID> Texturer::getTextureID()

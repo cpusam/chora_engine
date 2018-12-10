@@ -66,8 +66,10 @@ void GuiLabel::set_color ( SDL_Color c )
 
 void GuiLabel::set_str ( std::string s, std::string fontName )
 {
+	/*
 	if (s == str && texture)
 		return;
+	*/
 
 	str = s;
 

@@ -40,7 +40,7 @@ class Texturer{
 	SDL_Texture * addTexture (SDL_Renderer *renderer, std::string path);
 	SDL_Texture * addTexture (SDL_Renderer * renderer, std::string path, SDL_Color colorKey);
 	void remTexture ( std::string name );
-	SDL_Texture* getTexture ( std::string name );
+	SDL_Texture* getTexture ( std::string name, bool throwOnError=true );
 	
 	public:
 		static Texturer *instance();
@@ -49,7 +49,7 @@ class Texturer{
 		static SDL_Texture * add (SDL_Renderer * renderer, std::string path, SDL_Color colorKey );
 		static void add (SDL_Texture *tex, std::string name );
 		static void rem ( std::string name );
-		static SDL_Texture* get ( std::string name );
+		static SDL_Texture* get ( std::string name, bool throwOnError=true );
 		std::vector<TextureID> getTextureID();
 		static void destroy();
 };
