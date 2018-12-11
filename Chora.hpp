@@ -58,6 +58,7 @@
 //módulo game
 #include "game/Entity.hpp"
 #include "game/Elements.hpp"
+#include "game/Input.hpp"
 #include "game/Key.hpp"
 
 #endif

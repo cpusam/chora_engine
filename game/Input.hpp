@@ -21,25 +21,42 @@
 	distribution.
 */
 
-#ifndef KEY_HPP
-#define KEY_HPP
+#ifndef CHORA_INPUT_HPP
+#define CHORA_INPUT_HPP
 
-#include "Input.hpp"
+#include "../sdl.hpp"
+#include "../include/statemachine.hpp"
 
-class Key: public Input
+class Input: public StateMachine
 {
 	public:
-		Key();
-		Key ( SDL_Keycode k );
-		virtual ~Key();
+		enum State: int
+		{
+			FREE,
+			PRESS,
+			HOLD,
+			RELEASE,
+		};
+
+	public:
+		Input();
+		Input ( int k );
+		virtual ~Input();
 		
-		void setKey ( SDL_Keycode k );
-		SDL_Keycode getKey (  );
+		Uint32 getPressTime (  );
+
+		bool isPressed();
+		virtual void setInput ( int k );
+		virtual int getInput (  );
 		
+		virtual void reset (  );
 		void input ( SDL_Event & event ) override;
+		int update (  ) override;
 	
 	protected:
-		SDL_Keycode key;
+		int in;
+		bool press;
+		Uint32 pressTime;
 };
 
-#endif // KEY_HPP
+#endif

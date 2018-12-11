@@ -1,18 +1,15 @@
 #include "Key.hpp"
 
-Key::Key()
+Key::Key(): Input(-1)
 {
 	key = 0;
 	press = false;
 	set_state(FREE);
 }
 
-Key::Key ( SDL_Keycode k )
+Key::Key ( SDL_Keycode k ): Input(static_cast<int>(k))
 {
-	pressTime = 0;
 	key = k;
-	press = false;
-	set_state(FREE);
 }
 
 Key::~Key()
@@ -20,30 +17,15 @@ Key::~Key()
 	//dtor
 }
 
-Uint32 Key::getPressTime (  )
-{
-	return pressTime;
-}
-
-bool Key::isPressed()
-{
-	return press;
-}
-
 void Key::setKey ( SDL_Keycode k )
 {
 	key = k;
+	Input::setInput(static_cast<int>(k));
 }
 
 SDL_Keycode Key::getKey (  )
 {
 	return key;
-}
-
-void Key::reset (  )
-{
-	press = false;
-	set_state(FREE);
 }
 
 void Key::input ( SDL_Event & event )
@@ -55,51 +37,11 @@ void Key::input ( SDL_Event & event )
 			press = true;
 		}
 	}
-	else if (event.type == SDL_KEYUP)
+	
+	if (event.type == SDL_KEYUP)
 	{
 		if (event.key.keysym.sym == key)
 			press = false;
 	}
-}
-
-int Key::update (  )
-{
-	switch (get_state())
-	{
-		case FREE:
-			if (press)
-			{
-				pressTime = SDL_GetTicks();
-				set_state(PRESS);
-			}
-			break;
-		
-		case PRESS:
-			if (press)
-			{
-				set_state(HOLD);
-			}
-			else
-			{
-				set_state(RELEASE);
-			}
-			break;
-		
-		case HOLD:
-			if (press == false)
-				set_state(RELEASE);
-			break;
-		
-		case RELEASE:
-			press = false;
-			set_state(FREE);
-			break;
-		
-		default:
-			set_state(FREE);
-			break;
-	}
-	
-	return get_state();
 }
 
