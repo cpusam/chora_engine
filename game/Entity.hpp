@@ -157,7 +157,7 @@ class Entity: public StateMachine, public Movable
 		void flipAnim ( bool hor, bool ver );
 
 		//aplica impulso
-		void applyImpulse ( Vect impulse );
+		virtual void applyImpulse ( Vect impulse );
 		//move com velocidade limitada por maxVel
 		// add = adiciona à velocidade antes junto com a aceleração
 		virtual void moveX ( float add = 0 );
