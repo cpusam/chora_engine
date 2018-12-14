@@ -127,9 +127,9 @@ SDL_Rect rectIntersect ( SDL_Rect a, SDL_Rect b )
 }
 
 
-bool pointtile ( TileMap & map, std::vector <int> & coll_tile, Vect &  pos )
+bool pointtile ( TileMap & map, std::vector <int> & coll_tile, Vect &  position )
 {
-	int tile = map.get_tile(pos.x, pos.y);
+	int tile = map.get_tile(position.x, position.y);
 	for (unsigned int i = 0, s = coll_tile.size(); i < s; i++)
 		if (coll_tile[i] == tile)
 			return true;
@@ -176,7 +176,7 @@ std::vector<Entity *> boundingboxEx ( Entity * e, const std::vector<Entity *> & 
 	return vet;
 }
 
-std::vector<Entity *> pointboxEx ( const Vect & pos, const std::vector<Vect> & points, float addX, float addY, const std::vector<Entity *> & entities, bool checkVisible )
+std::vector<Entity *> pointboxEx ( const Vect & position, const std::vector<Vect> & points, float addX, float addY, const std::vector<Entity *> & entities, bool checkVisible )
 {
 	std::vector<Entity *> vet, touched;
 	Vect p;
@@ -192,8 +192,8 @@ std::vector<Entity *> pointboxEx ( const Vect & pos, const std::vector<Vect> & p
 		rect = entity->getCollRect();
 		for (i = 0; i < size; ++i)
 		{
-			p.x = pos.x + points[i].x + addX;
-			p.y = pos.y + points[i].y;
+			p.x = position.x + points[i].x + addX;
+			p.y = position.y + points[i].y;
 
 			if (p.x > rect.x + rect.w)
 				continue;
@@ -214,8 +214,8 @@ std::vector<Entity *> pointboxEx ( const Vect & pos, const std::vector<Vect> & p
 			rect = entity->getCollRect();
 			for (i = 0; i < size; ++i)
 			{
-				p.x = pos.x + points[i].x;
-				p.y = pos.y + points[i].y + addY;
+				p.x = position.x + points[i].x;
+				p.y = position.y + points[i].y + addY;
 
 				if (p.y > rect.y + rect.h)
 					continue;

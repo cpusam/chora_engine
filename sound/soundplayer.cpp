@@ -5,7 +5,7 @@ int SoundFX::get_type (  )
 	return type;
 }
 
-std::string SoundFX::get_id (  )
+std::string SoundFX::getID (  )
 {
 	return id;
 }
@@ -56,9 +56,9 @@ bool SoundFX::play ( int ch, int loops )
 
 		case UNDEF_SOUND:
 			if (chunk || music)
-				set_state(INACTIVE_SOUND);
+				setState(INACTIVE_SOUND);
 			else
-				set_state(UNLOADED_SOUND);
+				setState(UNLOADED_SOUND);
 			return false;
 
 		default:
@@ -66,9 +66,9 @@ bool SoundFX::play ( int ch, int loops )
 	}
 
 	if (ret)
-		set_state(PLAYING_SOUND);
+		setState(PLAYING_SOUND);
 	else
-		set_state(PAUSED_SOUND);
+		setState(PAUSED_SOUND);
 
 	return ret;
 }
@@ -94,9 +94,9 @@ bool SoundFX::pause (  )
 
 	case UNDEF_SOUND:
 		if (chunk || music)
-			set_state(INACTIVE_SOUND);
+			setState(INACTIVE_SOUND);
 		else
-			set_state(UNLOADED_SOUND);
+			setState(UNLOADED_SOUND);
 		return false;
 
 	default:
@@ -104,9 +104,9 @@ bool SoundFX::pause (  )
 	}
 
 	if (ret)
-		set_state(PAUSED_SOUND);
+		setState(PAUSED_SOUND);
 	else
-		set_state(PLAYING_SOUND);
+		setState(PLAYING_SOUND);
 
 	return ret;
 }
@@ -131,9 +131,9 @@ bool SoundFX::resume (  )
 
 	case UNDEF_SOUND:
 		if (chunk || music)
-			set_state(INACTIVE_SOUND);
+			setState(INACTIVE_SOUND);
 		else
-			set_state(UNLOADED_SOUND);
+			setState(UNLOADED_SOUND);
 		ret = false;
 	}
 
@@ -151,7 +151,7 @@ void SoundFX::destroy (  )
 	chunk = 0;
 	music = 0;
 
-	set_state(UNLOADED_SOUND);
+	setState(UNLOADED_SOUND);
 	type = UNDEF_SOUND;
 }
 
@@ -213,7 +213,7 @@ void SoundPlayer::free_sounds (  )
 bool SoundPlayer::has_sound ( std::string id )
 {
 	for (SoundFX & it: sound)
-		if (id == it.get_id())
+		if (id == it.getID())
 			return true;
 
 	return false;
@@ -221,7 +221,7 @@ bool SoundPlayer::has_sound ( std::string id )
 
 bool SoundPlayer::add_sound ( SoundFX & s )
 {
-	if (has_sound(s.get_id()))
+	if (has_sound(s.getID()))
 		return false;
 
 	sound.push_back(s);
@@ -231,7 +231,7 @@ bool SoundPlayer::add_sound ( SoundFX & s )
 bool SoundPlayer::playing ( std::string id )
 {
 	for (SoundFX & it: sound)
-		if (it.get_id() == id && it.get_state() == PLAYING_SOUND)
+		if (it.getID() == id && it.getState() == PLAYING_SOUND)
 			return true;
 
 	return false;
@@ -242,7 +242,7 @@ bool SoundPlayer::pause_sound ( std::string id )
 	bool ret = false;
 
 	for (SoundFX & it: sound)
-		if (id == it.get_id())
+		if (id == it.getID())
 		{
 			it.pause();
 			ret = true;
@@ -257,7 +257,7 @@ bool SoundPlayer::resume_sound ( std::string id )
 	bool ret = false;
 
 	for (SoundFX & it: sound)
-		if (id == it.get_id())
+		if (id == it.getID())
 		{
 			switch (it.get_type())
 			{
@@ -273,7 +273,7 @@ bool SoundPlayer::resume_sound ( std::string id )
 
 			if (ret)
 			{
-				it.set_state(PLAYING_SOUND);
+				it.setState(PLAYING_SOUND);
 				break;
 			}
 		}
@@ -285,16 +285,16 @@ bool SoundPlayer::play_sound ( std::string id, int channel, int loops )
 {
 	bool ret = false;
 	for (SoundFX & it: sound)
-		if (id == it.get_id())
+		if (id == it.getID())
 		{
-			if (it.get_state() == PAUSED_SOUND)
+			if (it.getState() == PAUSED_SOUND)
 			{
 				it.resume();
 				ret = true;
 			}
 			else
 				ret = it.play(channel, loops);
-			it.set_state(PLAYING_SOUND);
+			it.setState(PLAYING_SOUND);
 
 			if (ret)
 				return true;
@@ -308,7 +308,7 @@ bool SoundPlayer::halt_sound ( std::string id )
 	bool ret = false;
 
 	for (SoundFX & it: sound)
-		if (id == it.get_id() || id == "all")
+		if (id == it.getID() || id == "all")
 		{
 			switch (it.get_type())
 			{
@@ -324,7 +324,7 @@ bool SoundPlayer::halt_sound ( std::string id )
 
 			if (ret)
 			{
-				it.set_state(INACTIVE_SOUND);
+				it.setState(INACTIVE_SOUND);
 				break;
 			}
 		}
@@ -339,22 +339,22 @@ int SoundPlayer::update (  )
 		{
 			case CHUNK_SOUND:
 				if (Mix_Playing(it.get_channel()))
-					it.set_state(PLAYING_SOUND);
-				else if (it.get_state() != PAUSED_SOUND)
-					it.set_state(INACTIVE_SOUND);
+					it.setState(PLAYING_SOUND);
+				else if (it.getState() != PAUSED_SOUND)
+					it.setState(INACTIVE_SOUND);
 				break;
 
 			case MUSIC_SOUND:
 				if (Mix_PlayingMusic())
-					it.set_state(PLAYING_SOUND);
-				else if (it.get_state() != PAUSED_SOUND)
-					it.set_state(INACTIVE_SOUND);
+					it.setState(PLAYING_SOUND);
+				else if (it.getState() != PAUSED_SOUND)
+					it.setState(INACTIVE_SOUND);
 				break;
 			default:
 				break;
 		}
 
-	return get_state();
+	return getState();
 }
 
 

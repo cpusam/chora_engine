@@ -201,7 +201,7 @@ struct Vect
 		return this->rotate(angle);
 	}
 
-	float cos_theta ( Vect & b )
+	float cosTheta ( Vect & b )
 	{
 		float d = (b.length() * (this)->length());
 		if (d == 0)
@@ -216,7 +216,7 @@ struct Vect
 
 	Vect& project ( Vect & b )
 	{
-		float s = cos_theta(b);
+		float s = cosTheta(b);
 
 		x *= s;
 		y *= s;
@@ -224,7 +224,7 @@ struct Vect
 		return *this;
 	}
 
-	Vect& to_int (  )
+	Vect& toInt (  )
 	{
 		x = int(x);
 		y = int(y);
@@ -269,7 +269,7 @@ struct Vect
 		return *this;
 	}
 
-	bool is_zero (  )
+	bool isZero (  )
 	{
 		return x == 0 && y == 0;
 	}

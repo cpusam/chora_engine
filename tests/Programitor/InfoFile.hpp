@@ -32,7 +32,7 @@ class InfoFile{
 	static InfoFile *singleton;
 	
 	std::vector<std::string> name;
-	std::vector<SDL_Rect> pos;
+	std::vector<SDL_Rect> position;
 	
 	SDL_Surface *auxSurface;
 	SDL_Texture *auxTexture;

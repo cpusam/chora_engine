@@ -61,13 +61,13 @@ class GuiLabel: public Widget
 
 		void set_str ( std::string s, std::string fontName="=>default" );
 
-		SDL_Texture * get_texture (  );
+		SDL_Texture * getTexture (  );
 
-		void set_texture ( SDL_Texture * t );
+		void setTexture ( SDL_Texture * t );
 
-		int get_texture_width (  );
+		int getTexture_width (  );
 
-		int get_texture_height (  );
+		int getTexture_height (  );
 
 		std::string get_str (  );
 

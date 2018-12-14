@@ -33,24 +33,24 @@
 extern double Rand ( double min=0.0, double max=1.0 );
 extern int RandInt ( int min, int max );
 
-extern void print_video_driver (  );
+extern void printVideoDriver (  );
 
-extern Uint32 get_pixel ( SDL_Surface * surface, int x, int y );
-extern void put_pixel ( SDL_Surface *surface, int x, int y, Uint32 pixel );
+extern Uint32 getPixel ( SDL_Surface * surface, int x, int y );
+extern void putPixel ( SDL_Surface *surface, int x, int y, Uint32 pixel );
 
-extern SDL_Surface * optimize_surface ( SDL_Surface * s, SDL_Surface * screen );
+extern SDL_Surface * optimizeSurface ( SDL_Surface * s, SDL_Surface * screen );
 
-extern int texture_width ( SDL_Texture * t );
+extern int textureWidth ( SDL_Texture * t );
 
-extern int texture_height ( SDL_Texture * t );
+extern int textureHeight ( SDL_Texture * t );
 
-extern void fill_rect ( SDL_Renderer * renderer, Camera * cam, SDL_Color color, SDL_Rect r );
+extern void fillRect ( SDL_Renderer * renderer, Camera * cam, SDL_Color color, SDL_Rect r );
 
-extern void fill_rect ( SDL_Renderer * renderer, SDL_Color color, SDL_Rect r );
+extern void fillRect ( SDL_Renderer * renderer, SDL_Color color, SDL_Rect r );
 
-extern int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, int x, int y, int sizeW=0, int sizeH=0 );
+extern int drawTexture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, int x, int y, int sizeW=0, int sizeH=0 );
 
-extern int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, const SDL_Rect * src, const SDL_Rect * dst, double angle, SDL_Point * center, SDL_RendererFlip flip );
+extern int drawTexture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, const SDL_Rect * src, const SDL_Rect * dst, double angle, SDL_Point * center, SDL_RendererFlip flip );
 
 #endif
 

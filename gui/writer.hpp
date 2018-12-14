@@ -78,23 +78,23 @@ class Writer
 		
 		virtual ~Writer (  );
 
-		void free_fonts (  );
+		void freeFonts (  );
 		
-		int load_font ( std::string path, std::string name, int s );
+		int loadFont ( std::string path, std::string name, int s );
 
 		static void destroy (  );
 
-		TTF_Font * get_font ( std::string name );
+		TTF_Font * getFont ( std::string name );
 
-		bool resize_font ( std::string name, int s );
+		bool resizeFont ( std::string name, int s );
 
-		void set_renderer ( SDL_Renderer * r );
+		void setRenderer ( SDL_Renderer * r );
 
-		SDL_Renderer * get_renderer (  );
+		SDL_Renderer * getRenderer (  );
 
-		SDL_Texture * render_text ( std::string name, std::string text, SDL_Color c, int type=SOLID_TEXT );
+		SDL_Texture * renderText ( std::string name, std::string text, SDL_Color c, int type=SOLID_TEXT );
 
-		SDL_Surface * render_text_surface ( std::string name, std::string text, SDL_Color c, int type=SOLID_TEXT );
+		SDL_Surface * renderTextSurface ( std::string name, std::string text, SDL_Color c, int type=SOLID_TEXT );
 };
 
 #endif

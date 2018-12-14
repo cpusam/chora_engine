@@ -26,13 +26,13 @@ void InfoFile::add(std::string n, SDL_Renderer *r){
 		std::cout << "ERROR IMAGE " << n << '\n';
 	}
 	
-	pos.push_back((SDL_Rect){-1000,-1000,auxSurface->w,auxSurface->h});
+	position.push_back((SDL_Rect){-1000,-1000,auxSurface->w,auxSurface->h});
 	
 	auxTexture = SDL_CreateTextureFromSurface(r,auxSurface);
 	
 	std::string m = n;
 	
-	m += std::to_string(pos.size());
+	m += std::to_string(position.size());
 	
 	Texturer::instance()->add(auxTexture, m);
 	
@@ -41,13 +41,13 @@ void InfoFile::add(std::string n, SDL_Renderer *r){
 }
 	
 SDL_Texture *InfoFile::getTexture(std::string n){
-	return Texturer::instance()->get_texture(n);
+	return Texturer::instance()->getTexture(n);
 }
 	
 SDL_Rect *InfoFile::getPos(std::string n){
 	for (unsigned int i = 0, end = name.size(); i < end; i++){
 		if(name[i] == n){
-			return &pos[i];
+			return &position[i];
 		}
 
 	}		
@@ -57,8 +57,8 @@ SDL_Rect *InfoFile::getPos(std::string n){
 void InfoFile::setPos(std::string n, SDL_Rect p){
 	for (unsigned int i = 0, end = name.size(); i < end; i++){
 		if(name[i] == n){
-			pos[i].x = p.x;
-			pos[i].y = p.y;
+			position[i].x = p.x;
+			position[i].y = p.y;
 		}
 	}		
 }
@@ -76,5 +76,5 @@ void InfoFile::destroy(){
 }
 
 int InfoFile::getSize(){
-	return pos.size();
+	return position.size();
 }

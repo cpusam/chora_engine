@@ -8,7 +8,7 @@ class Texture{
 	
 	Texturer *x;
 	
-	SDL_Point pos;
+	SDL_Point position;
 	
 	
 	

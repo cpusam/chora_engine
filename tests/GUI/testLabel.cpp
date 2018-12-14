@@ -62,15 +62,15 @@ int main ( int argc, char** argv )
 		return 1;
 	}
 
-	Writer::instance()->set_renderer(renderer);
+	Writer::instance()->setRenderer(renderer);
 	try{
-		Writer::instance()->load_font("./fonts/inhouseedition.ttf", "default", 80);
+		Writer::instance()->loadFont("./fonts/inhouseedition.ttf", "default", 80);
 	}catch(Exception & e){
 		e.what();
 	}
 	
 	GuiLabel * label = new GuiLabel("Chora Engine", (SDL_Color){0,255,0,128}, "default");
-	label->set_pos(Vect((SCREEN_WIDTH - texture_width(label->get_texture()))/2, (SCREEN_HEIGHT - texture_height(label->get_texture()))/2));
+	label->setPosition(Vect((SCREEN_WIDTH - textureWidth(label->getTexture()))/2, (SCREEN_HEIGHT - textureHeight(label->getTexture()))/2));
 	label->show(true);
 	
 	SDL_Event event;
@@ -95,15 +95,15 @@ int main ( int argc, char** argv )
 		fullscreen.update();
 		print.update();
 
-		if (print.get_state() == Key::PRESS)
+		if (print.getState() == Key::PRESS)
 		{
 			std::cout<<"label.textura = " << std::endl
-			<< "w = " << texture_width(label->get_texture()) << std::endl
-			<< "h = " << texture_height(label->get_texture()) <<std::endl
-			<< "X/Y = "<<label->get_pos().x << "/"<<label->get_pos().y<<std::endl;
+			<< "w = " << textureWidth(label->getTexture()) << std::endl
+			<< "h = " << textureHeight(label->getTexture()) <<std::endl
+			<< "X/Y = "<<label->getPosition().x << "/"<<label->getPosition().y<<std::endl;
 		}
 
-		if (fullscreen.get_state() == Key::PRESS)
+		if (fullscreen.getState() == Key::PRESS)
 		{
 			fullscreenFlags = (fullscreenFlags ^ SDL_WINDOW_FULLSCREEN);
 			SDL_SetWindowFullscreen(window, fullscreenFlags);

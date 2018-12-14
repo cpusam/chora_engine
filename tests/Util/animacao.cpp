@@ -34,16 +34,16 @@ int main ( int argc, char **argv )
 	SDL_Color colorA = {255,255,0,255};
 	//SDL_Color colorB = {0,255,255,255};
 	
-	Vect pos;
+	Vect position;
 	Vect vel;
 	SDL_Rect limit = {0,0,640,480}, rectB = {0,0,200,200};
 	Camera camera((SDL_Rect){0,0,300,200}, limit);
 	Animation anim;
 	SDL_Texture * texture = Texturer::add(renderer,"image.png");
 	int w, h;
-	w = texture_width(texture);
-	h = texture_height(texture);
-	anim.add_frame(texture, (SDL_Rect){0,0,w,h}, rectB, 60);
+	w = textureWidth(texture);
+	h = textureHeight(texture);
+	anim.addFrame(texture, (SDL_Rect){0,0,w,h}, rectB, 60);
 	
 	int done = 0;
 	while (!done)
@@ -55,8 +55,8 @@ int main ( int argc, char **argv )
 			
 			if (event.type == SDL_MOUSEMOTION)
 			{
-				pos.x = event.motion.x - rectB.w/2;
-				pos.y = event.motion.y - rectB.h/2;
+				position.x = event.motion.x - rectB.w/2;
+				position.y = event.motion.y - rectB.h/2;
 			}
 			
 			if (event.type == SDL_KEYDOWN)
@@ -102,14 +102,14 @@ int main ( int argc, char **argv )
 			
 		}
 		
-		pos.x += vel.x;
-		pos.y += vel.y;
+		position.x += vel.x;
+		position.y += vel.y;
 		
 		SDL_SetRenderDrawColor(renderer, 0,0,0,0);
 		SDL_RenderClear(renderer);
 
-		SDL_Rect camRect = camera.get_dimension();
-		fill_rect(renderer, colorA, camRect);
+		SDL_Rect camRect = camera.getDimension();
+		fillRect(renderer, colorA, camRect);
 		
 		SDL_RenderPresent(renderer);
 		SDL_Delay(60);

@@ -32,7 +32,7 @@ int main ( int argc, char **argv )
 	}
 	
 	Texturer::instance()->add(renderer, "image.png");
-	SDL_Texture * image = Texturer::instance()->get_texture("image.png");
+	SDL_Texture * image = Texturer::instance()->get("image.png");
 	Animation anim;
 	
 	//anim.
@@ -42,7 +42,7 @@ int main ( int argc, char **argv )
 	SDL_Color color = {255, 255, 0, 255};
 	SDL_Color bg_color = {255, 255, 255, 255};
 	
-	Vect pos, vel;
+	Vect position, vel;
 	
 	int done = 0;
 	while (!done)
@@ -62,11 +62,11 @@ int main ( int argc, char **argv )
 			
 			if (event.type == SDL_MOUSEBUTTONDOWN)
 			{
-				SDL_Rect d = {event.button.x,event.button.y, cam.get_dimension().w/2,cam.get_dimension().h/2};
+				SDL_Rect d = {event.button.x,event.button.y, cam.getDimension().w/2,cam.getDimension().h/2};
 				d.x = d.x - d.w;
 				d.y = d.y - d.h;
 				
-				cam.setScreenPos(d.x, d.y);
+				cam.setScreenPosition(d.x, d.y);
 			}
 			
 			if (event.type == SDL_KEYDOWN)
@@ -111,26 +111,26 @@ int main ( int argc, char **argv )
 		}
 		if (vel.x || vel.y)
 			printf("Está movendo %u\n", SDL_GetTicks());
-		pos += vel;
-		cam.lookat(pos);
+		position += vel;
+		cam.lookat(position);
 		
 		SDL_SetRenderDrawColor(renderer, 0,0,0,0);
 		SDL_RenderClear(renderer);
 		
 		SDL_SetRenderDrawColor(renderer, bg_color.r, bg_color.g, bg_color.b, bg_color.a);
-		SDL_Rect r = cam.get_dimension();
+		SDL_Rect r = cam.getDimension();
 		SDL_RenderFillRect(renderer, &r);
 		// lado esquerdo
-		fill_rect(&cam, renderer, color, (SDL_Rect){-20, 100, 100, 20});
+		fillRect(renderer, &cam, color, (SDL_Rect){-20, 100, 100, 20});
 		// lado direito
-		fill_rect(&cam, renderer, color, (SDL_Rect){pos.x, pos.y, 100, 20});
+		fillRect(renderer, &cam, color, (SDL_Rect){position.x, position.y, 100, 20});
 		// lado de cima
-		fill_rect(&cam, renderer, color, (SDL_Rect){100, -20, 20, 100});
+		fillRect(renderer, &cam, color, (SDL_Rect){100, -20, 20, 100});
 		// lado de baixo
-		fill_rect(&cam, renderer, color, (SDL_Rect){100, 180, 20, 100});
+		fillRect(renderer, &cam, color, (SDL_Rect){100, 180, 20, 100});
 		
 		int ret = 0;
-		if ((ret = draw_texture(Texturer::instance()->get_texture("image.png"), 50, 50, &cam, renderer)) < 0)
+		if ((ret = drawTexture(renderer, &cam, Texturer::instance()->get("image.png"), 50, 50)) < 0)
 			printf("Retornou %d em %u\n", ret, SDL_GetTicks());
 		
 		SDL_RenderPresent(renderer);

@@ -57,7 +57,7 @@ class SoundFX: public StateMachine
 
 		virtual int update (  )
 		{
-			return get_state();
+			return getState();
 		}
 
 	public:
@@ -66,13 +66,13 @@ class SoundFX: public StateMachine
 			type = UNDEF_SOUND;
 			chunk = 0;
 			music = 0;
-			set_state(UNLOADED_SOUND);
+			setState(UNLOADED_SOUND);
 			channel = -1;
 		}
 
 		int get_type (  );
 
-		std::string get_id (  );
+		std::string getID (  );
 
 		std::string get_path (  );
 

@@ -1,11 +1,11 @@
 #include "statemachine.hpp"
 
-void StateMachine::set_state ( int s )
+void StateMachine::setState ( int s )
 {
 	state = s;
 }
 
-int StateMachine::get_state (  )
+int StateMachine::getState (  )
 {
 	return state;
 }
@@ -16,7 +16,7 @@ void StateMachine::input ( SDL_Event & event )
 
 int StateMachine::update (  )
 {
-	return get_state();
+	return getState();
 }
 
 
@@ -41,10 +41,10 @@ bool StatePatternMachine::add_state ( State * s )
 	return false;
 }
 
-bool StatePatternMachine::set_state ( int id )
+bool StatePatternMachine::setState ( int id )
 {
 	for (unsigned int i = 0; i < state.size(); i++)
-		if (state[i]->get_id() == id)
+		if (state[i]->getID() == id)
 		{
 			curr_state = state[i];
 			return true;
@@ -53,10 +53,10 @@ bool StatePatternMachine::set_state ( int id )
 	return false;
 }
 
-State * StatePatternMachine::get_state ( int id )
+State * StatePatternMachine::getState ( int id )
 {
 	for (unsigned int i = 0; i < state.size(); i++)
-		if (state[i]->get_id() == id)
+		if (state[i]->getID() == id)
 			return state[i];
 
 	return 0;

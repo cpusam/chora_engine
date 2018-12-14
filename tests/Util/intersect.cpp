@@ -38,7 +38,7 @@ int main ( int argc, char **argv )
 	SDL_Rect A = {(640 - 100)/2, (480 - 100)/2, 200, 200};
 	SDL_Rect B = {0, 0, 50, 50};
 	
-	Vect pos;
+	Vect position;
 	
 	int done = 0;
 	while (!done)
@@ -50,8 +50,8 @@ int main ( int argc, char **argv )
 			
 			if (event.type == SDL_MOUSEMOTION)
 			{
-				pos.x = event.motion.x - B.w/2;
-				pos.y = event.motion.y - B.h/2;
+				position.x = event.motion.x - B.w/2;
+				position.y = event.motion.y - B.h/2;
 			}
 			
 			if (event.type == SDL_KEYUP)
@@ -64,14 +64,14 @@ int main ( int argc, char **argv )
 		SDL_RenderClear(renderer);
 
 		// rect A
-		fill_rect(renderer, colorA, A);
+		fillRect(renderer, colorA, A);
 		// rect B
-		B.x = pos.x;
-		B.y = pos.y;
-		fill_rect(renderer, colorB, B);
+		B.x = position.x;
+		B.y = position.y;
+		fillRect(renderer, colorB, B);
 		// intersecção A com B
 		SDL_Rect inter = rectIntersect(A,B);
-		fill_rect(renderer, colorIntersect, inter);
+		fillRect(renderer, colorIntersect, inter);
 		
 		SDL_RenderPresent(renderer);
 		SDL_Delay(60);

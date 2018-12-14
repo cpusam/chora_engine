@@ -40,8 +40,8 @@ void GuiBar::draw ( SDL_Renderer * renderer )
 
 	SDL_Rect d;
 
-	d.x = pos.x;
-	d.y = pos.y;
+	d.x = position.x;
+	d.y = position.y;
 	d.w = dim.w;
 	d.h = dim.h;
 
@@ -53,16 +53,16 @@ void GuiBar::draw ( SDL_Renderer * renderer )
 	{
 		if (dir == 0)   // da direita para esquerda
 		{
-			d.x = pos.x;
+			d.x = position.x;
 			d.w = int(size/full_size * dim.w);
-			d.y = pos.y;
+			d.y = position.y;
 			d.h = dim.h;
 		}
 		else	 // da esquerda para direita
 		{
-			d.x = pos.x + (dim.w - int(size/full_size * dim.w));
+			d.x = position.x + (dim.w - int(size/full_size * dim.w));
 			d.w = dim.w;
-			d.y = pos.y;
+			d.y = position.y;
 			d.h = dim.h;
 		}
 	}
@@ -70,16 +70,16 @@ void GuiBar::draw ( SDL_Renderer * renderer )
 	{
 		if (dir == 0)   // baixo para cima
 		{
-			d.x = pos.x;
+			d.x = position.x;
 			d.w = dim.w;
-			d.y = pos.y;
+			d.y = position.y;
 			d.h = int(size/full_size * dim.h);
 		}
 		else	 // cima para baixo
 		{
-			d.x = pos.x;
+			d.x = position.x;
 			d.w = dim.w;
-			d.y = pos.y + (dim.h - int(size/full_size * dim.h));
+			d.y = position.y + (dim.h - int(size/full_size * dim.h));
 			d.h = int(size/full_size * dim.h);
 		}
 	}

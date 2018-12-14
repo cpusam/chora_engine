@@ -6,14 +6,14 @@ void TileMap::set_tilesize ( int ts )
 	tilesize = ts;
 }
 
-void TileMap::set_pos ( Vect p )
+void TileMap::setPosition ( Vect p )
 {
-	pos = p;
+	position = p;
 }
 
-Vect TileMap::get_pos (  )
+Vect TileMap::getPosition (  )
 {
-	return pos;
+	return position;
 }
 
 bool TileMap::set_tile ( int x, int y, int t )
@@ -60,8 +60,8 @@ int TileMap::get_tile ( int x, int y )
 		return -1;
 	}
 
-	x = int((x - pos.x) / tilesize);
-	y = int((y - pos.y) / tilesize);
+	x = int((x - position.x) / tilesize);
+	y = int((y - position.y) / tilesize);
 
 	if (y >= height || x >= width)
 		return -1;
@@ -120,7 +120,7 @@ int TileMap::get_height (  )
 	return height;
 }
 
-SDL_Rect TileMap::get_dimension (  )
+SDL_Rect TileMap::getDimension (  )
 {
 	return dimension;
 }

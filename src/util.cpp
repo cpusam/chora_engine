@@ -46,7 +46,7 @@ int RandInt ( int min, int max )
 }
 
 
-void print_video_driver ()
+void printVideoDriver ()
 {
 	int numdrivers = SDL_GetNumRenderDrivers ();
 	std::cout << "Render driver count: " << numdrivers << std::endl;
@@ -66,7 +66,7 @@ void print_video_driver ()
 }
 
 
-Uint32 get_pixel ( SDL_Surface *surface, int x, int y )
+Uint32 getPixel ( SDL_Surface *surface, int x, int y )
 {
 	/*
 	Uint32 * p = (Uint32 *)surface->pixels;
@@ -105,7 +105,7 @@ Uint32 get_pixel ( SDL_Surface *surface, int x, int y )
 	return 0;
 }
 
-void put_pixel ( SDL_Surface *surface, int x, int y, Uint32 pixel )
+void putPixel ( SDL_Surface *surface, int x, int y, Uint32 pixel )
 {
 	/*
 	Uint32 * p = (Uint32 *)surface->pixels;
@@ -146,7 +146,7 @@ void put_pixel ( SDL_Surface *surface, int x, int y, Uint32 pixel )
 	}
 }
 
-SDL_Surface * optimize_surface ( SDL_Surface * s, SDL_Surface * screen )
+SDL_Surface * optimizeSurface ( SDL_Surface * s, SDL_Surface * screen )
 {
 	if (!s || !screen)
 		return 0;
@@ -154,7 +154,7 @@ SDL_Surface * optimize_surface ( SDL_Surface * s, SDL_Surface * screen )
 	return SDL_ConvertSurface(s, screen->format, 0);
 }
 
-int texture_width ( SDL_Texture * t )
+int textureWidth ( SDL_Texture * t )
 {
 	if (!t)
 		return 0;
@@ -164,7 +164,7 @@ int texture_width ( SDL_Texture * t )
 	return w;
 }
 
-int texture_height ( SDL_Texture * t )
+int textureHeight ( SDL_Texture * t )
 {
 	if (!t)
 		return 0;
@@ -174,7 +174,7 @@ int texture_height ( SDL_Texture * t )
 	return h;
 }
 
-void fill_rect ( SDL_Renderer * renderer, Camera * cam, SDL_Color color, SDL_Rect r )
+void fillRect ( SDL_Renderer * renderer, Camera * cam, SDL_Color color, SDL_Rect r )
 {
 	SDL_Rect d;
 	SDL_Rect dim;
@@ -184,60 +184,60 @@ void fill_rect ( SDL_Renderer * renderer, Camera * cam, SDL_Color color, SDL_Rec
 
 	if (cam)
 	{
-		Vect pos = cam->get_position();
-		dim = cam->get_dimension();
-		d.x = (dim.x + r.x) - pos.x;
-		d.y = (dim.y + r.y) - pos.y;
+		Vect position = cam->getPosition();
+		dim = cam->getDimension();
+		d.x = (dim.x + r.x) - position.x;
+		d.y = (dim.y + r.y) - position.y;
 		
 		/*
-		if (d.x < dim.x + pos.x)
+		if (d.x < dim.x + position.x)
 		{
-			if (((dim.x + pos.x) - d.x) < d.w)
-				d.w -= ((dim.x + pos.x) - d.x);
+			if (((dim.x + position.x) - d.x) < d.w)
+				d.w -= ((dim.x + position.x) - d.x);
 			else
 				//source.w = 0; // não pode ser zero no emscripten
 				return;
 
 			d.x = dim.x;
 		}
-		else if (d.x + d.w > pos.x + dim.x + dim.w)
+		else if (d.x + d.w > position.x + dim.x + dim.w)
 		{
-			if (d.x + d.w - (pos.x + dim.x + dim.w) < d.w)
-				d.w -= d.x + d.w - (pos.x + dim.x + dim.w);
+			if (d.x + d.w - (position.x + dim.x + dim.w) < d.w)
+				d.w -= d.x + d.w - (position.x + dim.x + dim.w);
 			else
 				//source.w = 0; // não pode ser zero no emscripten
 				return;
 
-			d.x = d.x - pos.x;
+			d.x = d.x - position.x;
 		}
 		else
 		{
-			d.x = d.x - pos.x;
+			d.x = d.x - position.x;
 		}
 
-		if (d.y < dim.y + pos.y)
+		if (d.y < dim.y + position.y)
 		{
-			if (((dim.y + pos.y) - d.y) < d.h)
-				d.h -= ((dim.y + pos.y) - d.y);
+			if (((dim.y + position.y) - d.y) < d.h)
+				d.h -= ((dim.y + position.y) - d.y);
 			else
 				//source.h = 0; // não pode ser zero no emscripten
 				return;
 
 			d.y = dim.y;
 		}
-		else if (d.y + d.h > pos.y + dim.y + dim.h)
+		else if (d.y + d.h > position.y + dim.y + dim.h)
 		{
-			if (d.y + d.h - (pos.y + dim.y + dim.h) < d.h)
-				d.h -= d.y + d.h - (pos.y + dim.y + dim.h);
+			if (d.y + d.h - (position.y + dim.y + dim.h) < d.h)
+				d.h -= d.y + d.h - (position.y + dim.y + dim.h);
 			else
 				//source.h = 0; // não pode ser zero no emscripten
 				return;
 
-			d.y = d.y - pos.y;
+			d.y = d.y - position.y;
 		}
 		else
 		{
-			d.y = d.y - pos.y;
+			d.y = d.y - position.y;
 		}
 		*/
 	}
@@ -251,13 +251,13 @@ void fill_rect ( SDL_Renderer * renderer, Camera * cam, SDL_Color color, SDL_Rec
 	SDL_RenderFillRect(renderer, &d);
 }
 
-void fill_rect ( SDL_Renderer * renderer, SDL_Color color, SDL_Rect r )
+void fillRect ( SDL_Renderer * renderer, SDL_Color color, SDL_Rect r )
 {
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderFillRect(renderer, &r);
 }
 
-int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, int x, int y, int sizeW, int sizeH )
+int drawTexture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, int x, int y, int sizeW, int sizeH )
 {
 	if (!texture || !cam || !renderer)
 	{
@@ -277,66 +277,66 @@ int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture
 		return -2;
 	}
 
-	Vect pos = cam->get_position();
-	SDL_Rect dim = cam->get_dimension();
+	Vect position = cam->getPosition();
+	SDL_Rect dim = cam->getDimension();
 
 	dest.x = x + dim.x;
 	dest.y = y + dim.y;
 
-	if (dest.x < dim.x + pos.x)
+	if (dest.x < dim.x + position.x)
 	{
-		source.x += (dim.x + pos.x) - dest.x;
-		if (((dim.x + pos.x) - dest.x) < source.w)
-			source.w -= ((dim.x + pos.x) - dest.x);
+		source.x += (dim.x + position.x) - dest.x;
+		if (((dim.x + position.x) - dest.x) < source.w)
+			source.w -= ((dim.x + position.x) - dest.x);
 		else
 			//source.w = 0; // não pode ser zero no emscripten
 			return -3;
 
 		dest.x = dim.x;
 	}
-	else if (dest.x + dest.w > pos.x + dim.x + dim.w)
+	else if (dest.x + dest.w > position.x + dim.x + dim.w)
 	{
-		if (dest.x + dest.w - (pos.x + dim.x + dim.w) < source.w)
-			source.w -= dest.x + dest.w - (pos.x + dim.x + dim.w);
+		if (dest.x + dest.w - (position.x + dim.x + dim.w) < source.w)
+			source.w -= dest.x + dest.w - (position.x + dim.x + dim.w);
 		else
 			//source.w = 0; // não pode ser zero no emscripten
 			return -4;
 
-		dest.x = dest.x - pos.x;
+		dest.x = dest.x - position.x;
 	}
 	else
 	{
-		dest.x = dest.x - pos.x;
+		dest.x = dest.x - position.x;
 	}
 
-	if (dest.y < dim.y + pos.y)
+	if (dest.y < dim.y + position.y)
 	{
-		source.y += (dim.y + pos.y) - dest.y;
-		if (((dim.y + pos.y) - dest.y) < source.h)
-			source.h -= ((dim.y + pos.y) - dest.y);
+		source.y += (dim.y + position.y) - dest.y;
+		if (((dim.y + position.y) - dest.y) < source.h)
+			source.h -= ((dim.y + position.y) - dest.y);
 		else
 			//source.h = 0; // não pode ser zero no emscripten
 			return -5;
 
 		dest.y = dim.y;
 	}
-	else if (dest.y + dest.h > pos.y + dim.y + dim.h)
+	else if (dest.y + dest.h > position.y + dim.y + dim.h)
 	{
-		if (dest.y + dest.h - (pos.y + dim.y + dim.h) < source.h)
-			source.h -= dest.y + dest.h - (pos.y + dim.y + dim.h);
+		if (dest.y + dest.h - (position.y + dim.y + dim.h) < source.h)
+			source.h -= dest.y + dest.h - (position.y + dim.y + dim.h);
 		else
 		{
-			//source.h -= dest.y + dest.h - (pos.y + dim.y + dim.h);
-			printf("UTIL.cpp: source.h = %d, dest... = %lf w = %d, h = %d\n", source.h,dest.y + dest.h - (pos.y + dim.y + dim.h), w, h);
+			//source.h -= dest.y + dest.h - (position.y + dim.y + dim.h);
+			printf("UTIL.cpp: source.h = %d, dest... = %lf w = %d, h = %d\n", source.h,dest.y + dest.h - (position.y + dim.y + dim.h), w, h);
 			//source.h = 0; // não pode ser zero no emscripten
 			return -6;
 		}
 
-		dest.y = dest.y - pos.y;
+		dest.y = dest.y - position.y;
 	}
 	else
 	{
-		dest.y = dest.y - pos.y;
+		dest.y = dest.y - position.y;
 	}
 
 	if (sizeH == 0 || sizeW == 0)
@@ -353,7 +353,7 @@ int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture
 	return SDL_RenderCopy(renderer, texture, &source, &dest);
 }
 
-int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, const SDL_Rect * src, const SDL_Rect * dst, double angle, SDL_Point * center, SDL_RendererFlip flip )
+int drawTexture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, const SDL_Rect * src, const SDL_Rect * dst, double angle, SDL_Point * center, SDL_RendererFlip flip )
 {
 	if (!texture || !cam || !renderer)
 	{
@@ -389,66 +389,66 @@ int draw_texture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture
 	// atualiza o viewport para desenhar nele
 	cam->updateViewport(renderer);
 
-	Vect pos = cam->get_position();
-	SDL_Rect dim = cam->get_dimension();
+	Vect position = cam->getPosition();
+	SDL_Rect dim = cam->getDimension();
 
 	dest.x += dim.x;
 	dest.y += dim.y;
 
-	if (dest.x < dim.x + pos.x)
+	if (dest.x < dim.x + position.x)
 	{
-		source.x += (dim.x + pos.x) - dest.x;
-		if (((dim.x + pos.x) - dest.x) < source.w)
-			source.w -= ((dim.x + pos.x) - dest.x);
+		source.x += (dim.x + position.x) - dest.x;
+		if (((dim.x + position.x) - dest.x) < source.w)
+			source.w -= ((dim.x + position.x) - dest.x);
 		else
 			//source.w = 0; // não pode ser zero no emscripten
 			return -3;
 
 		dest.x = dim.x;
 	}
-	else if (dest.x + dest.w > pos.x + dim.x + dim.w)
+	else if (dest.x + dest.w > position.x + dim.x + dim.w)
 	{
-		if (dest.x + dest.w - (pos.x + dim.x + dim.w) < source.w)
-			source.w -= dest.x + dest.w - (pos.x + dim.x + dim.w);
+		if (dest.x + dest.w - (position.x + dim.x + dim.w) < source.w)
+			source.w -= dest.x + dest.w - (position.x + dim.x + dim.w);
 		else
 			//source.w = 0; // não pode ser zero no emscripten
 			return -4;
 
-		dest.x = dest.x - pos.x;
+		dest.x = dest.x - position.x;
 	}
 	else
 	{
-		dest.x = dest.x - pos.x;
+		dest.x = dest.x - position.x;
 	}
 
-	if (dest.y < dim.y + pos.y)
+	if (dest.y < dim.y + position.y)
 	{
-		source.y += (dim.y + pos.y) - dest.y;
-		if (((dim.y + pos.y) - dest.y) < source.h)
-			source.h -= ((dim.y + pos.y) - dest.y);
+		source.y += (dim.y + position.y) - dest.y;
+		if (((dim.y + position.y) - dest.y) < source.h)
+			source.h -= ((dim.y + position.y) - dest.y);
 		else
 			//source.h = 0; // não pode ser zero no emscripten
 			return -5;
 
 		dest.y = dim.y;
 	}
-	else if (dest.y + dest.h > pos.y + dim.y + dim.h)
+	else if (dest.y + dest.h > position.y + dim.y + dim.h)
 	{
-		if (dest.y + dest.h - (pos.y + dim.y + dim.h) < source.h)
-			source.h -= dest.y + dest.h - (pos.y + dim.y + dim.h);
+		if (dest.y + dest.h - (position.y + dim.y + dim.h) < source.h)
+			source.h -= dest.y + dest.h - (position.y + dim.y + dim.h);
 		else
 		{
-			//source.h -= dest.y + dest.h - (pos.y + dim.y + dim.h);
-			//printf("UTIL.cpp: source.h = %d, dest... = %lf w = %d, h = %d\n", source.h,dest.y + dest.h - (pos.y + dim.y + dim.h), w, h);
+			//source.h -= dest.y + dest.h - (position.y + dim.y + dim.h);
+			//printf("UTIL.cpp: source.h = %d, dest... = %lf w = %d, h = %d\n", source.h,dest.y + dest.h - (position.y + dim.y + dim.h), w, h);
 			//source.h = 0; // não pode ser zero no emscripten
 			return -6;
 		}
 
-		dest.y = dest.y - pos.y;
+		dest.y = dest.y - position.y;
 	}
 	else
 	{
-		dest.y = dest.y - pos.y;
+		dest.y = dest.y - position.y;
 	}
 
 	return SDL_RenderCopyEx(renderer, texture, &source, &dest, angle, center, flip);

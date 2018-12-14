@@ -60,7 +60,7 @@ class CollisionFrame: public AnimationFrame
 			rects = r;
 		}
 
-		void set_source ( SDL_Rect src );
+		void setSourceRect ( SDL_Rect src );
 		void add_rect ( SCollisionRect r );
 		bool set_rect ( int i, SCollisionRect r );
 		
@@ -77,7 +77,7 @@ class Sprite: public Animation
 		std::vector <CollisionFrame> coll_frames;
 
 	protected:
-		using Animation::add_frame;
+		using Animation::addFrame;
 
 	public:
 		Sprite (  )
@@ -86,7 +86,7 @@ class Sprite: public Animation
 
 
 		void set_coll_frames ( SDL_Texture *t, std::vector <CollisionFrame> c_f );
-		void add_frame ( SDL_Texture * t, CollisionFrame c );
+		void addFrame ( SDL_Texture * t, CollisionFrame c );
 		CollisionFrame get_coll_frame ( int i );
 		std::vector <CollisionFrame> get_coll_frames (  );
 };

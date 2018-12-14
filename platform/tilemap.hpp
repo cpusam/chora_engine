@@ -41,7 +41,7 @@ class TileMap
 		int width; // largura do std::mapa
 		int height;
 		int tilesize;
-		Vect pos;
+		Vect position;
 		SDL_Rect dimension;
 		std::vector <int> tileset;//conjunto de tiles do mapa
 		std::vector <int> tiles;//tiles neste mapa
@@ -64,9 +64,9 @@ class TileMap
 
 		void set_tilesize ( int ts );
 
-		void set_pos ( Vect p );
+		void setPosition ( Vect p );
 		
-		Vect get_pos (  );
+		Vect getPosition (  );
 
 		bool set_tile ( int x, int y, int t );
 
@@ -86,8 +86,8 @@ class TileMap
 				return -1;
 			}
 
-			x = int((x - pos.x) / tilesize);
-			y = int((y - pos.y) / tilesize);
+			x = int((x - position.x) / tilesize);
+			y = int((y - position.y) / tilesize);
 
 			if (y >= height || x >= width)
 				return -1;
@@ -113,7 +113,7 @@ class TileMap
 
 		int get_height (  );
 
-		SDL_Rect get_dimension (  );
+		SDL_Rect getDimension (  );
 
 		bool has_tile ( int t );
 

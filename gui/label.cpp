@@ -37,7 +37,7 @@ void GuiLabel::str_to_surface ( std::string s, std::string fontName )
 
 	texture = nullptr;
 	try {
-		texture = Writer::instance()->render_text(fontName, s, color, SOLID_TEXT);
+		texture = Writer::instance()->renderText(fontName, s, color, SOLID_TEXT);
 	} catch(Exception & e){
 		e.what();
 		abort();
@@ -54,7 +54,7 @@ void GuiLabel::str_to_surface ( std::string s, std::string fontName )
 
 	str = s;
 
-	dim.x = pos.x + rel_pos.x, dim.y = pos.y + rel_pos.y;
+	dim.x = position.x + rel_pos.x, dim.y = position.y + rel_pos.y;
 	dim.w = w, dim.h = h;
 }
 
@@ -76,12 +76,12 @@ void GuiLabel::set_str ( std::string s, std::string fontName )
 	str_to_surface(s, fontName);
 }
 
-SDL_Texture * GuiLabel::get_texture (  )
+SDL_Texture * GuiLabel::getTexture (  )
 {
 	return texture;
 }
 
-void GuiLabel::set_texture ( SDL_Texture * t )
+void GuiLabel::setTexture ( SDL_Texture * t )
 {
 	if (texture && texture != t)
 		SDL_DestroyTexture(texture);
@@ -101,7 +101,7 @@ void GuiLabel::set_texture ( SDL_Texture * t )
 	}
 }
 
-int GuiLabel::get_texture_width (  )
+int GuiLabel::getTexture_width (  )
 {
 	int w;
 
@@ -112,7 +112,7 @@ int GuiLabel::get_texture_width (  )
 	return w;
 }
 
-int GuiLabel::get_texture_height (  )
+int GuiLabel::getTexture_height (  )
 {
 	int h;
 
@@ -133,8 +133,8 @@ void GuiLabel::draw ( SDL_Renderer * renderer )
 	if (!visible)
 		return;
 
-	child_draw(renderer);
-	SDL_Rect d = {int(pos.x),int(pos.y),dim.w,dim.h};
+	childDraw(renderer);
+	SDL_Rect d = {int(position.x),int(position.y),dim.w,dim.h};
 	if (texture)
 		SDL_RenderCopy(renderer, texture, nullptr, &d);
 }

@@ -2,7 +2,7 @@
 
 int intersectSide ( Entity * a, Entity * b, Vect * result )
 {
-	if (a->get_vel().is_zero() || b->get_vel().is_zero())
+	if (a->get_vel().isZero() || b->get_vel().isZero())
 		return RectSide::NONE;
 	
 	SDL_Rect rectA, rectB;

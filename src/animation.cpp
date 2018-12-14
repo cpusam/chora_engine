@@ -1,14 +1,14 @@
 #include "animation.hpp"
 #include "collision.hpp"
 
-void AnimationFrame::set_frame ( int d, SDL_Rect src )
+void AnimationFrame::setFrame ( int d, SDL_Rect src )
 {
-	set_source(src);
-	set_destiny((SDL_Rect){0,0,src.w,src.h});
-	set_delay(d);
+	setSourceRect(src);
+	setDestinyRect((SDL_Rect){0,0,src.w,src.h});
+	setDelay(d);
 }
 
-bool AnimationFrame::set_delay ( int d )
+bool AnimationFrame::setDelay ( int d )
 {
 	if (d > -1)
 		delay = d;
@@ -16,45 +16,45 @@ bool AnimationFrame::set_delay ( int d )
 	return (d > -1);
 }
 
-int AnimationFrame::get_delay (  )
+int AnimationFrame::getDelay (  )
 {
 	return delay;
 }
 
-void AnimationFrame::set_source ( SDL_Rect s )
+void AnimationFrame::setSourceRect ( const SDL_Rect & s )
 {
 	source = s;
 }
 
-SDL_Rect AnimationFrame::get_source (  )
+SDL_Rect AnimationFrame::getSourceRect (  )
 {
 	return source;
 }
 
-void AnimationFrame::set_destiny ( SDL_Rect d )
+void AnimationFrame::setDestinyRect ( const SDL_Rect & d )
 {
 	x = d.x;
 	y = d.y;
 	destiny = d;
 }
 
-SDL_Rect AnimationFrame::get_destiny (  )
+SDL_Rect AnimationFrame::getDestinyRect (  )
 {
 	return destiny;
 }
 
 
-Vect AnimationFrame::get_orientation (  )
+Vect AnimationFrame::getOrientation (  )
 {
 	return orientation;
 }
 
-float AnimationFrame::get_angle (  )
+float AnimationFrame::getAngle (  )
 {
 	return angle;
 }
 
-void AnimationFrame::set_angle ( float rad )
+void AnimationFrame::setAngle ( float rad )
 {
 	angle = rad;
 }
@@ -65,7 +65,7 @@ void AnimationFrame::rotate ( float a )
 	orientation.rotate(a);
 }
 
-void AnimationFrame::set_flip ( bool hor, bool ver )
+void AnimationFrame::setFlip ( bool hor, bool ver )
 {
 	unsigned int f = static_cast<unsigned int>(flip);
 	
@@ -83,12 +83,12 @@ SDL_RendererFlip AnimationFrame::get_flip (  )
 	return flip;
 }
 
-void AnimationFrame::set_texture ( SDL_Texture * t )
+void AnimationFrame::setTexture ( SDL_Texture * t )
 {
 	texture = t;
 }
 
-SDL_Texture * AnimationFrame::get_texture (  )
+SDL_Texture * AnimationFrame::getTexture (  )
 {
 	return texture;
 }
@@ -111,81 +111,81 @@ bool AnimationFrame::destroy (  )
 
 void Animation::play (  )
 {
-	if (get_state() == STOPPED)
-		set_state(START);
+	if (getState() == STOPPED)
+		setState(START);
 	else
-		set_state(RUNNING);
+		setState(RUNNING);
 
 	timer.start();
 }
 
 void Animation::pause (  )
 {
-	set_state(PAUSED);
+	setState(PAUSED);
 	timer.pause();
 }
 
 void Animation::reset (  )
 {
 	index = 0;
-	set_state(START);
+	setState(START);
 	timer.reset();
 }
 
-void Animation::set_repeat ( bool r )
+void Animation::setRepeat ( bool r )
 {
 	repeat = r;
 }
 
-void Animation::set_delay ( int f, int d )
+void Animation::setFrameDelay ( int f, int d )
 {
 	if (f >= 0 && f < int(frames.size()))
-		frames[f].set_delay(d);
+		frames[f].setDelay(d);
 }
 
-int Animation::get_total_time (  )
+int Animation::getTotalTime (  )
 {
 	int total = 0;
 	for (auto & frame: frames)
-		total += frame.get_delay();
+		total += frame.getDelay();
 	return total;
 }
 
 // seta todos os frames para o mesmo delay
-void Animation::set_frames_delay ( int d )
+void Animation::setFramesDelay ( int d )
 {
 	for (unsigned i = 0; i < frames.size(); i++)
-		frames[i].set_delay(d);
+		frames[i].setDelay(d);
 }
 
-int Animation::get_frames_size (  )
+int Animation::getFramesSize (  )
 {
 	return frames.size();
 }
 
-void Animation::clear_frames ( bool destroy )
+void Animation::clearFrames ( bool destroy )
 {
 	frames.clear();
 	if (destroy)
-		destroy_textures();
+		destroyTextures();
 	texture.clear();
 }
 
-Vect Animation::get_orientation (  )
+Vect Animation::getOrientation (  )
 {
 	return orientation;
 }
 
-float Animation::get_angle (  )
+float Animation::getAngle (  )
 {
 	return angle;
 }
 
-void Animation::set_angle ( float rad )
+void Animation::setAngle ( float rad )
 {
 	for (auto & frame: frames)
 	{
-		frame.set_angle(rad);
+		frame.setAngle(rad);
 	}
 }
 
@@ -201,27 +201,27 @@ void Animation::rotate ( float a )
 		frames[i].rotate(a);
 }
 
-void Animation::set_use_rot ( bool u )
+void Animation::setUseRotation ( bool u )
 {
 	use_rot = true;
 }
 
-bool Animation::get_use_rot (  )
+bool Animation::getUseRotation (  )
 {
 	return use_rot;
 }
 
-void Animation::set_use_center ( bool u )
+void Animation::setUseCenter ( bool u )
 {
 	use_center = true;
 }
 
-bool Animation::get_use_center (  )
+bool Animation::getUseCenter (  )
 {
 	return use_center;
 }
 
-void Animation::set_center ( Vect center )
+void Animation::setCenter ( Vect center )
 {
 	this->center = center;
 }
@@ -234,13 +234,13 @@ void Animation::flip ( SDL_RendererFlip f )
 	ver = f & SDL_FLIP_VERTICAL;
 	
 	for (unsigned i = 0; i < frames.size(); i++)
-		frames[i].set_flip(hor, ver);
+		frames[i].setFlip(hor, ver);
 }
 
 void Animation::flip ( bool hor, bool ver )
 {
 	for (unsigned i = 0; i < frames.size(); i++)
-		frames[i].set_flip(hor, ver);
+		frames[i].setFlip(hor, ver);
 }
 
 SDL_RendererFlip Animation::get_flip (  )
@@ -248,43 +248,43 @@ SDL_RendererFlip Animation::get_flip (  )
 	return frames.at(0).get_flip();
 }
 
-void Animation::add_frame ( SDL_Texture * t, SDL_Rect const & src, int d )
+void Animation::addFrame ( SDL_Texture * t, SDL_Rect const & src, int d )
 {
 	index = 0;
 	texture.push_back(t);
 	AnimationFrame f;
 
-	f.set_source(src);
-	f.set_destiny((SDL_Rect){0,0,src.w,src.h});
-	f.set_delay(d);
-	f.set_texture(t);
+	f.setSourceRect(src);
+	f.setDestinyRect((SDL_Rect){0,0,src.w,src.h});
+	f.setDelay(d);
+	f.setTexture(t);
 
 	frames.push_back(static_cast<AnimationFrame>(f));
 }
 
-void Animation::add_frame ( SDL_Texture * t, SDL_Rect const & src, SDL_Rect const & dst, int d )
+void Animation::addFrame ( SDL_Texture * t, SDL_Rect const & src, SDL_Rect const & dst, int d )
 {
 	index = 0;
 	texture.push_back(t);
 	AnimationFrame f;
 
-	f.set_source(src);
-	f.set_destiny(dst);
-	f.set_delay(d);
-	f.set_texture(t);
+	f.setSourceRect(src);
+	f.setDestinyRect(dst);
+	f.setDelay(d);
+	f.setTexture(t);
 
 	frames.push_back(f);
 }
 
-void Animation::add_frame ( SDL_Texture * t, AnimationFrame & f )
+void Animation::addFrame ( SDL_Texture * t, AnimationFrame & f )
 {
 	index = 0;
 	texture.push_back(t);
-	f.set_texture(t);
+	f.setTexture(t);
 	frames.push_back(f);
 }
 
-SDL_Texture * Animation::get_texture ( int i )
+SDL_Texture * Animation::getTexture ( int i )
 {
 	if (texture.size() > 0 && i < int(texture.size()))
 		return texture[i];
@@ -292,7 +292,7 @@ SDL_Texture * Animation::get_texture ( int i )
 	return 0;
 }
 
-void Animation::destroy_textures (  )
+void Animation::destroyTextures (  )
 {
 	
 	std::vector <SDL_Texture *> t;
@@ -334,7 +334,7 @@ void Animation::destroy_textures (  )
 	//t.clear();
 }
 
-bool Animation::has_texture ( SDL_Texture * t )
+bool Animation::hasTexture ( SDL_Texture * t )
 {
 	if (!t)
 		return false;
@@ -346,7 +346,7 @@ bool Animation::has_texture ( SDL_Texture * t )
 	return false;
 }
 
-bool Animation::set_index ( int i )
+bool Animation::setIndex ( int i )
 {
 	if (i >= 0 && i < int(frames.size()))
 	{
@@ -358,37 +358,37 @@ bool Animation::set_index ( int i )
 	return false;
 }
 
-int Animation::get_index (  )
+int Animation::getIndex (  )
 {
 	return index;
 }
 
-void Animation::set_timer ( STimer t )
+void Animation::setTimer ( STimer t )
 {
 	timer = t;
 }
 
-STimer Animation::get_timer (  )
+STimer Animation::getTimer (  )
 {
 	return timer;
 }
 
-void Animation::set_name ( std::string n )
+void Animation::setName ( std::string n )
 {
 	name = n;
 }
 
-std::string Animation::get_name (  )
+std::string Animation::getName (  )
 {
 	return name;
 }
 
-std::vector<AnimationFrame> & Animation::get_frames (  )
+std::vector<AnimationFrame> & Animation::getFrames (  )
 {
 	return frames;
 }
 
-AnimationFrame Animation::get_frame ( int i )
+AnimationFrame Animation::getFrame ( int i )
 {
 	if (i > 0 && i <= int(frames.size()))
 		return frames[i];
@@ -396,7 +396,7 @@ AnimationFrame Animation::get_frame ( int i )
 	return AnimationFrame();
 }
 
-AnimationFrame Animation::get_curr_frame (  )
+AnimationFrame Animation::getCurrentFrame (  )
 {
 	return frames[index];
 }
@@ -406,8 +406,8 @@ int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 	int ret = 0;
 	static SDL_Rect dest, source;
 	{
-		dest = frames.at(index).get_destiny();
-		source = frames.at(index).get_source();
+		dest = frames.at(index).getDestinyRect();
+		source = frames.at(index).getSourceRect();
 	}
 
 	dest.x = dest.x + x;
@@ -429,13 +429,13 @@ int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 		{
 			static SDL_Point center;
 			if (use_center)
-				center = {frames[index].get_source().w/2, frames[index].get_source().h/2};
+				center = {frames[index].getSourceRect().w/2, frames[index].getSourceRect().h/2};
 			else if (use_rot)
 			{
 				center.x = this->center.x;
 				center.y = this->center.y;
 			}
-			ret = SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
+			ret = SDL_RenderCopyEx(renderer, texture.at(index), &source, &dest, TO_DEGREES(frames[index].getAngle()), &center, frames[index].get_flip());
 		}
 	}
 	
@@ -447,18 +447,18 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int d
 {
 	int ret = 0;
 	SDL_Rect dest, source;
-	//if (get_state() == CHANGE_FRAME)
+	//if (getState() == CHANGE_FRAME)
 	{
-		dest = frames.at(index).get_destiny();
-		source = frames.at(index).get_source();
+		dest = frames.at(index).getDestinyRect();
+		source = frames.at(index).getSourceRect();
 	}
 
 	dest.w = destW;
 	dest.h = destH;
 
-	Vect pos = cam->get_position();
-	SDL_Rect dim = cam->get_dimension();
-	//SDL_Rect view = cam->get_view();
+	Vect position = cam->getPosition();
+	SDL_Rect dim = cam->getDimension();
+	//SDL_Rect view = cam->getView();
 
 	dest.x = dest.x + x;
 	dest.y = dest.y + y;
@@ -470,8 +470,8 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int d
 	}
 	
 	
-	dest.x = (dest.x - pos.x) + dim.x;
-	dest.y = (dest.y - pos.y) + dim.y;
+	dest.x = (dest.x - position.x) + dim.x;
+	dest.y = (dest.y - position.y) + dim.y;
 	
 	/*
 	SDL_Rect rect = rectIntersect(dest,dim);
@@ -481,11 +481,11 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int d
 	if (texture.size() && texture.at(index))
 	{
 		//SDL_Color color = {255,255,0,128};
-		//fill_rect(renderer, color, rect);
+		//fillRect(renderer, color, rect);
 		// atualiza o viewport para desenhar nele
 		//cam->updateViewport(renderer);
 		if (use_rot == false)
-			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, 0, 0, frames[index].get_flip());
+			ret = SDL_RenderCopyEx(renderer, frames.at(index).getTexture(), &source, &dest, 0, 0, frames[index].get_flip());
 		else
 		{
 			static SDL_Point center = {dest.w/2, dest.h/2};
@@ -495,7 +495,7 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int d
 				center.y = this->center.y;
 			}
 
-			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
+			ret = SDL_RenderCopyEx(renderer, frames.at(index).getTexture(), &source, &dest, TO_DEGREES(frames[index].getAngle()), &center, frames[index].get_flip());
 		}
 	}
 	
@@ -506,12 +506,12 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 {
 	int ret = 0;
 	SDL_Rect dest, source;
-	dest = frames.at(index).get_destiny();
-	source = frames.at(index).get_source();
+	dest = frames.at(index).getDestinyRect();
+	source = frames.at(index).getSourceRect();
 
-	Vect pos = cam->get_position();
-	SDL_Rect dim = cam->get_dimension();
-	//SDL_Rect view = cam->get_view();
+	Vect position = cam->getPosition();
+	SDL_Rect dim = cam->getDimension();
+	//SDL_Rect view = cam->getView();
 
 	dest.x += x;
 	dest.y += y;
@@ -523,8 +523,8 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 	}
 	
 	
-	dest.x = (dest.x - pos.x) + dim.x;
-	dest.y = (dest.y - pos.y) + dim.y;
+	dest.x = (dest.x - position.x) + dim.x;
+	dest.y = (dest.y - position.y) + dim.y;
 	
 	
 	/*
@@ -535,11 +535,11 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 	if (texture.size() && texture.at(index))
 	{
 		//SDL_Color color = {255,255,0,128};
-		//fill_rect(renderer, color, rect);
+		//fillRect(renderer, color, rect);
 		// atualiza o viewport para desenhar nele
 		//cam->updateViewport(renderer);
 		if (use_rot == false)
-			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, 0, 0, frames[index].get_flip());
+			ret = SDL_RenderCopyEx(renderer, frames.at(index).getTexture(), &source, &dest, 0, 0, frames[index].get_flip());
 		else
 		{
 			SDL_Point center = {dest.w/2, dest.h/2};
@@ -549,7 +549,7 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 				center.y = this->center.y;
 			}
 
-			ret = SDL_RenderCopyEx(renderer, frames.at(index).get_texture(), &source, &dest, TO_DEGREES(frames[index].get_angle()), &center, frames[index].get_flip());
+			ret = SDL_RenderCopyEx(renderer, frames.at(index).getTexture(), &source, &dest, TO_DEGREES(frames[index].getAngle()), &center, frames[index].get_flip());
 		}
 	}
 	
@@ -558,7 +558,7 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 
 int Animation::update (  )
 {
-	switch (get_state())
+	switch (getState())
 	{
 		case START:
 		case CHANGE_FRAME:
@@ -571,7 +571,7 @@ int Animation::update (  )
 			}
 
 			timer.update();
-			if (timer.steps() >= frames[index].get_delay())
+			if (timer.steps() >= frames[index].getDelay())
 			{
 				timer.reset();
 				index++;
@@ -580,28 +580,28 @@ int Animation::update (  )
 					if (repeat)
 					{
 						index = 0;
-						set_state(FINISHED); // termina e repete a animação
+						setState(FINISHED); // termina e repete a animação
 						break;
 					}
 					else
 					{
 						index = int(frames.size() - 1);
-						set_state(STOPPED); // terminou a animação e fica parado
+						setState(STOPPED); // terminou a animação e fica parado
 						break;
 					}
 				}
 
-				set_state(CHANGE_FRAME); // novo frame
+				setState(CHANGE_FRAME); // novo frame
 				break;
 			}
 
-			set_state(RUNNING); // rodando
+			setState(RUNNING); // rodando
 			break;
 
 		default:
 			break;
 	}
 
-	return get_state();
+	return getState();
 }
 

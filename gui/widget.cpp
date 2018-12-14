@@ -12,34 +12,34 @@ void Widget::destroy (  )
 	child.clear();
 }
 
-void Widget::set_id ( std::string new_id )
+void Widget::setID ( std::string new_id )
 {
 	id = new_id;
 }
 
-std::string Widget::get_id (  )
+std::string Widget::getID (  )
 {
 	return id;
 }
 
-void Widget::set_pos ( Vect p )
+void Widget::setPosition ( Vect p )
 {
-	if (pos.x == p.x && pos.y == p.y)
+	if (position.x == p.x && position.y == p.y)
 		return;
 
-	pos = p;
+	position = p;
 	dim.x = int(p.x), dim.y = int(p.y);
 
 	for (std::vector <Widget *>::iterator i = child.begin(); i != child.end(); i++)
-		(*i)->set_pos(Vect::add((*i)->get_rel_pos(), pos));
+		(*i)->setPosition(Vect::add((*i)->getRelativePosition(), position));
 }
 
-Vect Widget::get_pos (  )
+Vect Widget::getPosition (  )
 {
-	return pos;
+	return position;
 }
 
-void Widget::set_rel_pos ( Vect p )
+void Widget::setRelativePosition ( Vect p )
 {
 	if (rel_pos.x == p.x && rel_pos.y == p.y)
 		return;
@@ -48,35 +48,35 @@ void Widget::set_rel_pos ( Vect p )
 
 	if (parent)
 	{
-		pos.x = parent->get_pos().x + rel_pos.x;
-		pos.y = parent->get_pos().y + rel_pos.y;
-		dim.x = int(pos.x);
-		dim.y = int(pos.y);
+		position.x = parent->getPosition().x + rel_pos.x;
+		position.y = parent->getPosition().y + rel_pos.y;
+		dim.x = int(position.x);
+		dim.y = int(position.y);
 	}
 	else
 	{
 		dim.x = int(rel_pos.x);
 		dim.y = int(rel_pos.y);
-		pos = rel_pos;
+		position = rel_pos;
 	}
 
 	for (std::vector <Widget *>::iterator i = child.begin(); i != child.end(); i++)
-		(*i)->set_pos((*i)->get_rel_pos() + pos);
+		(*i)->setPosition((*i)->getRelativePosition() + position);
 }
 
-Vect Widget::get_rel_pos (  )
+Vect Widget::getRelativePosition (  )
 {
 	return rel_pos;
 }
 
-void Widget::set_dim ( SDL_Rect d )
+void Widget::setDimension ( SDL_Rect d )
 {
-	d.x = int(pos.x + rel_pos.x);
-	d.y = int(pos.y + rel_pos.y);
+	d.x = int(position.x + rel_pos.x);
+	d.y = int(position.y + rel_pos.y);
 	dim = d;
 }
 
-SDL_Rect Widget::get_dim (  )
+SDL_Rect Widget::getDimension (  )
 {
 	return dim;
 }
@@ -84,27 +84,27 @@ SDL_Rect Widget::get_dim (  )
 void Widget::show ( bool s )
 {
 	visible = s;
-	show_child(s);
+	showChild(s);
 }
 
-bool Widget::is_visible (  )
+bool Widget::isVisible (  )
 {
 	return visible;
 }
 
-void Widget::set_parent ( Widget * w )
+void Widget::setParent ( Widget * w )
 {
 	if (parent)
-		parent->rem_child(this);
+		parent->removeChild(this);
 	parent = w;
 }
 
-Widget * Widget::get_parent (  )
+Widget * Widget::getParent (  )
 {
 	return parent;
 }
 
-bool Widget::has_child ( Widget * w )
+bool Widget::hasChild ( Widget * w )
 {
 	for (unsigned int i(0); i < child.size(); i++)
 		if (w == child[i] && w)
@@ -113,21 +113,21 @@ bool Widget::has_child ( Widget * w )
 	return false;
 }
 
-void Widget::show_child ( bool s )
+void Widget::showChild ( bool s )
 {
 	if (visible)
 		for (std::vector <Widget *>::iterator i = child.begin(); i != child.end(); i++)
 		{
 			(*i)->show(s);
-			(*i)->show_child(s);
+			(*i)->showChild(s);
 		}
 }
 
-bool Widget::add_child ( Widget * w )
+bool Widget::addChild ( Widget * w )
 {
-	if (!has_child(w))
+	if (!hasChild(w))
 	{
-		w->set_parent(this);
+		w->setParent(this);
 		child.push_back(w);
 		return true;
 	}
@@ -135,14 +135,14 @@ bool Widget::add_child ( Widget * w )
 	return false;
 }
 
-void Widget::clear_child (  )
+void Widget::clearChildren (  )
 {
 	child.clear();
 }
 
-bool Widget::rem_child ( Widget * w )
+bool Widget::removeChild ( Widget * w )
 {
-	if (has_child(w))
+	if (hasChild(w))
 	{
 		for (std::vector <Widget *>::iterator i = child.begin(); i != child.end(); i++)
 			if (*i == w)
@@ -155,16 +155,16 @@ bool Widget::rem_child ( Widget * w )
 	return false;
 }
 
-Widget * Widget::get_child ( std::string s_id )
+Widget * Widget::getChild ( std::string s_id )
 {
 	for (std::vector <Widget *>::iterator i = child.begin(); i != child.end(); i++)
-		if ((*i)->get_id() == s_id)
+		if ((*i)->getID() == s_id)
 			return (*i);
 
 	return 0;
 }
 
-Widget * Widget::get_child ( int index )
+Widget * Widget::getChild ( int index )
 {
 	if (index > -1 && index < (int)child.size())
 		return child.at(index);
@@ -172,13 +172,13 @@ Widget * Widget::get_child ( int index )
 	return 0;
 }
 
-const std::vector<Widget *> Widget::get_all_children()
+const std::vector<Widget *> Widget::getAllChildren()
 {
 	std::vector<Widget *> all = this->child;
 	
 	for (size_t i = 0, end = all.size(); i < end; ++i)
 	{
-		std::vector<Widget *> children = all[i]->get_children();
+		std::vector<Widget *> children = all[i]->getChildren();
 		for (Widget * child: children)
 			if (child && std::find(all.begin(), all.end(), child) == all.end())
 				all.push_back(child);
@@ -187,61 +187,56 @@ const std::vector<Widget *> Widget::get_all_children()
 	return all;
 }
 
-const std::vector<Widget *> & Widget::get_children (  )
+const std::vector<Widget *> & Widget::getChildren (  )
 {
 	return child;
 }
 
-int Widget::child_size (  )
-{
-	return child.size();
-}
-
 /*
-	as funções child_input, child_update e child_draw devem ser chamadas nas
+	as funções childInput, childUpdate e childDraw devem ser chamadas nas
 	respectivas funções input, update e draw isso se a classe derivada
 	de Widget possuir filhos.
 */
-void Widget::child_input ( SDL_Event & event )
+void Widget::childInput ( SDL_Event & event )
 {
 	for (std::vector <Widget *>::iterator i = child.begin(); i != child.end(); i++)
-		if ((*i)->is_visible() && visible)
+		if ((*i)->isVisible() && visible)
 			(*i)->input(event);
 }
 
-int Widget::child_update (  )
+int Widget::childUpdate (  )
 {
 	for (std::vector <Widget *>::iterator i = child.begin(); i != child.end(); i++)
-		if ((*i)->is_visible() && visible)
+		if ((*i)->isVisible() && visible)
 			(*i)->update();
 
 	return DEFAULT_STATE;
 }
 
 
-void Widget::child_draw ( SDL_Renderer * renderer )
+void Widget::childDraw ( SDL_Renderer * renderer )
 {
 	for (std::vector <Widget *>::iterator i = child.begin(), end = child.end(); i != end; i++)
-		if ((*i)->is_visible() && visible)
+		if ((*i)->isVisible() && visible)
 			(*i)->draw(renderer);
 }
 
 
 void Widget::input ( SDL_Event & event )
 {
-	child_input(event);
+	childInput(event);
 }
 
 int Widget::update (  )
 {
-	child_update();
+	childUpdate();
 
-	return get_state();
+	return getState();
 }
 
 void Widget::draw ( SDL_Renderer * renderer )
 {
-	child_draw(renderer);
+	childDraw(renderer);
 }
 
 

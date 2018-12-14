@@ -45,11 +45,11 @@ SDL_Rect SCollisionRect::get_world_rect ( Vect p )
 }
 
 //////////////////////////////////////////////////////////
-void CollisionFrame::set_source ( SDL_Rect src )
+void CollisionFrame::setSourceRect ( SDL_Rect src )
 {
-	AnimationFrame::set_source(src);
+	AnimationFrame::setSourceRect(src);
 	src.x = src.y = 0;
-	AnimationFrame::set_destiny(src);
+	AnimationFrame::setDestinyRect(src);
 }
 
 void CollisionFrame::add_rect ( SCollisionRect r )
@@ -107,13 +107,13 @@ void Sprite::set_coll_frames ( SDL_Texture * t, std::vector <CollisionFrame> c_f
 	coll_frames = c_f;
 
 	for (unsigned int i = 0; i < c_f.size(); i++)
-		Animation::add_frame(t, c_f[i]);
+		Animation::addFrame(t, c_f[i]);
 }
 
-void Sprite::add_frame ( SDL_Texture * t, CollisionFrame c )
+void Sprite::addFrame ( SDL_Texture * t, CollisionFrame c )
 {
 	coll_frames.push_back(c);
-	Animation::add_frame(t, c);
+	Animation::addFrame(t, c);
 }
 
 CollisionFrame Sprite::get_coll_frame ( int i )

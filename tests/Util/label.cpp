@@ -16,7 +16,7 @@ int main ()
 	TTF_Init();
 	
 	// tem que configurar o writer primeiro
-	Writer::instance()->set_renderer(renderer);
+	Writer::instance()->setRenderer(renderer);
 	
 	GuiLabel * label;
 	try
@@ -31,7 +31,7 @@ int main ()
 	{
 		printf("Erro %s\n", e);
 	}
-	label->set_pos(Vect((640 - label->get_texture_width())/2, 480/2));
+	label->setPosition(Vect((640 - label->getTexture_width())/2, 480/2));
 	
 	int done = 0;
 	while (!done)

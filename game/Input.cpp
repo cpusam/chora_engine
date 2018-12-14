@@ -4,7 +4,7 @@ Input::Input()
 {
 	in = -1;
 	press = false;
-	set_state(State::FREE);
+	setState(State::FREE);
 }
 
 Input::Input ( int k )
@@ -12,7 +12,7 @@ Input::Input ( int k )
 	pressTime = 0;
 	in = k;
 	press = false;
-	set_state(State::FREE);
+	setState(State::FREE);
 }
 
 Input::~Input()
@@ -43,7 +43,7 @@ int Input::getInput (  )
 void Input::reset (  )
 {
 	press = false;
-	set_state(State::FREE);
+	setState(State::FREE);
 }
 
 void Input::input ( SDL_Event & event )
@@ -53,42 +53,42 @@ void Input::input ( SDL_Event & event )
 
 int Input::update (  )
 {
-	switch (get_state())
+	switch (getState())
 	{
 		case State::FREE:
 			if (press)
 			{
 				pressTime = SDL_GetTicks();
-				set_state(State::PRESS);
+				setState(State::PRESS);
 			}
 			break;
 		
 		case State::PRESS:
 			if (press)
 			{
-				set_state(State::HOLD);
+				setState(State::HOLD);
 			}
 			else
 			{
-				set_state(State::RELEASE);
+				setState(State::RELEASE);
 			}
 			break;
 		
 		case State::HOLD:
 			if (press == false)
-				set_state(State::RELEASE);
+				setState(State::RELEASE);
 			break;
 		
 		case State::RELEASE:
 			press = false;
-			set_state(State::FREE);
+			setState(State::FREE);
 			break;
 		
 		default:
-			set_state(State::FREE);
+			setState(State::FREE);
 			break;
 	}
 	
-	return get_state();
+	return getState();
 }
 

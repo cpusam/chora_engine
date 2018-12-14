@@ -4,7 +4,7 @@ Key::Key(): Input(-1)
 {
 	key = 0;
 	press = false;
-	set_state(FREE);
+	setState(FREE);
 }
 
 Key::Key ( SDL_Keycode k ): Input(static_cast<int>(k))

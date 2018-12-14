@@ -59,15 +59,15 @@ class Camera
 		// para assim jogar na viewport alvo da camera
 		virtual void updateViewport ( SDL_Renderer * renderer );
 		virtual void lookat ( Vect p );
-		Vect get_position (  );
-		Vect get_focus (  );
-		SDL_Rect get_view (  ); // retorna posição da camera junto com suas dimensões
-		void set_position ( Vect p );
-		int set_focus ( Vect f );
-		SDL_Rect get_dimension (  );
-		SDL_Rect get_limit (  );
-		void setScreenPos ( int x, int y );
-		void set_limit ( SDL_Rect l );
+		Vect getPosition (  );
+		Vect getFocus (  );
+		SDL_Rect getView (  ); // retorna posição da camera junto com suas dimensões
+		void setPosition ( Vect p );
+		int setFocus ( Vect f );
+		SDL_Rect getDimension (  );
+		SDL_Rect getBoundary (  );
+		void setScreenPosition ( int x, int y );
+		void setBoundary ( SDL_Rect l );
 		
 		// se está dentro da área de ação
 		bool inAction ( Vect p );

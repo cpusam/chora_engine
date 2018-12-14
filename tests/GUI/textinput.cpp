@@ -33,8 +33,8 @@ int main (int argc, char ** argv )
 		return 1;
 	}
 
-	Writer::instance()->set_renderer(renderer);
-	Writer::instance()->load_font("fonts/Jumpman.ttf", "=>default", 50);
+	Writer::instance()->setRenderer(renderer);
+	Writer::instance()->loadFont("fonts/Jumpman.ttf", "=>default", 50);
 	FPSManager::instance()->set_framerate(60);
 
 	int done = 0;
@@ -53,7 +53,7 @@ int main (int argc, char ** argv )
 			/*
 			if (event.type == SDL_MOUSEMOTION)
 			{
-				textinput->set_pos(Vect(event.motion.x, event.motion.y));
+				textinput->setPosition(Vect(event.motion.x, event.motion.y));
 			}
 			*/
 		}

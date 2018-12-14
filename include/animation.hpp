@@ -125,8 +125,8 @@ class AnimationFrame
 		AnimationFrame ( int d, SDL_Rect s )
 		{
 			x = y = 0;
-			set_delay(d);
-			set_source(s);
+			setDelay(d);
+			setSourceRect(s);
 			texture = 0;
 			angle = 0;
 			orientation.set(1,0);
@@ -137,9 +137,9 @@ class AnimationFrame
 		{
 			x = dst.x;
 			y = dst.y;
-			set_delay(d);
-			set_source(s);
-			set_destiny(dst);
+			setDelay(d);
+			setSourceRect(s);
+			setDestinyRect(dst);
 			texture = t;
 			angle = 0;
 			orientation.set(1,0);
@@ -150,39 +150,39 @@ class AnimationFrame
 		{
 			x = frame.destiny.x;
 			y = frame.destiny.y;
-			set_delay(frame.delay);
-			set_source(frame.source);
-			set_destiny(frame.destiny);
+			setDelay(frame.delay);
+			setSourceRect(frame.source);
+			setDestinyRect(frame.destiny);
 			texture = frame.texture;
 			angle = frame.angle;
 			orientation = frame.orientation;
 			flip = frame.flip;
 		}
 
-		void set_frame ( int d, SDL_Rect src );
+		void setFrame ( int d, SDL_Rect src );
 
-		bool set_delay ( int d );
-		int get_delay (  );
+		bool setDelay ( int d );
+		int getDelay (  );
 
-		void set_source ( SDL_Rect s );
+		void setSourceRect ( const SDL_Rect & s );
 
-		SDL_Rect get_source (  );
+		SDL_Rect getSourceRect (  );
 
-		void set_destiny ( SDL_Rect d );
+		void setDestinyRect ( const SDL_Rect & d );
 
-		SDL_Rect get_destiny (  );
+		SDL_Rect getDestinyRect (  );
 
-		Vect get_orientation (  );
+		Vect getOrientation (  );
 
-		float get_angle (  );
-		void set_angle ( float rad );
+		float getAngle (  );
+		void setAngle ( float rad );
 
 		// rotaciona a imagem em 'a' radianos
 		void rotate ( float a );
-		void set_flip ( bool hor, bool ver );
+		void setFlip ( bool hor, bool ver );
 		SDL_RendererFlip get_flip (  );
-		void set_texture ( SDL_Texture * t );
-		SDL_Texture * get_texture (  );
+		void setTexture ( SDL_Texture * t );
+		SDL_Texture * getTexture (  );
 
 		bool destroy (  );
 };
@@ -221,7 +221,7 @@ class Animation: public StateMachine
 	public:
 		Animation (  )
 		{
-			set_state(START);
+			setState(START);
 			repeat = true;
 			index = 0;
 			timer.start();
@@ -232,69 +232,69 @@ class Animation: public StateMachine
 			name = "";
 		}
 
-		//using StateMachine::get_state;
+		//using StateMachine::getState;
 
 		void play (  );
 		void pause (  );
 
 		void reset (  );
-		void set_repeat ( bool r );
+		void setRepeat ( bool r );
 
-		void set_delay ( int f, int d );
-		int get_total_time (  );
+		void setFrameDelay ( int f, int d );
+		int getTotalTime (  );
 
 		// seta todos os frames para o mesmo delay
-		void set_frames_delay ( int d );
+		void setFramesDelay ( int d );
 
-		int get_frames_size (  );
+		int getFramesSize (  );
 
-		void clear_frames ( bool destroy=false );
+		void clearFrames ( bool destroy=false );
 
-		Vect get_orientation (  );
+		Vect getOrientation (  );
 
-		float get_angle (  );
-		void set_angle ( float rad );
+		float getAngle (  );
+		void setAngle ( float rad );
 
 		void rotate ( float a );
 
-		void set_use_rot ( bool u );
+		void setUseRotation ( bool u );
 
-		bool get_use_rot (  );
+		bool getUseRotation (  );
 
-		void set_use_center ( bool u );
-		bool get_use_center (  );
+		void setUseCenter ( bool u );
+		bool getUseCenter (  );
 
-		void set_center ( Vect center );
+		void setCenter ( Vect center );
 		
 		SDL_RendererFlip get_flip (  );
 		
 		void flip ( SDL_RendererFlip f );
 		void flip ( bool hor, bool ver );
 
-		virtual void add_frame ( SDL_Texture * t, AnimationFrame & f );
-		virtual void add_frame ( SDL_Texture * t, SDL_Rect const & src, int d );
+		virtual void addFrame ( SDL_Texture * t, AnimationFrame & f );
+		virtual void addFrame ( SDL_Texture * t, SDL_Rect const & src, int d );
 		// remover esse destiny e adicionar um w,h no draw como na libgdx
-		virtual void add_frame ( SDL_Texture * t, SDL_Rect const & src, SDL_Rect const & dst, int d );
+		virtual void addFrame ( SDL_Texture * t, SDL_Rect const & src, SDL_Rect const & dst, int d );
 
-		SDL_Texture * get_texture ( int i );
+		SDL_Texture * getTexture ( int i );
 
-		void destroy_textures (  );
+		void destroyTextures (  );
 
-		bool has_texture ( SDL_Texture * t );
+		bool hasTexture ( SDL_Texture * t );
 
-		bool set_index ( int i );
+		bool setIndex ( int i );
 
-		int get_index (  );
+		int getIndex (  );
 		
-		void set_timer ( STimer t );
-		STimer get_timer (  );
+		void setTimer ( STimer t );
+		STimer getTimer (  );
 
-		void set_name ( std::string n );
-		std::string get_name (  );
+		void setName ( std::string n );
+		std::string getName (  );
 
-		std::vector<AnimationFrame> & get_frames (  );
-		virtual AnimationFrame get_frame ( int i );
-		virtual AnimationFrame get_curr_frame (  );
+		std::vector<AnimationFrame> & getFrames (  );
+		virtual AnimationFrame getFrame ( int i );
+		virtual AnimationFrame getCurrentFrame (  );
 
 		virtual int draw ( SDL_Renderer * renderer, int x, int y );
 

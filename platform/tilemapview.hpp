@@ -17,9 +17,9 @@ class CAnimatedTile: public Animation
 			tile = -1;
 		}
 
-		SDL_Texture * get_texture (  )
+		SDL_Texture * getTexture (  )
 		{
-			return get_curr_frame().get_texture();
+			return getCurrentFrame().getTexture();
 		}
 
 		int get_tile (  )
@@ -54,14 +54,14 @@ class TileMapView: public TileMap
 		}
 		
 		CAnimatedTile get_animation ( int tile );
-		SDL_Rect get_source ( int tile );
+		SDL_Rect getSourceRect ( int tile );
 		
 		void clear_source (  )
 		{
 			source.clear();
 		}
 
-		void set_source ( int k, SDL_Rect f )
+		void setSourceRect ( int k, SDL_Rect f )
 		{
 			source[k] = f;
 		}

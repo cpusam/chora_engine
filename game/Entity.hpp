@@ -133,16 +133,16 @@ class Entity: public StateMachine, public Movable
 		virtual bool isGround (  );
 		virtual void setGround ( bool g );
 
-		virtual bool moveToPosition (Vect pos, float maxVel );
+		virtual bool moveToPosition (Vect position, float maxVel );
 		virtual void setCountPath ( int count );
 		virtual bool moveInPath ( Vect startPos, std::vector<Vect> & path, float maxVel, bool back );
-		virtual bool collisionVer (  );
-		virtual bool collisionHor (  );
+		virtual bool collisionVertical (  );
+		virtual bool collisionHorizontal (  );
 		
 		void setCollPos ( Vect p );
 		Vect getCollPos (  );//retorna posição do collRect somada à posição do this
 		Vect getCollCenter (  );
-		//se relative == true retorna collRect sem somar 'pos'
+		//se relative == true retorna collRect sem somar 'position'
 		SDL_Rect getCollRect ( RelativePosition relative=RELATIVE_WORLD );// retorna o retângulo de colisão em coordenadas do mundo
 		void setCollRect ( SDL_Rect rect, int numPoints=0 );
 		SDL_Rect getView (  );

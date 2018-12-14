@@ -8,10 +8,10 @@ GuiButton::GuiButton ( SDL_Rect d )
 	color1 = (SDL_Color){0xFF, 0xFF, 0x00, 0xFF};
 	color2 = (SDL_Color){0x00, 0xFF, 0xFF, 0xFF};
 	color3 = (SDL_Color){0xFF, 0x00, 0x00, 0xFF};
-	pos.x = d.x, pos.y = d.y;
+	position.x = d.x, position.y = d.y;
 	// dimensão padrão
 	dim = d;
-	set_state(State::NORMAL);
+	setState(State::NORMAL);
 	run_release = false;
 	texture = nullptr;
 }
@@ -23,44 +23,44 @@ GuiButton::GuiButton ( SDL_Rect d, std::string str, std::string fontName, SDL_Re
 	color1 = (SDL_Color){0xFF, 0xFF, 0x00, 0xFF};
 	color2 = (SDL_Color){0x00, 0xFF, 0xFF, 0xFF};
 	color3 = (SDL_Color){0xFF, 0x00, 0x00, 0xFF};
-	pos.x = d.x, pos.y = d.y;
+	position.x = d.x, position.y = d.y;
 	// dimensão padrão
 	dim = d;
 	set_label(new GuiLabel(str, (SDL_Color){0,0,0,255}, fontName)); // por padrão na cor preta
-	set_state(State::NORMAL);
+	setState(State::NORMAL);
 	this->texture = nullptr;
-	set_texture(texture);
-	set_sources(src);
+	setTexture(texture);
+	setSourceRects(src);
 	run_release = false;
 }
 
 GuiButton::~GuiButton (  )
 {
-	//widget::destroy trata de dar conta de label, que foi adicionada com add_child
+	//widget::destroy trata de dar conta de label, que foi adicionada com addChild
 }
 
 void GuiButton::press (  )
 {
-	if (get_state() != State::PRESSED)
-		set_state(State::PRESSED);
+	if (getState() != State::PRESSED)
+		setState(State::PRESSED);
 }
 
 void GuiButton::select (  )
 {
-	if (get_state() != State::SELECTED)
-		set_state(State::SELECTED);
+	if (getState() != State::SELECTED)
+		setState(State::SELECTED);
 }
 
 void GuiButton::release (  )
 {
-	if (get_state() != State::RELEASED)
+	if (getState() != State::RELEASED)
 	{
-		set_state(State::RELEASED);
+		setState(State::RELEASED);
 		run_release = false;
 	}
 }
 
-void GuiButton::set_texture ( SDL_Texture * texture )
+void GuiButton::setTexture ( SDL_Texture * texture )
 {
 	if (this->texture)
 	{
@@ -70,7 +70,7 @@ void GuiButton::set_texture ( SDL_Texture * texture )
 	this->texture = texture;
 }
 
-void GuiButton::set_sources ( SDL_Rect src[3] )
+void GuiButton::setSourceRects ( SDL_Rect src[3] )
 {
 	if (src)
 	{
@@ -86,7 +86,7 @@ void GuiButton::set_sources ( SDL_Rect src[3] )
 	}
 }
 
-SDL_Texture * GuiButton::get_texture (  )
+SDL_Texture * GuiButton::getTexture (  )
 {
 	return texture;
 }
@@ -101,22 +101,22 @@ void GuiButton::set_callback ( void (* c) ( Widget * b ) )
 	callback = c;
 }
 
-void GuiButton::set_dim ( SDL_Rect d )
+void GuiButton::setDimension ( SDL_Rect d )
 {
 	dim = d;
-	pos.x = d.x;
-	pos.y = d.y;
+	position.x = d.x;
+	position.y = d.y;
 
 	if (!label)
 		return;
 
 	Vect p;
 	SDL_Rect dst;
-	dst = label->get_dim();
+	dst = label->getDimension();
 	// posição do label relativo ao botão
 	p.x = (dst.w - d.w)/2.0f;
 	p.y = (dst.h - d.h)/2.0f;
-	label->set_rel_pos(p);
+	label->setRelativePosition(p);
 }
 
 void GuiButton::set_label ( GuiLabel * l )
@@ -126,7 +126,7 @@ void GuiButton::set_label ( GuiLabel * l )
 
 	if (label && label != l)
 	{
-		rem_child(label);
+		removeChild(label);
 		delete label;
 		label = nullptr;
 		throw 1;
@@ -134,19 +134,19 @@ void GuiButton::set_label ( GuiLabel * l )
 
 
 	label = l;
-	add_child(label);
+	addChild(label);
 
 	Vect p;
 	SDL_Rect d;
 	int w, h;
-	d = label->get_dim();
+	d = label->getDimension();
 	w = d.w, d.w += 10;
 	h = d.h, d.h += 5;
 	dim.w = d.w, dim.h = d.h; // tamanho do botão
 	// posição do label relativo ao botão
 	p.x = (d.w - w)/2.0f;
 	p.y = (d.h - h)/2.0f;
-	label->set_rel_pos(p);
+	label->setRelativePosition(p);
 }
 
 void GuiButton::input ( SDL_Event & event )
@@ -161,16 +161,16 @@ void GuiButton::input ( SDL_Event & event )
 			if (event.button.button == SDL_BUTTON_LEFT)
 			{
 				p.set(event.button.x, event.button.y);
-				if (get_state() == State::SELECTED || get_state() == State::NORMAL)
+				if (getState() == State::SELECTED || getState() == State::NORMAL)
 				{
-					if (event.button.state == SDL_PRESSED && pointbox(p, get_dim()))
-						set_state(State::PRESSED);
+					if (event.button.state == SDL_PRESSED && pointbox(p, getDimension()))
+						setState(State::PRESSED);
 				}
-				else if (get_state() == State::RELEASED)
+				else if (getState() == State::RELEASED)
 				{
-					if (!run_release && pointbox(p, get_dim()))
+					if (!run_release && pointbox(p, getDimension()))
 					{
-						set_state(State::PRESSED);
+						setState(State::PRESSED);
 					}	
 				}
 			}
@@ -180,11 +180,11 @@ void GuiButton::input ( SDL_Event & event )
 			if (event.button.button == SDL_BUTTON_LEFT)
 			{
 				p.set(event.button.x, event.button.y);
-				if (get_state() == State::PRESSED)
+				if (getState() == State::PRESSED)
 					if (event.button.state == SDL_RELEASED)
 					{
 						run_release = true;
-						set_state(State::RELEASED);
+						setState(State::RELEASED);
 					}
 			}
 			break;
@@ -194,19 +194,19 @@ void GuiButton::input ( SDL_Event & event )
 			p.y = event.motion.y;
 			if (pointbox(p, dim))
 			{
-				if (get_state() == State::NORMAL || get_state() == State::RELEASED)
-					set_state(State::SELECTED);
+				if (getState() == State::NORMAL || getState() == State::RELEASED)
+					setState(State::SELECTED);
 			}
 			else
 			{
-				set_state(State::NORMAL);
+				setState(State::NORMAL);
 			}
 			break;
 		default:
 			break;
 	}
 
-	child_input(event);
+	childInput(event);
 }
 
 int GuiButton::update (  )
@@ -216,7 +216,7 @@ int GuiButton::update (  )
 	SDL_GetMouseState(&x, &y);
 	p.x = x, p.y = y;
 
-	switch (get_state())
+	switch (getState())
 	{
 		case State::NORMAL: // normal
 			break;
@@ -226,25 +226,25 @@ int GuiButton::update (  )
 			break;
 		case State::RELEASED: // solto depois de pressionado
 		{
-			if (get_state() == run_release)
+			if (getState() == run_release)
 			{
 				if (callback)
 					callback(this);
 				run_release = false;
 			}
-			if (pointbox(p, get_dim()))
-				set_state(State::SELECTED);
+			if (pointbox(p, getDimension()))
+				setState(State::SELECTED);
 			else
-				set_state(State::NORMAL);
+				setState(State::NORMAL);
 			break;
 		}
 		default:
 			break;
 	}
 
-	child_update();
+	childUpdate();
 	
-	return get_state();
+	return getState();
 }
 
 void GuiButton::draw ( SDL_Renderer * renderer )
@@ -255,7 +255,7 @@ void GuiButton::draw ( SDL_Renderer * renderer )
 	if (!texture)
 	{
 		SDL_Rect rect = dim;
-		switch (get_state())
+		switch (getState())
 		{
 			case State::NORMAL:
 				SDL_SetRenderDrawColor(renderer, color1.r, color1.b, color1.g, color1.a);
@@ -272,12 +272,12 @@ void GuiButton::draw ( SDL_Renderer * renderer )
 		}
 
 		SDL_RenderFillRect(renderer, &rect);
-		child_draw(renderer);
+		childDraw(renderer);
 		return;
 	}
 	
 	SDL_Rect d = dim;
-	switch (get_state())
+	switch (getState())
 	{
 		case State::NORMAL:
 			if (SDL_RenderCopy(renderer,texture, &src[0], &d) == -1)
@@ -297,7 +297,7 @@ void GuiButton::draw ( SDL_Renderer * renderer )
 			break;
 	}
 
-	child_draw(renderer);
+	childDraw(renderer);
 }
 
 

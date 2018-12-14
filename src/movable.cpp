@@ -1,40 +1,37 @@
 #include "movable.hpp"
 #include "SDL_gfx/SDL_framerate.hpp"
 
-void Movable::set_pos ( Vect p )
+Vect Movable::getAcceleration (  )
 {
-	pos = p;
+	return acc;
 }
 
-Vect Movable::get_pos (  )
+float Movable::getAccelerationX (  )
 {
-	return pos;
+	return acc.x;
 }
 
-void Movable::setPosition ( Vect p )
+float Movable::getAccelerationY (  )
 {
-	pos = p;
+	return acc.y;
 }
+
 
 Vect Movable::getPosition (  )
 {
-	return pos;
+	return position;
 }
 
-void Movable::set_vel ( Vect v )
+float Movable::getPositionX (  )
 {
-	vel = v;
+	return position.x;
 }
 
-void Movable::set_vel_x ( float x )
+float Movable::getPositionY (  )
 {
-	vel.x = x;
+	return position.y;
 }
 
-void Movable::set_vel_y ( float y )
-{
-	vel.y = y;
-}
 
 Vect Movable::get_vel (  )
 {
@@ -51,42 +48,59 @@ float Movable::get_vel_y (  )
 	return vel.y;
 }
 
-void Movable::set_acc ( Vect a )
+void Movable::setAcceleration ( Vect a )
 {
 	acc = a;
 }
 
-void Movable::set_acc_x ( float x )
+void Movable::setAccelerationX ( float x )
 {
 	acc.x = x;
 }
 
-void Movable::set_acc_y ( float y )
+void Movable::setAccelerationY ( float y )
 {
 	acc.y = y;
 }
 
-Vect Movable::get_acc (  )
+
+void Movable::setPosition ( Vect p )
 {
-	return acc;
+	position = p;
 }
 
-float Movable::get_acc_x (  )
+void Movable::setPositionX ( float px )
 {
-	return acc.x;
+	position.x = px;
 }
 
-float Movable::get_acc_y (  )
+void Movable::setPositionY ( float py )
 {
-	return acc.y;
+	position.y = py;
 }
 
-void Movable::set_dim ( SDL_Rect d )
+void Movable::setVelocity ( Vect v )
+{
+	vel = v;
+}
+
+void Movable::setVelocityX ( float x )
+{
+	vel.x = x;
+}
+
+void Movable::setVelocityY ( float y )
+{
+	vel.y = y;
+}
+
+
+void Movable::setDimension ( SDL_Rect d )
 {
 	dim = d;
 }
 
-SDL_Rect Movable::get_dim (  )
+SDL_Rect Movable::getDimension (  )
 {
 	return dim;
 }

@@ -30,7 +30,7 @@
 class Movable
 {
 	protected:
-		Vect pos; // posição
+		Vect position; // posição
 		Vect vel; // velocidade
 		Vect acc; // aceleração
 		SDL_Rect dim; // posição e dimensão
@@ -44,33 +44,34 @@ class Movable
 			};
 		}
 
-		// remover esses dois
-		virtual void set_pos ( Vect p );
-		virtual Vect get_pos (  );
-		
-		virtual void setPosition ( Vect p );
+		virtual Vect getAcceleration (  );
+		virtual float getAccelerationX (  );
+		virtual float getAccelerationY (  );
 
 		virtual Vect getPosition (  );
-
-		virtual void set_vel ( Vect v );
-		virtual void set_vel_x ( float x );
-		virtual void set_vel_y ( float y );
-
+		virtual float getPositionX (  );
+		virtual float getPositionY (  );
+		
 		virtual Vect get_vel (  );
 		virtual float get_vel_x (  );
 		virtual float get_vel_y (  );
 
-		virtual void set_acc ( Vect a );
-		virtual void set_acc_x ( float x );
-		virtual void set_acc_y ( float y );
+		virtual void setAcceleration ( Vect a );
+		virtual void setAccelerationX ( float x );
+		virtual void setAccelerationY ( float y );
 
-		virtual Vect get_acc (  );
-		virtual float get_acc_x (  );
-		virtual float get_acc_y (  );
+		virtual void setPosition ( Vect p );
+		virtual void setPositionX ( float px );
+		virtual void setPositionY ( float py );
 
-		virtual void set_dim ( SDL_Rect d );
+		virtual void setVelocity ( Vect v );
+		virtual void setVelocityX ( float x );
+		virtual void setVelocityY ( float y );
 
-		virtual SDL_Rect get_dim (  );
+		
+
+		virtual void setDimension ( SDL_Rect d );
+		virtual SDL_Rect getDimension (  );
 };
 
 #endif

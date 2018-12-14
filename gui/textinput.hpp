@@ -59,8 +59,8 @@ class GuiTextInput: public GuiLabel
 
 	protected:
 		Vect cursorPos;
-		using Widget::set_pos;
-		using Widget::set_rel_pos;
+		using Widget::setPosition;
+		using Widget::setRelativePosition;
 
 	public:
 		GuiTextInput ( int fontsize, SDL_Color c, int ss=10, std::string fontName="=>default" );
@@ -78,9 +78,9 @@ class GuiTextInput: public GuiLabel
 		*/
 		void set_cursor_size ( int w, int h );
 
-		void set_pos ( Vect p );
+		void setPosition ( Vect p );
 
-		void set_rel_pos ( Vect p );
+		void setRelativePosition ( Vect p );
 
 		void input ( SDL_Event & event );
 

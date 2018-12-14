@@ -8,6 +8,8 @@
 #include <vector>
 #include <iterator>
 
+#warning "precisa atualizar este programa"
+
 using namespace std;
 
 enum EPlayerState
@@ -34,12 +36,8 @@ float toAcc ( float p )
 	return p / vel;
 }
 
-class Tux: public StateMachine, public Movable {
-		vector <Animation *> anim;
-		Animation * curr_anim;
+class Tux: public Entity {
 		bool key_right, key_left, key_up, key_down;
-		int dir;
-		TileMap * map;
 		vector <Vect> point_up;
 		vector <Vect> point_down;
 		vector <Vect> point_left;
@@ -67,14 +65,14 @@ public:
 			int fd = 150;
 			// animações de direita
 			anim.push_back(new Animation());
-			anim[0]->add_frame(texture,(SDL_Rect){144,0,48,43}, 60);
+			anim[0]->addFrame(texture,(SDL_Rect){144,0,48,43}, 60);
 			anim.push_back(new Animation());
-			anim[1]->add_frame(texture, (SDL_Rect){0 ,0,48,43}, fd);
-			anim[1]->add_frame(texture, (SDL_Rect){48,0,48,43}, fd);
-			anim[1]->add_frame(texture, (SDL_Rect){96,0,48,43}, fd);
-			anim[1]->add_frame(texture, (SDL_Rect){48,0,48,43}, fd);
+			anim[1]->addFrame(texture, (SDL_Rect){0 ,0,48,43}, fd);
+			anim[1]->addFrame(texture, (SDL_Rect){48,0,48,43}, fd);
+			anim[1]->addFrame(texture, (SDL_Rect){96,0,48,43}, fd);
+			anim[1]->addFrame(texture, (SDL_Rect){48,0,48,43}, fd);
 			anim.push_back(new Animation());
-			anim[2]->add_frame(texture, (SDL_Rect){192,0,48,43}, fd);
+			anim[2]->addFrame(texture, (SDL_Rect){192,0,48,43}, fd);
 
 			aux = IMG_Load(buf2);
 			if (!aux)
@@ -86,14 +84,14 @@ public:
 			aux = NULL;
 			// animações de esquerda
 			anim.push_back(new Animation());
-			anim[3]->add_frame(texture,(SDL_Rect){144,0,48,43}, 60);
+			anim[3]->addFrame(texture,(SDL_Rect){144,0,48,43}, 60);
 			anim.push_back(new Animation());
-			anim[4]->add_frame(texture, (SDL_Rect){0 ,0,48,43}, fd);
-			anim[4]->add_frame(texture, (SDL_Rect){48,0,48,43}, fd);
-			anim[4]->add_frame(texture, (SDL_Rect){96,0,48,43}, fd);
-			anim[4]->add_frame(texture, (SDL_Rect){48,0,48,43}, fd);
+			anim[4]->addFrame(texture, (SDL_Rect){0 ,0,48,43}, fd);
+			anim[4]->addFrame(texture, (SDL_Rect){48,0,48,43}, fd);
+			anim[4]->addFrame(texture, (SDL_Rect){96,0,48,43}, fd);
+			anim[4]->addFrame(texture, (SDL_Rect){48,0,48,43}, fd);
 			anim.push_back(new Animation());
-			anim[5]->add_frame(texture, (SDL_Rect){192,0,48,43}, fd);
+			anim[5]->addFrame(texture, (SDL_Rect){192,0,48,43}, fd);
 			
 			
 			coll_tiles.push_back('a');
@@ -121,13 +119,13 @@ public:
 			acc.x = (100);
 			acc.y = (100);
 			velStartJump = (200);
-			set_state(STANDING);
+			setState(STANDING);
 		}
 
 		~Tux (  )
 		{
-			anim[0]->destroy_textures();
-			anim[2]->destroy_textures();
+			anim[0]->destroyTextures();
+			anim[2]->destroyTextures();
 			for (unsigned int i = 0; i < anim.size(); i++)
 				delete anim[i];
 		}
@@ -185,17 +183,17 @@ public:
 		void input ( Widget & widget )
 		{
 			
-			if (widget.get_child("keyLeft")->get_state() == 3) // pressionado
+			if (widget.getChild("keyLeft")->getState() == 3) // pressionado
 				key_left = true;
 			else
 				key_left = false;
 			
-			if (widget.get_child("keyRight")->get_state() == 3) // pressionado
+			if (widget.getChild("keyRight")->getState() == 3) // pressionado
 				key_right = true;
 			else
 				key_right = false;
 			
-			if (widget.get_child("keyJump")->get_state() == 3) // pressionado
+			if (widget.getChild("keyJump")->getState() == 3) // pressionado
 				key_up = true;
 			else
 				key_up = false;
@@ -212,12 +210,12 @@ public:
 
 	bool ground (  )
 	{
-		return has_coll_tile(map->get_tile(pos.x + point_down[0].x, pos.y + point_down[0].y + 1)) || has_coll_tile(map->get_tile(pos.x + point_down[1].x, pos.y + point_down[1].y + 1));
+		return has_coll_tile(map->get_tile(position.x + point_down[0].x, position.y + point_down[0].y + 1)) || has_coll_tile(map->get_tile(position.x + point_down[1].x, position.y + point_down[1].y + 1));
 	}
 
 	int update (  )
 	{
-		switch (get_state())
+		switch (getState())
 		{
 			case FLYING:
 				if (key_left)
@@ -245,7 +243,7 @@ public:
 				{
 					vel.y = 0;
 				}
-				pos += vel;
+				position += vel;
 				curr_anim = anim[1];
 				curr_anim->update();
 				break;
@@ -257,7 +255,7 @@ public:
 					dir = LEFT_DIR;
 					curr_anim = anim[4];
 					curr_anim->reset();
-					set_state(WALKING);
+					setState(WALKING);
 					break;
 				}
 				
@@ -267,15 +265,15 @@ public:
 					dir = RIGHT_DIR;
 					curr_anim = anim[1];
 					curr_anim->reset();
-					set_state(WALKING);
+					setState(WALKING);
 					break;
 				}
 				
 				if (ground() && key_up)
 				{
 					vel.y = -velStartJump;
-					pos.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
-					collision_ver(*map, coll_tiles, pos, point_up, vel);
+					position.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
+					collisionVertical(*map, coll_tiles, position, point_up, vel);
 					
 					if (dir == LEFT_DIR)
 						curr_anim = anim[5];
@@ -283,15 +281,15 @@ public:
 						curr_anim = anim[2];
 					
 					curr_anim->reset();
-					set_state(JUMPING);
+					setState(JUMPING);
 					break;
 				}
 				
 				vel.y += gravity;
 				if (vel.y > velStartJump)
 					vel.y = velStartJump;
-				pos.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
-				collision_ver(*map, coll_tiles, pos, point_down, vel);
+				position.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
+				collisionVertical(*map, coll_tiles, position, point_down, vel);
 				
 				curr_anim->update();
 				break;
@@ -306,7 +304,7 @@ public:
 							curr_anim = anim[2]; // para direita;
 						
 						curr_anim->reset();
-						set_state(JUMPING);
+						setState(JUMPING);
 						break;
 					}
 					else
@@ -332,15 +330,15 @@ public:
 							else
 								curr_anim = anim[2];
 							curr_anim->reset();
-							set_state(JUMPING);
+							setState(JUMPING);
 							break;
 						}
 
 						if (key_up)
 						{
 							vel.y = -velStartJump;
-							pos.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
-							collision_ver(*map, coll_tiles, pos, point_up, vel);
+							position.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
+							collisionVertical(*map, coll_tiles, position, point_up, vel);
 				
 							if (dir == LEFT_DIR)
 								curr_anim = anim[5];
@@ -348,18 +346,18 @@ public:
 								curr_anim = anim[2];
 				
 							curr_anim->reset();
-							set_state(JUMPING);
+							setState(JUMPING);
 							break;
 						}
 					}
 					
-					pos.x += vel.x * FPSManager::instance()->get_delta()/1000.f;
+					position.x += vel.x * FPSManager::instance()->get_delta()/1000.f;
 					
-					tile_collision(*map, coll_tiles, pos, point_right, vel, MOVE_TO_LEFT);
-					tile_collision(*map, coll_tiles, pos, point_left, vel, MOVE_TO_RIGHT);
+					//tile_collision(*map, coll_tiles, position, point_right, vel, MOVE_TO_LEFT);
+					//tile_collision(*map, coll_tiles, position, point_left, vel, MOVE_TO_RIGHT);
 					
-					//collision_hor(*map, coll_tiles, pos, point_left, vel);
-					//collision_hor(*map, coll_tiles, pos, point_right, vel);
+					//collisionHorizontal(*map, coll_tiles, position, point_left, vel);
+					//collisionHorizontal(*map, coll_tiles, position, point_right, vel);
 					curr_anim->update();
 					break;
 
@@ -383,7 +381,7 @@ public:
 					
 					if (ground())
 					{
-						collision_ver(*map, coll_tiles, pos, point_down, vel);
+						collisionVertical(*map, coll_tiles, position, point_down, vel);
 						vel.y = 0;
 						vel.x = 0;
 						if (dir == LEFT_DIR)
@@ -392,37 +390,37 @@ public:
 							curr_anim = anim[0];
 						
 						curr_anim->reset();
-						set_state(STANDING);
+						setState(STANDING);
 						break;
 					}
 					
-					pos.x += vel.x * FPSManager::instance()->get_delta()/1000.f;
-					collision_hor(*map, coll_tiles, pos, point_right, vel);
-					collision_hor(*map, coll_tiles, pos, point_left, vel);
+					position.x += vel.x * FPSManager::instance()->get_delta()/1000.f;
+					collisionHorizontal(*map, coll_tiles, position, point_right, vel);
+					collisionHorizontal(*map, coll_tiles, position, point_left, vel);
 					
 					vel.y += gravity;
 					if (vel.y > velStartJump)
 						vel.y = velStartJump;
-					pos.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
+					position.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
 					
-					collision_ver(*map, coll_tiles, pos, point_up, vel);
-					collision_ver(*map, coll_tiles, pos, point_down, vel);
+					collisionVertical(*map, coll_tiles, position, point_up, vel);
+					collisionVertical(*map, coll_tiles, position, point_down, vel);
 					
 					curr_anim->update();
 					break;
 		
 			default:
-				set_state(STANDING);
+				setState(STANDING);
 				break;
 		}
 		
-		return get_state();
+		return getState();
 	}
 
 	void draw(SDL_Renderer *renderer, Camera *cam)
 	{
 		if (curr_anim)
-			curr_anim->draw(renderer, cam, pos.x, pos.y);
+			curr_anim->draw(renderer, cam, position.x, position.y);
 	}
 };
 
@@ -451,32 +449,32 @@ int main (  )
 
 		map.texture = IMG_LoadTexture(renderer,"tiles.png");
 		map.remove_tile('.');
-		map.set_source('a', (SDL_Rect){32,0,32,32});
+		map.setSourceRect('a', (SDL_Rect){32,0,32,32});
 
 		Background background;
 		
-		background.set_texture(IMG_LoadTexture(renderer, "back.jpg"));
-		Camera cam((SDL_Rect){100,100,15*32,10*32}, map.get_dimension());
+		background.setTexture(IMG_LoadTexture(renderer, "back.jpg"));
+		Camera cam((SDL_Rect){100,100,15*32,10*32}, map.getDimension());
 		
 		Texturer::instance()->add(renderer, "background.png");
 		Widget widget;
 		GuiButton * button;
 		try
 		{
-			Writer::instance()->set_renderer(renderer);
-			Writer::instance()->load_font("04B_20__.TTF","04B_20", 50);
+			Writer::instance()->setRenderer(renderer);
+			Writer::instance()->loadFont("04B_20__.TTF","04B_20", 50);
 			
 			button = new GuiButton((SDL_Rect){20,12*32, 64,32}, "<-");
-			button->set_id("keyLeft");
-			widget.add_child(button);
+			button->setID("keyLeft");
+			widget.addChild(button);
 		
 			button = new GuiButton((SDL_Rect){4*32 + 20,12*32, 64,32}, "->");
-			button->set_id("keyRight");
-			widget.add_child(button);	
+			button->setID("keyRight");
+			widget.addChild(button);	
 
 			button = new GuiButton((SDL_Rect){18*32,12*32, 64,32}, "^");
-			button->set_id("keyJump");
-			widget.add_child(button);
+			button->setID("keyJump");
+			widget.addChild(button);
 			button = 0;
 		} catch (const char * e)
 		{
@@ -487,7 +485,7 @@ int main (  )
 		
 
 		int done = 0;
-		player.set_pos(Vect(0, cam.get_dimension().h/2));
+		player.setPosition(Vect(0, cam.getDimension().h/2));
 
 		while (!done)
 		{
@@ -507,14 +505,14 @@ int main (  )
 		
 		player.update();
 		widget.update();
-		cam.lookat(player.get_pos());
+		cam.lookat(player.getPosition());
 		
 		FPSManager::instance()->update();
 		if (FPSManager::instance()->get_delta() > 0)
 		{
 			SDL_SetRenderDrawColor(renderer, 0,0,0,255);
 			SDL_RenderClear(renderer);
-			background.draw(&cam,renderer);
+			background.draw(renderer, &cam);
 			map.draw(renderer,&cam);
 			player.draw(renderer, &cam);
 			widget.draw(renderer);

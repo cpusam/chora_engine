@@ -44,7 +44,7 @@ Tarefas:
 	-atualizar os exemplos pois mudei muito a engine.
 	-adicionar uma posição x/y ao TileMap
 	-adicionar Megaman/src/Entity.cpp.hpp ao código da engine
-	-[ABANDONADO]remover o dst do Animation::add_frame e adicionar w,h como destino no
+	-[ABANDONADO]remover o dst do Animation::addFrame e adicionar w,h como destino no
 	 Animation::draw
 	-Adicionar métodos estáticos para acessar funções das classes singleton, pois é muito ruim 
 	 acessar com instance(), como Writer::instance().fazAlgumaCoisa();
@@ -86,7 +86,7 @@ RESOLVIDOS:
 	-usar milisegundos para as animações ao invés de ticks. Isso deixaria
 	 mais fácil de controlá-las.
 	-[RESOLVIDO]tem bug no colorkey das funções mirror_surface e clone_surface de util.hpp.
-	 As duas deixam uma surface transparente, se não usá-las em CAnimation::add_frame
+	 As duas deixam uma surface transparente, se não usá-las em CAnimation::addFrame
 	 a animação mostra os frames normalmente. Consegui consertar o bug só que em CAnimation
 	 continua sendo transparente as surfaces. A surface de frame da animação está ok, deve
 	 ser erro na blitagem.[Consegui resolver!!! Era que falta só setar as posições x e y do
@@ -94,7 +94,7 @@ RESOLVIDOS:
 
 ABANDONADOS:
 	-[ABANDONADO]novo bug nas funções clone_surface e mirror_surface. Eles deixam a surface 
-	 toda transparente, As funções funcionam normal quando não se usa optimize_surface_alpha.
+	 toda transparente, As funções funcionam normal quando não se usa optimizeSurface_alpha.
 
 NOTAS:
 	-nos CControls dos jogos trocar o input por leitura de teclado diretamente a cada atualização

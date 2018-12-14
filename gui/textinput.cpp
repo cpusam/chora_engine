@@ -13,9 +13,9 @@ GuiTextInput::GuiTextInput ( int fontsize, SDL_Color c, int ss, std::string font
 	time_change = 200;
 
 	str_to_surface("a", fontName);
-	textsize = get_texture_width();
+	textsize = getTexture_width();
 	int width = textsize;
-	int height = get_texture_height();
+	int height = getTexture_height();
 	str_to_surface("", fontName);
 	str = "";
 
@@ -23,8 +23,8 @@ GuiTextInput::GuiTextInput ( int fontsize, SDL_Color c, int ss, std::string font
 	remakeTexture = false;
 	strsize = ss;
 	cursorStart = int(str.length());
-	cursor.x = pos.x + rel_pos.x;
-	cursor.y = pos.y + rel_pos.y;
+	cursor.x = position.x + rel_pos.x;
+	cursor.y = position.y + rel_pos.y;
 	cursor.w = 5;
 	cursor.h = fontsize;
 	cursor_color = 0xFF0000FF;
@@ -81,24 +81,24 @@ void GuiTextInput::set_cursor_size ( int w, int h )
 	cursor.h = h;
 }
 
-void GuiTextInput::set_pos ( Vect p )
+void GuiTextInput::setPosition ( Vect p )
 {
-	Widget::set_pos(p);
-	cursor.x = pos.x + rel_pos.x + get_texture_width();
-	cursor.y = pos.y + rel_pos.y;
+	Widget::setPosition(p);
+	cursor.x = position.x + rel_pos.x + getTexture_width();
+	cursor.y = position.y + rel_pos.y;
 
-	box.x = pos.x + rel_pos.x;
-	box.y = pos.y + rel_pos.y;
+	box.x = position.x + rel_pos.x;
+	box.y = position.y + rel_pos.y;
 }
 
-void GuiTextInput::set_rel_pos ( Vect p )
+void GuiTextInput::setRelativePosition ( Vect p )
 {
-	Widget::set_rel_pos(p);
-	cursor.x = pos.x + rel_pos.x + get_texture_width();
-	cursor.y = pos.y + rel_pos.y;
+	Widget::setRelativePosition(p);
+	cursor.x = position.x + rel_pos.x + getTexture_width();
+	cursor.y = position.y + rel_pos.y;
 
-	box.x = pos.x + rel_pos.x;
-	box.y = pos.y + rel_pos.y;
+	box.x = position.x + rel_pos.x;
+	box.y = position.y + rel_pos.y;
 }
 
 void GuiTextInput::input ( SDL_Event & event )
@@ -113,7 +113,7 @@ void GuiTextInput::input ( SDL_Event & event )
 
 	if (event.type == SDL_TEXTINPUT)
 	{
-		if (is_visible() && locked == false)
+		if (isVisible() && locked == false)
 		{
 			remakeTexture = true;
 			int oldSize = int(str.length());
@@ -127,16 +127,16 @@ void GuiTextInput::input ( SDL_Event & event )
 
 			if (cursorStart == oldSize && int(str.length()) < strsize)
 				cursorStart = int(str.length());
-			cursor.x = get_pos().x + cursorStart * textsize;
+			cursor.x = getPosition().x + cursorStart * textsize;
 		}
 	}
 
 	if (event.type == SDL_TEXTEDITING)
 	{
-		if (is_visible() && locked == false)
+		if (isVisible() && locked == false)
 		{
 			remakeTexture = true;
-			cursor.x = get_pos().x + cursorStart * textsize;
+			cursor.x = getPosition().x + cursorStart * textsize;
 		}
 	}
 
@@ -158,7 +158,7 @@ void GuiTextInput::input ( SDL_Event & event )
 		cursorPos.y = float(event.button.y);
 	}
 
-	child_input(event);
+	childInput(event);
 }
 
 void GuiTextInput::draw ( SDL_Renderer * renderer )
@@ -181,7 +181,7 @@ void GuiTextInput::draw ( SDL_Renderer * renderer )
 		timer.reset();
 	}
 
-	child_draw(renderer);
+	childDraw(renderer);
 }
 
 int GuiTextInput::update (  )
@@ -196,58 +196,58 @@ int GuiTextInput::update (  )
 		remakeTexture = false;
 		str_to_surface(str, fontName);
 
-		dim.w = get_texture_width();
-		dim.h = get_texture_height();
+		dim.w = getTexture_width();
+		dim.h = getTexture_height();
 	}
 
-	if (controls["backspace"].get_state() == Key::PRESS && cursorStart > 0)
+	if (controls["backspace"].getState() == Key::PRESS && cursorStart > 0)
 	{
 		cursorStart--;
 		if (cursorStart < 0)
 			cursorStart = 0;
-		cursor.x = get_pos().x + cursorStart * textsize;
+		cursor.x = getPosition().x + cursorStart * textsize;
 
 		if (str.size())
 			str.erase(str.begin() + cursorStart, str.begin() + cursorStart + 1);
 		remakeTexture = true;
 	}
 
-	if (controls["delete"].get_state() == Key::PRESS && cursorStart < int(str.length()))
+	if (controls["delete"].getState() == Key::PRESS && cursorStart < int(str.length()))
 	{
 		cursorStart++;
 		if (cursorStart > int(str.length()))
 			cursorStart = int(str.length());
-		cursor.x = get_pos().x + cursorStart * textsize;
+		cursor.x = getPosition().x + cursorStart * textsize;
 
 		if (str.size())
 			str.erase(str.begin() + cursorStart, str.begin() + cursorStart + 1);
 		remakeTexture = true;
 	}
 
-	if (controls["left"].get_state() == Key::PRESS)
+	if (controls["left"].getState() == Key::PRESS)
 	{
 		cursorStart--;
 		if (cursorStart < 0)
 			cursorStart = 0;
-		cursor.x = get_pos().x + cursorStart * textsize;
+		cursor.x = getPosition().x + cursorStart * textsize;
 	}
 
-	if (controls["right"].get_state() == Key::PRESS)
+	if (controls["right"].getState() == Key::PRESS)
 	{
 		cursorStart++;
 		if (cursorStart > int(str.length()))
 			cursorStart = str.length();
-		cursor.x = get_pos().x + cursorStart * textsize;
+		cursor.x = getPosition().x + cursorStart * textsize;
 	}
 
 	if (timer.steps() < time_change/2)
 	{
-		if (controls["backspace"].get_state() == Key::HOLD && cursorStart > 0)
+		if (controls["backspace"].getState() == Key::HOLD && cursorStart > 0)
 		{
 			cursorStart--;
 			if (cursorStart < 0)
 				cursorStart = 0;
-			cursor.x = get_pos().x + cursorStart * textsize;
+			cursor.x = getPosition().x + cursorStart * textsize;
 			
 			if (str.size())
 				str.erase(str.begin() + cursorStart, str.begin() + cursorStart + 1);
@@ -257,5 +257,5 @@ int GuiTextInput::update (  )
 
 	timer.update();
 
-	return get_state();
+	return getState();
 }

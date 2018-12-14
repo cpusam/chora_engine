@@ -1,11 +1,11 @@
 #include "background.hpp"
 
-SDL_Texture * Background::get_texture (  )
+SDL_Texture * Background::getTexture (  )
 {
 	return texture;
 }
 
-bool Background::set_texture ( SDL_Texture * t )
+bool Background::setTexture ( SDL_Texture * t )
 {
 	if (texture && texture != t)
 		SDL_DestroyTexture(texture);
@@ -32,8 +32,8 @@ void Background::draw ( SDL_Renderer * renderer, Camera * cam )
 
 	if (cam)
 	{
-		p = cam->get_position() + pos;
-		d = cam->get_dimension();
+		p = cam->getPosition() + position;
+		d = cam->getDimension();
 		src = d;
 	}
 	else
@@ -68,23 +68,23 @@ void Background::draw ( SDL_Renderer * renderer, Camera * cam )
 	SDL_RenderCopy(renderer, texture, &src, &d);
 }
 // apenas um scrolling horizontal
-void Background::draw_hor ( SDL_Renderer * renderer, Camera * cam )
+void Background::drawHorizontal ( SDL_Renderer * renderer, Camera * cam )
 {
 	if (!texture)
 		return;
 	
 	Vect p;
 	int w, h;
-	SDL_Rect dim = cam->get_dimension(), src, dest;
+	SDL_Rect dim = cam->getDimension(), src, dest;
 	SDL_QueryTexture(texture, 0, 0, &w, &h);
 
-	Vect pCam = cam->get_position();
+	Vect pCam = cam->getPosition();
 
-	float ratioW = float(static_cast<int>(roundf(pCam.x + pos.x)) % dim.w) / float(dim.w);
+	float ratioW = float(static_cast<int>(roundf(pCam.x + position.x)) % dim.w) / float(dim.w);
 	//src a direita
 	if (w == dim.w)
 	{
-		src.x = static_cast<int>(SDL_fabs(pCam.x + pos.x)) % w;
+		src.x = static_cast<int>(SDL_fabs(pCam.x + position.x)) % w;
 		src.w = w - src.x;
 	}
 	else
@@ -98,7 +98,7 @@ void Background::draw_hor ( SDL_Renderer * renderer, Camera * cam )
 	//destino a esquerda
 	dest.x = dim.x;
 	dest.y = 0;
-	dest.w = dim.w - static_cast<int>(roundf(pCam.x + pos.x)) % dim.w;
+	dest.w = dim.w - static_cast<int>(roundf(pCam.x + position.x)) % dim.w;
 	dest.h = dim.h;
 	SDL_RenderCopy(renderer, texture, &src, &dest);
 	if (dest.w < dim.w)
@@ -106,7 +106,7 @@ void Background::draw_hor ( SDL_Renderer * renderer, Camera * cam )
 		//src a direita
 		src.x = 0;
 		if (w == dim.w)
-			src.w = static_cast<int>(pCam.x + pos.x) % w;
+			src.w = static_cast<int>(pCam.x + position.x) % w;
 		else
 			src.w = w * ratioW;
 		
@@ -121,7 +121,7 @@ void Background::draw_hor ( SDL_Renderer * renderer, Camera * cam )
 
 // NOTE: falta testar, precisa refazer
 // apenas um scrolling vertical
-void Background::draw_ver ( SDL_Renderer * renderer, Camera * cam )
+void Background::drawVertical ( SDL_Renderer * renderer, Camera * cam )
 {
 	
 	if (!texture)
@@ -129,15 +129,15 @@ void Background::draw_ver ( SDL_Renderer * renderer, Camera * cam )
 	
 	Vect p;
 	int w, h;
-	SDL_Rect dim = cam->get_dimension(), src, dest;
+	SDL_Rect dim = cam->getDimension(), src, dest;
 	SDL_QueryTexture(texture, 0, 0, &w, &h);
 
-	Vect pCam = cam->get_position();
+	Vect pCam = cam->getPosition();
 
-	float ratioH = float(static_cast<int>(roundf(pCam.y + pos.y)) % h) / float(dim.h);
+	float ratioH = float(static_cast<int>(roundf(pCam.y + position.y)) % h) / float(dim.h);
 	if (h == dim.h)
 	{
-		src.y = static_cast<int>(SDL_fabs(pCam.y + pos.y)) % h;
+		src.y = static_cast<int>(SDL_fabs(pCam.y + position.y)) % h;
 		src.h = h - src.y;
 	}
 	else
@@ -149,7 +149,7 @@ void Background::draw_ver ( SDL_Renderer * renderer, Camera * cam )
 	src.w = w;
 	dest.x = 0;
 	dest.y = 0;
-	dest.h = dim.h - static_cast<int>(roundf(pCam.y + pos.y)) % dim.h;
+	dest.h = dim.h - static_cast<int>(roundf(pCam.y + position.y)) % dim.h;
 	dest.w = dim.w;
 	SDL_RenderCopy(renderer, texture, &src, &dest);
 	if (dest.h < dim.h)
@@ -169,17 +169,17 @@ void Background::draw_ver ( SDL_Renderer * renderer, Camera * cam )
 
 /////////////////////////////////////////////////////////////
 
-void AnimatedBackground::add_frame ( SDL_Texture *t, SDL_Rect & f, int d )
+void AnimatedBackground::addFrame ( SDL_Texture *t, SDL_Rect & f, int d )
 {
-	anim[0].add_frame(t, f, d);
-	anim[1].add_frame(t, f, d);
+	anim[0].addFrame(t, f, d);
+	anim[1].addFrame(t, f, d);
 }
 
 
 int AnimatedBackground::update (  )
 {
 	int ret = DEFAULT_STATE;
-	switch (get_state())
+	switch (getState())
 	{
 	case 0:
 		break;
@@ -198,13 +198,13 @@ void AnimatedBackground::draw ( SDL_Renderer * renderer, Camera * cam )
 	SDL_Rect d, src;
 	int w, h;
 
-	if (!anim[0].get_texture(0))
+	if (!anim[0].getTexture(0))
 		return;
 
-	SDL_QueryTexture(anim[0].get_texture(0), 0, 0, &w, &h);
+	SDL_QueryTexture(anim[0].getTexture(0), 0, 0, &w, &h);
 
-	p = cam->get_position();
-	d = cam->get_dimension();
+	p = cam->getPosition();
+	d = cam->getDimension();
 	src = d;
 
 	src.x = int(p.x);
@@ -228,20 +228,20 @@ void AnimatedBackground::draw ( SDL_Renderer * renderer, Camera * cam )
 		src.y = h - d.h;
 	}
 
-	SDL_RenderCopy(renderer, anim[0].get_texture(0), &src, &d);
+	SDL_RenderCopy(renderer, anim[0].getTexture(0), &src, &d);
 }
 
-void AnimatedBackground::draw_hor ( SDL_Renderer * renderer, Camera * cam )
+void AnimatedBackground::drawHorizontal ( SDL_Renderer * renderer, Camera * cam )
 {
 	Vect p;
 	SDL_Rect d, dim, src, surf;
 
-	if (!anim[0].get_texture(0))
+	if (!anim[0].getTexture(0))
 		return;
 
-	p = cam->get_position();
-	d = dim = cam->get_dimension();
-	surf = src = anim[0].get_curr_frame().get_source();
+	p = cam->getPosition();
+	d = dim = cam->getDimension();
+	surf = src = anim[0].getCurrentFrame().getSourceRect();
 
 	src.y = surf.y + int(p.y) % surf.h;
 	if (p.y < 0)
@@ -253,14 +253,14 @@ void AnimatedBackground::draw_hor ( SDL_Renderer * renderer, Camera * cam )
 	src.w = dim.w;
 	src.h = dim.h;
 	d.x = dim.x;
-	SDL_RenderCopy(renderer, anim[0].get_texture(0), &src, &d);
+	SDL_RenderCopy(renderer, anim[0].getTexture(0), &src, &d);
 
 	if (int(p.x) % surf.w > surf.w - dim.w)
 	{
 		src.x = surf.x;
 		src.w = int(p.x) % surf.w - (surf.w - dim.w);
 		d.x = dim.x + surf.w - int(p.x) % surf.w;
-		SDL_RenderCopy(renderer, anim[0].get_texture(0), &src, &d);
+		SDL_RenderCopy(renderer, anim[0].getTexture(0), &src, &d);
 	}
 }
 

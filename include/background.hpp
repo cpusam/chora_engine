@@ -43,7 +43,7 @@ class Background
 
 		// posição do background no mundo
 		// seria como posição inicial quando repeat = true
-		Vect pos;
+		Vect position;
 
 	public:
 		Background ( SDL_Texture * t=0 )
@@ -56,29 +56,29 @@ class Background
 		{
 		}
 
-		void set_repeat ( bool r )
+		void setRepeat ( bool r )
 		{
 			repeat = r;
 		}
 
-		bool get_repeat (  )
+		bool getRepeat (  )
 		{
 			return repeat;
 		}
 
-		void set_pos ( Vect p )
+		void setPosition ( Vect p )
 		{
-			pos = p;
+			position = p;
 		}
 
-		Vect get_pos (  )
+		Vect getPosition (  )
 		{
-			return pos;
+			return position;
 		}
 
-		SDL_Texture * get_texture (  );
+		SDL_Texture * getTexture (  );
 
-		bool set_texture ( SDL_Texture * t );
+		bool setTexture ( SDL_Texture * t );
 
 		/*
 			scrolling nos eixos x e y mas limitado pelas bordas da surface
@@ -87,11 +87,11 @@ class Background
 		void draw ( SDL_Renderer * renderer, Camera * cam );
 
 		// apenas um scrolling horizontal
-		void draw_hor ( SDL_Renderer * renderer, Camera * cam );
+		void drawHorizontal ( SDL_Renderer * renderer, Camera * cam );
 
 		// TODO: falta testar, precisa refazer
 		// apenas um scrolling vertical
-		void draw_ver ( SDL_Renderer * renderer, Camera * cam );
+		void drawVertical ( SDL_Renderer * renderer, Camera * cam );
 };
 
 class AnimatedBackground: private StateMachine
@@ -102,21 +102,21 @@ class AnimatedBackground: private StateMachine
 	public:
 		AnimatedBackground (  )
 		{
-			set_state(1);
+			setState(1);
 		}
 
 		~AnimatedBackground (  )
 		{
-			anim[0].destroy_textures();
+			anim[0].destroyTextures();
 		}
 
-		void add_frame ( SDL_Texture *t, SDL_Rect & f, int d );
+		void addFrame ( SDL_Texture *t, SDL_Rect & f, int d );
 
 		int update (  ) override;
 
 		void draw ( SDL_Renderer * renderer, Camera * cam );
 
-		void draw_hor ( SDL_Renderer * renderer, Camera * cam );
+		void drawHorizontal ( SDL_Renderer * renderer, Camera * cam );
 };
 
 #endif

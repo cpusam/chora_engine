@@ -12,7 +12,7 @@ CAnimatedTile TileMapView::get_animation ( int tile )
 	return CAnimatedTile();
 }
 
-SDL_Rect TileMapView::get_source ( int tile )
+SDL_Rect TileMapView::getSourceRect ( int tile )
 {
 	if (source.count(tile) > 0)
 		return source[tile];
@@ -24,7 +24,7 @@ void TileMapView::add_animation ( CAnimatedTile & a, int t )
 {
 	//if (!texture)
 		//throw "TileMapView: texture nula";
-	//a.set_texture(texture);
+	//a.setTexture(texture);
 
 	a.set_tile(t);
 	add_tile(t);
@@ -70,14 +70,14 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 		return -1;
 
 	int i, j, t, ret = 0;
-	Vect pos = cam->get_position() - this->pos, pCam = cam->get_position() - this->pos;
+	Vect position = cam->getPosition() - this->position, pCam = cam->getPosition() - this->position;
 	SDL_Rect dest = {0,0,tilesize,tilesize};
 	SDL_Rect src = {0,0,0,0};
-	SDL_Rect dim = cam->get_dimension();
+	SDL_Rect dim = cam->getDimension();
 
 	Vect p;
-	p.x = int(pos.x) / tilesize;
-	p.y = int(pos.y) / tilesize;
+	p.x = int(position.x) / tilesize;
+	p.y = int(position.y) / tilesize;
 	dim.x = 0;
 	dim.y = 0;
 	dim.w /= tilesize;
@@ -132,11 +132,11 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 				for (int k = 0; k < animatedTilesID.size(); k++)
 					if (animatedTilesID[k] == t)
 					{
-						AnimationFrame frame = animatedTiles[k].get_curr_frame();
-						src = frame.get_source();
+						AnimationFrame frame = animatedTiles[k].getCurrentFrame();
+						src = frame.getSourceRect();
 						SDL_Point center = {src.w/2, src.h/2};
-						SDL_Texture * textureAnim = animatedTiles[k].get_texture();
-						ret = SDL_RenderCopyEx(renderer, textureAnim, &src, &dest, animatedTiles[k].get_angle(), &center, frame.get_flip());
+						SDL_Texture * textureAnim = animatedTiles[k].getTexture();
+						ret = SDL_RenderCopyEx(renderer, textureAnim, &src, &dest, animatedTiles[k].getAngle(), &center, frame.get_flip());
 						break;
 					}
 				#endif
@@ -159,11 +159,11 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 		return -1;
 	
 	int i, j, t, ret = 0;
-	Vect pos = cam->get_position() - this->pos;
-	Vect p = cam->get_position() - this->pos;
+	Vect position = cam->getPosition() - this->position;
+	Vect p = cam->getPosition() - this->position;
 	SDL_Rect dest = {0,0,tilesize,tilesize};
 	SDL_Rect src = {0,0,0,0};
-	SDL_Rect dim = {0,0, cam->get_dimension().w, cam->get_dimension().h};
+	SDL_Rect dim = {0,0, cam->getDimension().w, cam->getDimension().h};
 
 
 	// limita o movimento da camera
@@ -173,19 +173,19 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 	if (dim.h > height)
 		dim.h = height;
 
-	if (pos.x < 0)
-		pos.x = 0;
-	else if (pos.x + dim.w > width)
-		pos.x = width - dim.w;
+	if (position.x < 0)
+		position.x = 0;
+	else if (position.x + dim.w > width)
+		position.x = width - dim.w;
 
-	if (pos.y < 0)
-		pos.y = 0;
-	else if (pos.y + dim.h > height)
-		pos.y = height - dim.h;
+	if (position.y < 0)
+		position.y = 0;
+	else if (position.y + dim.h > height)
+		position.y = height - dim.h;
 
 
-	pos.x = int(pos.x) / tilesize;
-	pos.y = int(pos.y) / tilesize;
+	position.x = int(position.x) / tilesize;
+	position.y = int(position.y) / tilesize;
 	dim.w /= tilesize;
 	dim.h /= tilesize;
 	int mod_x = int(p.x) % tilesize;
@@ -193,8 +193,8 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 
 
 
-	for (i = pos.x - 1; i <= pos.x + dim.w + 1; i++)
-		for (j = pos.y - 1; j <= pos.y + dim.h + 1; j++)
+	for (i = position.x - 1; i <= position.x + dim.w + 1; i++)
+		for (j = position.y - 1; j <= position.y + dim.h + 1; j++)
 		{
 			//t = tileset.at(i * width + j); <- BUGADO!
 			t = get_tile(i * tilesize, j * tilesize);
@@ -202,8 +202,8 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 				continue;
 
 			//é preciso parenteses extras para evitar bugs
-			dest.x = ((i - pos.x) * tilesize + dim.x + x) - mod_x;
-			dest.y = ((j - pos.y) * tilesize + dim.y + y) - mod_y;
+			dest.x = ((i - position.x) * tilesize + dim.x + x) - mod_x;
+			dest.y = ((j - position.y) * tilesize + dim.y + y) - mod_y;
 
 			dest.w = tilesize;
 			dest.h = tilesize;
@@ -216,11 +216,11 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 				for (int k = 0; k < animatedTilesID.size(); k++)
 					if (animatedTilesID[k] == t)
 					{
-						AnimationFrame frame = animatedTiles[k].get_curr_frame();
-						src = frame.get_source();
+						AnimationFrame frame = animatedTiles[k].getCurrentFrame();
+						src = frame.getSourceRect();
 						SDL_Point center = {src.w/2, src.h/2};
-						SDL_Texture * textureAnim = animatedTiles[k].get_texture();
-						ret = SDL_RenderCopyEx(renderer, textureAnim, &src, &dest, animatedTiles[k].get_angle(), &center, frame.get_flip());
+						SDL_Texture * textureAnim = animatedTiles[k].getTexture();
+						ret = SDL_RenderCopyEx(renderer, textureAnim, &src, &dest, animatedTiles[k].getAngle(), &center, frame.get_flip());
 						break;
 					}
 				#endif
@@ -248,7 +248,7 @@ int TileMapView::draw ( SDL_Renderer * renderer, int x, int y )
 		return -1;
 	
 	int i, j, t, ret = 0;
-	Vect pos, p;
+	Vect position, p;
 	SDL_Rect dest = {0,0,tilesize,tilesize};
 	SDL_Rect src = {0,0,0,0};
 	SDL_Rect dim = {0,0, width, height};
@@ -279,11 +279,11 @@ int TileMapView::draw ( SDL_Renderer * renderer, int x, int y )
 				for (int k = 0; k < animatedTilesID.size(); k++)
 					if (animatedTilesID[k] == t)
 					{
-						AnimationFrame frame = animatedTiles[k].get_curr_frame();
-						src = frame.get_source();
+						AnimationFrame frame = animatedTiles[k].getCurrentFrame();
+						src = frame.getSourceRect();
 						SDL_Point center = {src.w/2, src.h/2};
-						SDL_Texture * textureAnim = animatedTiles[k].get_texture();
-						ret = SDL_RenderCopyEx(renderer, textureAnim, &src, &dest, animatedTiles[k].get_angle(), &center, frame.get_flip());
+						SDL_Texture * textureAnim = animatedTiles[k].getTexture();
+						ret = SDL_RenderCopyEx(renderer, textureAnim, &src, &dest, animatedTiles[k].getAngle(), &center, frame.get_flip());
 						break;
 					}
 				#endif

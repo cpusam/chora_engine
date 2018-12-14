@@ -64,14 +64,14 @@ class GuiButton: public Widget
 		void select (  );
 		void release (  );
 
-		void set_texture ( SDL_Texture * texture );
-		void set_sources ( SDL_Rect src[3] );
-		SDL_Texture * get_texture (  );
+		void setTexture ( SDL_Texture * texture );
+		void setSourceRects ( SDL_Rect src[3] );
+		SDL_Texture * getTexture (  );
 		GuiLabel * get_label (  );
 
 		virtual void set_callback ( void (* c) ( Widget * b ) );
 
-		virtual void set_dim ( SDL_Rect d );
+		virtual void setDimension ( SDL_Rect d );
 
 		virtual void set_label ( GuiLabel * l );
 

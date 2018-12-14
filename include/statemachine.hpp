@@ -45,8 +45,8 @@ class StateMachine
 		{
 		}
 
-		virtual void set_state ( int s );
-		virtual int get_state (  );
+		virtual void setState ( int s );
+		virtual int getState (  );
 		virtual void input ( SDL_Event & event );
 		virtual int update (  );
 };
@@ -62,12 +62,12 @@ class State
 			id = DEFAULT_STATE_ID;
 		}
 
-		void set_id ( int i )
+		void setID ( int i )
 		{
 			id = i;
 		}
 
-		int get_id (  )
+		int getID (  )
 		{
 			return id;
 		}
@@ -91,8 +91,8 @@ class StatePatternMachine
 
 		virtual bool has_state ( State * s );
 		virtual bool add_state ( State * s );
-		virtual bool set_state ( int id ); // troca de estado
-		virtual State * get_state ( int id );
+		virtual bool setState ( int id ); // troca de estado
+		virtual State * getState ( int id );
 		virtual State * get_curr_state (  );
 		virtual int update (  ); // retorna o id do estado
 };

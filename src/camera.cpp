@@ -84,17 +84,17 @@ void Camera::lookat ( Vect p )
 		position.y = (limit.y + limit.h) - dimension.h;
 }
 
-Vect Camera::get_position (  )
+Vect Camera::getPosition (  )
 {
 	return position;
 }
 
-Vect Camera::get_focus (  )
+Vect Camera::getFocus (  )
 {
 	return focus;
 }
 
-int Camera::set_focus ( Vect f )
+int Camera::setFocus ( Vect f )
 {
 	if (f.x < 0 || f.y < 0)
 		return -1;
@@ -106,12 +106,12 @@ int Camera::set_focus ( Vect f )
 	return 0;
 }
 
-SDL_Rect Camera::get_view (  )
+SDL_Rect Camera::getView (  )
 {
 	return (SDL_Rect){int(position.x), int(position.y), dimension.w,dimension.h};
 }
 
-void Camera::set_position ( Vect p )
+void Camera::setPosition ( Vect p )
 {
 	position = p;
 
@@ -127,23 +127,23 @@ void Camera::set_position ( Vect p )
 	
 }
 
-SDL_Rect Camera::get_dimension (  )
+SDL_Rect Camera::getDimension (  )
 {
 	return dimension;
 }
 
-SDL_Rect Camera::get_limit (  )
+SDL_Rect Camera::getBoundary (  )
 {
 	return limit;
 }
 
-void Camera::setScreenPos ( int x, int y )
+void Camera::setScreenPosition ( int x, int y )
 {
 	viewport.x = x;
 	viewport.y = y;
 }
 
-void Camera::set_limit ( SDL_Rect l )
+void Camera::setBoundary ( SDL_Rect l )
 {
 	limit = l;
 }

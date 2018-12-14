@@ -35,7 +35,7 @@ class Widget: public StateMachine
 {
 	protected:
 		std::string id; // identificação do widget
-		Vect pos; // posição absoluta no screen
+		Vect position; // posição absoluta no screen
 		Vect rel_pos; // posição relativa ao widget pai
 		SDL_Rect dim; // dimensão, dim.x e dim.y posição no screen
 		bool visible; // só recebe eventos se estiver visível
@@ -49,79 +49,77 @@ class Widget: public StateMachine
 			id = i;
 			parent = 0;
 			visible = true;
-			set_state(1);
+			setState(1);
 		}
 
 		Widget ( Widget & w )
 		{
-			id = w.get_id();
-			pos = w.get_pos();
-			rel_pos = w.get_rel_pos();
-			dim = w.get_dim();
-			visible = w.is_visible();
-			parent = w.get_parent();
+			id = w.getID();
+			position = w.getPosition();
+			rel_pos = w.getRelativePosition();
+			dim = w.getDimension();
+			visible = w.isVisible();
+			parent = w.getParent();
 			child.reserve(w.child.size());
 			for (unsigned int i = 0; i < w.child.size(); i++)
-				child[i] = w.get_child(i);
+				child[i] = w.getChild(i);
 		}
 
 		void destroy (  );
 
-		void set_id ( std::string new_id );
+		void setID ( std::string new_id );
 
-		std::string get_id (  );
+		std::string getID (  );
 
-		void set_pos ( Vect p );
+		void setPosition ( Vect p );
 
-		Vect get_pos (  );
+		Vect getPosition (  );
 
-		void set_rel_pos ( Vect p );
+		void setRelativePosition ( Vect p );
 
-		Vect get_rel_pos (  );
+		Vect getRelativePosition (  );
 
-		void set_dim ( SDL_Rect d );
+		void setDimension ( SDL_Rect d );
 
-		SDL_Rect get_dim (  );
+		SDL_Rect getDimension (  );
 
 		void show ( bool s=true );
 
-		bool is_visible (  );
+		bool isVisible (  );
 
-		void set_parent ( Widget * w );
+		void setParent ( Widget * w );
 
-		Widget * get_parent (  );
+		Widget * getParent (  );
 
-		bool has_child ( Widget * w );
+		bool hasChild ( Widget * w );
 
-		void show_child ( bool s=true );
+		void showChild ( bool s=true );
 
-		bool add_child ( Widget * w );
+		bool addChild ( Widget * w );
 
-		void clear_child (  );
+		void clearChildren (  );
 
-		bool rem_child ( Widget * w );
+		bool removeChild ( Widget * w );
 
-		Widget * get_child ( std::string s_id );
+		Widget * getChild ( std::string s_id );
 
-		Widget * get_child ( int index );
+		Widget * getChild ( int index );
 
 		//NOTE: precisa testar com wigets que tenha filhos
-		const std::vector<Widget *> get_all_children();
+		const std::vector<Widget *> getAllChildren();
 		//pega os filhos mais perto de this
-		const std::vector<Widget *> & get_children (  );
-
-		int child_size (  );
+		const std::vector<Widget *> & getChildren (  );
 
 		/*
-			as funções child_input, child_update e child_draw devem ser chamadas nas
+			as funções childInput, childUpdate e childDraw devem ser chamadas nas
 			respectivas funções input, update e draw isso se a classe derivada
 			de Widget possuir filhos.
 		*/
-		void child_input ( SDL_Event & event );
+		void childInput ( SDL_Event & event );
 
-		int child_update (  );
+		int childUpdate (  );
 
-		void child_draw ( SDL_Renderer * renderer );
+		void childDraw ( SDL_Renderer * renderer );
 
 
 

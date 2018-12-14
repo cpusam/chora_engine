@@ -25,7 +25,7 @@ Writer * Writer::instance()
 	return singleton;
 }
 
-void Writer::free_fonts (  )
+void Writer::freeFonts (  )
 {
 	bool closed = false;
 	for (auto & it: fonts)
@@ -42,7 +42,7 @@ void Writer::free_fonts (  )
 	fonts.clear();
 }
 
-int Writer::load_font ( std::string path, std::string name, int s )
+int Writer::loadFont ( std::string path, std::string name, int s )
 {
 	if (fonts.find(name) != fonts.end() && fonts[name].font != nullptr)
 		TTF_CloseFont(fonts[name].font);
@@ -54,7 +54,7 @@ int Writer::load_font ( std::string path, std::string name, int s )
 	font.font = TTF_OpenFont(static_cast<const char *>(path.c_str()), s);
 	if (!font.font)
 	{
-		throw Exception("Writer::load_font não carregou uma fonta chmada "+name+" com path="+path);
+		throw Exception("Writer::loadFont não carregou uma fonta chmada "+name+" com path="+path);
 	}
 	
 	fonts["=>default"] = font;
@@ -67,13 +67,13 @@ void Writer::destroy (  )
 {
 	if (singleton)
 	{
-		singleton->free_fonts();
+		singleton->freeFonts();
 		delete singleton;
 		singleton = 0;
 	}
 }
 
-TTF_Font * Writer::get_font ( std::string name )
+TTF_Font * Writer::getFont ( std::string name )
 {
 	if (fonts.find(name) != fonts.end())
 		return fonts[name].font;
@@ -81,7 +81,7 @@ TTF_Font * Writer::get_font ( std::string name )
 	return fonts["=>default"].font;
 }
 
-bool Writer::resize_font ( std::string name, int s )
+bool Writer::resizeFont ( std::string name, int s )
 {	
 	Font font = fonts[name];
 	if (fonts.size() == 0 || font.font == nullptr || s <= 0)
@@ -115,18 +115,18 @@ bool Writer::resize_font ( std::string name, int s )
 	return true;
 }
 
-void Writer::set_renderer ( SDL_Renderer * r )
+void Writer::setRenderer ( SDL_Renderer * r )
 {
 	renderer = r;
 }
 
-SDL_Renderer * Writer::get_renderer (  )
+SDL_Renderer * Writer::getRenderer (  )
 {
 	return renderer;
 }
 
 
-SDL_Texture * Writer::render_text ( std::string name, std::string text, SDL_Color c, int type )
+SDL_Texture * Writer::renderText ( std::string name, std::string text, SDL_Color c, int type )
 {	
 	if (name == "")
 	{
@@ -143,7 +143,7 @@ SDL_Texture * Writer::render_text ( std::string name, std::string text, SDL_Colo
 	if (renderer == nullptr)
 		throw Exception("Writer: nenhum renderer usado\n");
 
-	SDL_Surface * surface = render_text_surface(name, text, c, type);
+	SDL_Surface * surface = renderTextSurface(name, text, c, type);
 	if (!surface)
 		throw Exception("Writer::erro ao criar surface auxiliar");
 	SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -159,7 +159,7 @@ SDL_Texture * Writer::render_text ( std::string name, std::string text, SDL_Colo
 	return texture;
 }
 
-SDL_Surface * Writer::render_text_surface ( std::string name, std::string text, SDL_Color c, int type )
+SDL_Surface * Writer::renderTextSurface ( std::string name, std::string text, SDL_Color c, int type )
 {
 	if (name == "")
 	{
