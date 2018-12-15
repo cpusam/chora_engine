@@ -35,7 +35,7 @@ int main ( int argc, char **argv )
 	//SDL_Color colorB = {0,255,255,255};
 	
 	Vect position;
-	Vect vel;
+	Vect velocity;
 	SDL_Rect limit = {0,0,640,480}, rectB = {0,0,200,200};
 	Camera camera((SDL_Rect){0,0,300,200}, limit);
 	Animation anim;
@@ -64,16 +64,16 @@ int main ( int argc, char **argv )
 				switch (event.key.keysym.sym)
 				{
 					case SDLK_UP:
-						vel.y = -5;
+						velocity.y = -5;
 						break;
 					case SDLK_DOWN:
-						vel.y = 5;
+						velocity.y = 5;
 						break;
 					case SDLK_RIGHT:
-						vel.x = 5;
+						velocity.x = 5;
 						break;
 					case SDLK_LEFT:
-						vel.x = -5;
+						velocity.x = -5;
 						break;
 					default:
 						break;
@@ -84,16 +84,16 @@ int main ( int argc, char **argv )
 				switch (event.key.keysym.sym)
 				{
 					case SDLK_UP:
-						vel.y = 0;
+						velocity.y = 0;
 						break;
 					case SDLK_DOWN:
-						vel.y = 0;
+						velocity.y = 0;
 						break;
 					case SDLK_RIGHT:
-						vel.x = 0;
+						velocity.x = 0;
 						break;
 					case SDLK_LEFT:
-						vel.x = 0;
+						velocity.x = 0;
 						break;
 					default:
 						break;
@@ -102,8 +102,8 @@ int main ( int argc, char **argv )
 			
 		}
 		
-		position.x += vel.x;
-		position.y += vel.y;
+		position.x += velocity.x;
+		position.y += velocity.y;
 		
 		SDL_SetRenderDrawColor(renderer, 0,0,0,0);
 		SDL_RenderClear(renderer);

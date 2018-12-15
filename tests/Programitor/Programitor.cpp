@@ -98,7 +98,7 @@ int main(){
 		}
 		
 		FPSManager::instance()->update();
-		if (FPSManager::instance()->get_delta() > 0){
+		if (FPSManager::instance()->getDelta() > 0){
 			
 			SDL_SetRenderDrawColor(renderer, 255,255,255,255);
 			SDL_RenderClear(renderer);

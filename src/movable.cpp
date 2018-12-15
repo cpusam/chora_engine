@@ -33,19 +33,19 @@ float Movable::getPositionY (  )
 }
 
 
-Vect Movable::get_vel (  )
+Vect Movable::getVelocity (  )
 {
-	return vel;
+	return velocity;
 }
 
-float Movable::get_vel_x (  )
+float Movable::getVelocityX (  )
 {
-	return vel.x;
+	return velocity.x;
 }
 
-float Movable::get_vel_y (  )
+float Movable::getVelocityY (  )
 {
-	return vel.y;
+	return velocity.y;
 }
 
 void Movable::setAcceleration ( Vect a )
@@ -81,17 +81,17 @@ void Movable::setPositionY ( float py )
 
 void Movable::setVelocity ( Vect v )
 {
-	vel = v;
+	velocity = v;
 }
 
 void Movable::setVelocityX ( float x )
 {
-	vel.x = x;
+	velocity.x = x;
 }
 
 void Movable::setVelocityY ( float y )
 {
-	vel.y = y;
+	velocity.y = y;
 }
 
 

@@ -77,8 +77,8 @@ struct STimer
 			if (state)
 			{
 				Uint32 tick = SDL_GetTicks();
-				//#warning "Aqui deveria usar FPSManager::get_delta para tempo gasto"
-				step = FPSManager::instance()->get_delta();//(float)tick - lastTick;
+				//#warning "Aqui deveria usar FPSManager::getDelta para tempo gasto"
+				step = FPSManager::instance()->getDelta();//(float)tick - lastTick;
 				
 				ticks += step;
 				lastTick = tick;

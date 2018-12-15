@@ -42,7 +42,7 @@ int main ( int argc, char **argv )
 	SDL_Color color = {255, 255, 0, 255};
 	SDL_Color bg_color = {255, 255, 255, 255};
 	
-	Vect position, vel;
+	Vect position, velocity;
 	
 	int done = 0;
 	while (!done)
@@ -74,16 +74,16 @@ int main ( int argc, char **argv )
 				switch (event.key.keysym.sym)
 				{
 					case SDLK_RIGHT:
-						vel.x = 5;
+						velocity.x = 5;
 						break;
 					case SDLK_LEFT:
-						vel.x = -5;
+						velocity.x = -5;
 						break;
 					case SDLK_UP:
-						vel.y = -5;
+						velocity.y = -5;
 						break;
 					case SDLK_DOWN:
-						vel.y = 5;
+						velocity.y = 5;
 						break;
 					
 					default:
@@ -97,11 +97,11 @@ int main ( int argc, char **argv )
 				{
 					case SDLK_RIGHT:
 					case SDLK_LEFT:
-						vel.x = 0;
+						velocity.x = 0;
 						break;
 					case SDLK_UP:
 					case SDLK_DOWN:
-						vel.y = 0;
+						velocity.y = 0;
 						break;
 					
 					default:
@@ -109,9 +109,9 @@ int main ( int argc, char **argv )
 				}
 			}
 		}
-		if (vel.x || vel.y)
+		if (velocity.x || velocity.y)
 			printf("Está movendo %u\n", SDL_GetTicks());
-		position += vel;
+		position += velocity;
 		cam.lookat(position);
 		
 		SDL_SetRenderDrawColor(renderer, 0,0,0,0);

@@ -31,7 +31,7 @@ class Movable
 {
 	protected:
 		Vect position; // posição
-		Vect vel; // velocidade
+		Vect velocity; // velocidade
 		Vect acc; // aceleração
 		SDL_Rect dim; // posição e dimensão
 
@@ -52,9 +52,9 @@ class Movable
 		virtual float getPositionX (  );
 		virtual float getPositionY (  );
 		
-		virtual Vect get_vel (  );
-		virtual float get_vel_x (  );
-		virtual float get_vel_y (  );
+		virtual Vect getVelocity (  );
+		virtual float getVelocityX (  );
+		virtual float getVelocityY (  );
 
 		virtual void setAcceleration ( Vect a );
 		virtual void setAccelerationX ( float x );

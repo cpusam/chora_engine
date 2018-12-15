@@ -6,7 +6,7 @@
 CAnimatedTile TileMapView::get_animation ( int tile )
 {
 	for (unsigned int i = 0; i < animation.size(); i++)
-		if (animation.at(i).get_tile() == tile)
+		if (animation.at(i).getTile() == tile)
 			return animation.at(i);
 	
 	return CAnimatedTile();
@@ -20,18 +20,18 @@ SDL_Rect TileMapView::getSourceRect ( int tile )
 	return (SDL_Rect){0,0,-1,-1};
 }
 
-void TileMapView::add_animation ( CAnimatedTile & a, int t )
+void TileMapView::addAnimation ( CAnimatedTile & a, int t )
 {
 	//if (!texture)
 		//throw "TileMapView: texture nula";
 	//a.setTexture(texture);
 
-	a.set_tile(t);
-	add_tile(t);
+	a.setTile(t);
+	addTile(t);
 	#ifdef OLD_ANIMATED
 	animation[t] = a;
 	#else
-	if (!is_animated(t))
+	if (!isAnimated(t))
 	{
 		animatedTilesID.push_back(t);
 		animatedTiles.push_back(a);
@@ -39,7 +39,7 @@ void TileMapView::add_animation ( CAnimatedTile & a, int t )
 	#endif
 }
 
-bool TileMapView::is_animated (	int t )
+bool TileMapView::isAnimated (	int t )
 {
 	#ifdef OLD_ANIMATED
 	return (animation.find(t) != animation.end());
@@ -48,12 +48,12 @@ bool TileMapView::is_animated (	int t )
 	#endif
 }
 
-void TileMapView::update_animation (  )
+void TileMapView::updateAnimation (  )
 {
 	#ifdef OLD_ANIMATED
 	for (std::vector <int>::iterator i = tiles.begin(); i != tiles.end(); i++)
 	{
-		if (is_animated(*i))
+		if (isAnimated(*i))
 			animation[*i].update();
 	}
 	#else
@@ -114,8 +114,8 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 				continue;
 			
 			t = tileset[index];
-			//t = get_tile(i * tilesize, j * tilesize);
-			if (!has_tile(t))
+			//t = getTile(i * tilesize, j * tilesize);
+			if (!hasTile(t))
 				continue;
 
 			dest.x = ((i - p.x) * tilesize + dim.x) - mod_x;
@@ -124,7 +124,7 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam )
 			dest.w = tilesize;
 			dest.h = tilesize;
 
-			if (is_animated(t))
+			if (isAnimated(t))
 			{
 				#ifdef OLD_ANIMATED
 					animation[t].draw(renderer, dest.x, dest.y);
@@ -197,8 +197,8 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 		for (j = position.y - 1; j <= position.y + dim.h + 1; j++)
 		{
 			//t = tileset.at(i * width + j); <- BUGADO!
-			t = get_tile(i * tilesize, j * tilesize);
-			if (!has_tile(t))
+			t = getTile(i * tilesize, j * tilesize);
+			if (!hasTile(t))
 				continue;
 
 			//é preciso parenteses extras para evitar bugs
@@ -208,7 +208,7 @@ int TileMapView::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 			dest.w = tilesize;
 			dest.h = tilesize;
 
-			if (is_animated(t))
+			if (isAnimated(t))
 			{
 				#ifdef OLD_ANIMATED
 					animation[t].draw(renderer, dest.x, dest.y);
@@ -261,8 +261,8 @@ int TileMapView::draw ( SDL_Renderer * renderer, int x, int y )
 		for (j = -1; j <= dim.h+1; j++)
 		{
 			//t = tileset.at(i * width + j); <- BUGADO!
-			t = get_tile(i * tilesize, j * tilesize);
-			if (!has_tile(t))
+			t = getTile(i * tilesize, j * tilesize);
+			if (!hasTile(t))
 				continue;
 			
 			dest.x += x;
@@ -271,7 +271,7 @@ int TileMapView::draw ( SDL_Renderer * renderer, int x, int y )
 			dest.w = tilesize;
 			dest.h = tilesize;
 			
-			if (is_animated(t))
+			if (isAnimated(t))
 			{
 				#ifdef OLD_ANIMATED
 					animation[t].draw(renderer, dest.x, dest.y);

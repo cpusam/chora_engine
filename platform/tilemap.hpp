@@ -62,27 +62,27 @@ class TileMap
 			dimension = (SDL_Rect){0,0,tilesize * width,tilesize * height};
 		}
 
-		void set_tilesize ( int ts );
+		void setTilesize ( int ts );
 
 		void setPosition ( Vect p );
 		
 		Vect getPosition (  );
 
-		bool set_tile ( int x, int y, int t );
+		bool setTile ( int x, int y, int t );
 
-		void set_tile ( int i, int t );
+		void setTile ( int i, int t );
 
-		inline int get_tile ( int x, int y )
+		inline int getTile ( int x, int y )
 		{
 			if (x < 0 || y < 0)
 			{
 				static int p = 0;
 				if (p < 100)
 				{
-					printf("CTilaMap: get_tile posições negativas x = %d, y = %d\n", x, y);
+					printf("CTilaMap: getTile posições negativas x = %d, y = %d\n", x, y);
 				}
 				p++;
-				//throw "TileMap: get_tile posições negativas!\n";
+				//throw "TileMap: getTile posições negativas!\n";
 				return -1;
 			}
 
@@ -105,23 +105,23 @@ class TileMap
 		Vect get_tile_pos ( int i );
 
 		// Se o indice i for um tile, retorna >= 0. Caso contrário < 0 caso não haja
-		int get_tile ( int i );
+		int getTile ( int i );
 
-		int get_tilesize (  );
+		int getTilesize (  );
 
-		int get_width (  );
+		int getWidth (  );
 
-		int get_height (  );
+		int getHeight (  );
 
 		SDL_Rect getDimension (  );
 
-		bool has_tile ( int t );
+		bool hasTile ( int t );
 
-		bool add_tile ( int t );
+		bool addTile ( int t );
 
-		void remove_tile ( int t );
+		void removeTile ( int t );
 
-		int find_first_pos ( int t );
+		int findFirstPosition ( int t );
 
 		/*
 			Lẽ todo o vetor e se encontra um -1 soma uma linha
@@ -136,7 +136,7 @@ class TileMap
 		int read ( std::string filename );
 
 		//lê um mapa de um xpm
-		int read_from_xpm ( std::string filename );
+		int readFromXPM ( std::string filename );
 };
 
 

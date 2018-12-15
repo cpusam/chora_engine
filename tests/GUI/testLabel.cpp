@@ -76,7 +76,7 @@ int main ( int argc, char** argv )
 	SDL_Event event;
 	Key fullscreen(SDLK_f), print(SDLK_p);
 
-	FPSManager::instance()->set_framerate(60); // 60 fps
+	FPSManager::instance()->setFramerate(60); // 60 fps
 
 	Uint32 fullscreenFlags = 0;
 	bool done = false;
@@ -109,7 +109,7 @@ int main ( int argc, char** argv )
 			SDL_SetWindowFullscreen(window, fullscreenFlags);
 		}
 
-		if (FPSManager::instance()->get_delta() > 0)
+		if (FPSManager::instance()->getDelta() > 0)
 		{
 			SDL_SetRenderTarget(renderer, targetTexture);
 			SDL_SetRenderDrawColor(renderer, 0,0,0,255);

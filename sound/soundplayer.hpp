@@ -30,23 +30,59 @@
 #include "../sdl.hpp"
 #include "../include/statemachine.hpp"
 
-enum ESoundType
-{
-	UNDEF_SOUND=-1,
-	CHUNK_SOUND,
-	MUSIC_SOUND
-};
-
-enum ESoundState
-{
-	UNLOADED_SOUND, // som ainda n�o carregado
-	INACTIVE_SOUND, // som carregado e pronto para tocar
-	PAUSED_SOUND, // som pausado
-	PLAYING_SOUND // tocando o som
-};
 
 class SoundFX: public StateMachine
 {
+	public:
+		enum Type
+		{
+			UNDEF=-1,
+			CHUNK,
+			MUSIC
+		};
+
+		enum State
+		{
+			UNLOADED, // som ainda n�o carregado
+			INACTIVE, // som carregado e pronto para tocar
+			PAUSED, // som pausado
+			PLAYING // tocando o som
+		};
+
+	public:
+		SoundFX (  )
+		{
+			type = UNDEF;
+			chunk = nullptr;
+			music = nullptr;
+			setState(UNLOADED);
+			channel = -1;
+		}
+
+		int getType (  );
+
+		std::string getID (  );
+
+		std::string getPath (  );
+
+		Mix_Chunk * getMixChunk (  );
+
+		Mix_Music * getMixMusic (  );
+
+		int getChannel (  );
+
+		bool play ( int ch, int loops );
+
+		bool pause (  );
+
+		bool resume (  );
+
+		void destroy (  );
+
+		void loadChunk ( std::string p );
+
+		void loadMusic ( std::string p );
+
 	protected:
 		int type;
 		int channel; // canal usado para tocar o som
@@ -59,40 +95,6 @@ class SoundFX: public StateMachine
 		{
 			return getState();
 		}
-
-	public:
-		SoundFX (  )
-		{
-			type = UNDEF_SOUND;
-			chunk = 0;
-			music = 0;
-			setState(UNLOADED_SOUND);
-			channel = -1;
-		}
-
-		int get_type (  );
-
-		std::string getID (  );
-
-		std::string get_path (  );
-
-		Mix_Chunk * get_chunk (  );
-
-		Mix_Music * get_music (  );
-
-		int get_channel (  );
-
-		bool play ( int ch, int loops );
-
-		bool pause (  );
-
-		bool resume (  );
-
-		void destroy (  );
-
-		void set_chunk ( std::string p );
-
-		void set_music ( std::string p );
 };
 
 class SoundPlayer: public StateMachine
@@ -110,38 +112,42 @@ class SoundPlayer: public StateMachine
 	public:
 		~SoundPlayer (  )
 		{
-			free_sounds();
+			freeSounds();
 		}
 
 		static SoundPlayer * instance (  )
 		{
-			if (!singleton)
-				singleton = new SoundPlayer();
-
+			if (singleton)
+				return singleton;
+			
+			singleton = new SoundPlayer();
 			return singleton;
 		}
 
 		static void destroy (  )
 		{
 			if (singleton)
+			{
 				delete singleton;
+				singleton = nullptr;
+			}
 		}
 
-		void free_sounds (  );
+		void freeSounds (  );
 
-		bool has_sound ( std::string id );
+		bool hasSound ( std::string id );
 
-		bool add_sound ( SoundFX & s );
+		bool addSound ( SoundFX & s );
 
 		bool playing ( std::string id );
 
-		bool pause_sound ( std::string id );
+		bool pauseSound ( std::string id );
 
-		bool resume_sound ( std::string id );
+		bool resumeSound ( std::string id );
 
-		bool play_sound ( std::string id, int channel=-1, int loops=0 );
+		bool playSound ( std::string id, int channel=-1, int loops=0 );
 
-		bool halt_sound ( std::string id );
+		bool haltSound ( std::string id );
 
 		int update (  );
 };

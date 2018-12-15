@@ -8,7 +8,7 @@ GuiLabel::GuiLabel ( std::string s, SDL_Color c, const std::string fontName )
 	texture = nullptr;
 	/*
 		if (s != "")
-			set_str(s);
+			setString(s);
 		else
 			str = "";
 		*/
@@ -58,13 +58,13 @@ void GuiLabel::str_to_surface ( std::string s, std::string fontName )
 	dim.w = w, dim.h = h;
 }
 
-void GuiLabel::set_color ( SDL_Color c )
+void GuiLabel::setColor ( SDL_Color c )
 {
 	color = c;
 	str_to_surface(str);
 }
 
-void GuiLabel::set_str ( std::string s, std::string fontName )
+void GuiLabel::setString ( std::string s, std::string fontName )
 {
 	/*
 	if (s == str && texture)
@@ -101,7 +101,7 @@ void GuiLabel::setTexture ( SDL_Texture * t )
 	}
 }
 
-int GuiLabel::getTexture_width (  )
+int GuiLabel::getTextureWidth (  )
 {
 	int w;
 
@@ -112,7 +112,7 @@ int GuiLabel::getTexture_width (  )
 	return w;
 }
 
-int GuiLabel::getTexture_height (  )
+int GuiLabel::getTextureHeight (  )
 {
 	int h;
 
@@ -123,7 +123,7 @@ int GuiLabel::getTexture_height (  )
 	return h;
 }
 
-std::string GuiLabel::get_str (  )
+std::string GuiLabel::getString (  )
 {
 	return str;
 }
@@ -173,7 +173,7 @@ void GuiLabelNumber::proc_value ( float v )   // para ser usada internamente
 		s.swap(aux);
 	}
 
-	set_str(s);
+	setString(s);
 }
 
 void GuiLabelNumber::set_left_zero ( int lz )

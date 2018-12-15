@@ -57,19 +57,19 @@ class GuiLabel: public Widget
 		void str_to_surface ( std::string s, std::string fontName="=>default" );
 
 	public:
-		void set_color ( SDL_Color c );
+		void setColor ( SDL_Color c );
 
-		void set_str ( std::string s, std::string fontName="=>default" );
+		void setString ( std::string s, std::string fontName="=>default" );
 
 		SDL_Texture * getTexture (  );
 
 		void setTexture ( SDL_Texture * t );
 
-		int getTexture_width (  );
+		int getTextureWidth (  );
 
-		int getTexture_height (  );
+		int getTextureHeight (  );
 
-		std::string get_str (  );
+		std::string getString (  );
 
 		void draw ( SDL_Renderer * renderer );
 };
@@ -83,12 +83,12 @@ class GuiLabelNumber: public GuiLabel
 		float value;
 		float left_zero; // número máximo de zeros a esquerda
 	protected:
-		using GuiLabel::set_str;
+		using GuiLabel::setString;
 
 	public:
 		GuiLabelNumber ( float v, SDL_Color c, int lz=0 )
 		{
-			set_color(c);
+			setColor(c);
 			value = -1;
 			left_zero = lz;
 			set_value(v);

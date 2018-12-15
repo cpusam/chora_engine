@@ -1,7 +1,7 @@
 #include "tilemap.hpp"
 #include <algorithm>
 
-void TileMap::set_tilesize ( int ts )
+void TileMap::setTilesize ( int ts )
 {
 	tilesize = ts;
 }
@@ -16,11 +16,11 @@ Vect TileMap::getPosition (  )
 	return position;
 }
 
-bool TileMap::set_tile ( int x, int y, int t )
+bool TileMap::setTile ( int x, int y, int t )
 {
 	if (x < 0 || y < 0)
 	{
-		std::cout<<"TileMap: get_tile posições negativas!\n";
+		std::cout<<"TileMap: getTile posições negativas!\n";
 		return false;
 	}
 
@@ -36,27 +36,27 @@ bool TileMap::set_tile ( int x, int y, int t )
 	return true;
 }
 
-void TileMap::set_tile ( int i, int t )
+void TileMap::setTile ( int i, int t )
 {
 	if (i > -1 && i < int(tileset.size()))
 	{
 		tileset[i] = t;
-		if (!has_tile(t))
+		if (!hasTile(t))
 			tiles.push_back(t);
 	}
 }
 /*
-int TileMap::get_tile ( int x, int y )
+int TileMap::getTile ( int x, int y )
 {
 	if (x < 0 || y < 0)
 	{
 		static int p = 0;
 		if (p < 100)
 		{
-			printf("CTilaMap: get_tile posições negativas x = %d, y = %d\n", x, y);
+			printf("CTilaMap: getTile posições negativas x = %d, y = %d\n", x, y);
 		}
 		p++;
-		//throw "TileMap: get_tile posições negativas!\n";
+		//throw "TileMap: getTile posições negativas!\n";
 		return -1;
 	}
 
@@ -88,7 +88,7 @@ Vect TileMap::get_tile_pos ( int i )
 	return p;
 }
 
-int TileMap::get_tile ( int i )
+int TileMap::getTile ( int i )
 {
 	if (i > -1 && i < int(tileset.size()))
 		return tileset[i];
@@ -96,7 +96,7 @@ int TileMap::get_tile ( int i )
 	return -1;
 }
 
-int TileMap::find_first_pos ( int t )
+int TileMap::findFirstPosition ( int t )
 {
 	for (unsigned int i = 0, end = tileset.size(); i < end; i++)
 		if (t == tileset[i])
@@ -105,17 +105,17 @@ int TileMap::find_first_pos ( int t )
 	return -1; // sem posição ou não encontrado
 }
 
-int TileMap::get_tilesize (  )
+int TileMap::getTilesize (  )
 {
 	return tilesize;
 }
 
-int TileMap::get_width (  )
+int TileMap::getWidth (  )
 {
 	return width;
 }
 
-int TileMap::get_height (  )
+int TileMap::getHeight (  )
 {
 	return height;
 }
@@ -125,21 +125,21 @@ SDL_Rect TileMap::getDimension (  )
 	return dimension;
 }
 
-bool TileMap::has_tile ( int t )
+bool TileMap::hasTile ( int t )
 {
 	return std::find(tiles.begin(), tiles.end(), t) != tiles.end();
 }
 
-bool TileMap::add_tile ( int t )
+bool TileMap::addTile ( int t )
 {
-	if (has_tile(t))
+	if (hasTile(t))
 		return false;
 
 	tiles.push_back(t);
 	return true;
 }
 
-void TileMap::remove_tile ( int t )
+void TileMap::removeTile ( int t )
 {
 	for (std::vector <int>::iterator it = tiles.begin(), end = tiles.end(); it != end; it++)
 		if (t == *it)
@@ -167,7 +167,7 @@ int TileMap::read ( std::vector <int> & t )
 		else
 		{
 			tileset.push_back(*i);
-			if (!has_tile(*i))
+			if (!hasTile(*i))
 				tiles.push_back(*i);
 		}
 	}
@@ -198,7 +198,7 @@ int TileMap::read ( int * t, int size )
 		else if (t[i] >= ' ')
 		{
 			tileset.push_back(t[i]);
-			if (!has_tile(t[i]))
+			if (!hasTile(t[i]))
 				tiles.push_back(t[i]);
 		}
 	}
@@ -236,7 +236,7 @@ int TileMap::read ( std::string filename )
 		else if (file && tile >= ' ')
 		{
 			tileset.push_back(tile);
-			if (!has_tile(tile))
+			if (!hasTile(tile))
 				tiles.push_back(tile);
 		}
 	}
@@ -247,7 +247,7 @@ int TileMap::read ( std::string filename )
 	return 1;
 }
 
-int TileMap::read_from_xpm ( std::string filename )
+int TileMap::readFromXPM ( std::string filename )
 {
 	FILE * file = fopen(filename.c_str(), "r");
 

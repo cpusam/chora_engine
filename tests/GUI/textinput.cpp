@@ -35,7 +35,7 @@ int main (int argc, char ** argv )
 
 	Writer::instance()->setRenderer(renderer);
 	Writer::instance()->loadFont("fonts/Jumpman.ttf", "=>default", 50);
-	FPSManager::instance()->set_framerate(60);
+	FPSManager::instance()->setFramerate(60);
 
 	int done = 0;
 	GuiTextInput * textinput = new GuiTextInput(50, (SDL_Color){255, 0, 0, 255}, 10);

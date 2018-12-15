@@ -31,7 +31,7 @@ int main ()
 	{
 		printf("Erro %s\n", e);
 	}
-	label->setPosition(Vect((640 - label->getTexture_width())/2, 480/2));
+	label->setPosition(Vect((640 - label->getTextureWidth())/2, 480/2));
 	
 	int done = 0;
 	while (!done)

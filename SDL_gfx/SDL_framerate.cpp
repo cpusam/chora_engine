@@ -5,12 +5,12 @@ FPSManager * FPSManager::singleton = nullptr;
 FPSManager::FPSManager (  )
 {
 	time_passed = 0;
-	init_framerate();
+	initFramerate();
 }
 
-void FPSManager::init_framerate (  )
+void FPSManager::initFramerate (  )
 {
-	lastticks = baseticks = get_ticks();
+	lastticks = baseticks = getTicks();
 }
 
 
@@ -33,7 +33,7 @@ void FPSManager::destroy (  )
 	}
 }
 
-Uint32 FPSManager::get_ticks (  )
+Uint32 FPSManager::getTicks (  )
 {
 	Uint32 ticks = SDL_GetTicks();
 
@@ -53,7 +53,7 @@ Uint32 FPSManager::get_ticks (  )
 	}
 }
 
-int FPSManager::set_framerate ( Uint32 rate )
+int FPSManager::setFramerate ( Uint32 rate )
 {
 	if ((rate >= FPS_LOWER_LIMIT) && (rate <= FPS_UPPER_LIMIT))
 	{
@@ -66,14 +66,14 @@ int FPSManager::set_framerate ( Uint32 rate )
 	return (-1);
 }
 
-FPSDef FPSManager::get_fpsdef (  )
+FPSDef FPSManager::getFPSDef (  )
 {
 	return fpsdef;
 }
 
-bool FPSManager::set_fpsdef ( FPSDef d )
+bool FPSManager::setFPSDef ( FPSDef d )
 {
-	if (set_framerate(d.rate) > -1)
+	if (setFramerate(d.rate) > -1)
 	{
 		fpsdef = d;
 		return true;
@@ -82,12 +82,12 @@ bool FPSManager::set_fpsdef ( FPSDef d )
 	return false;
 }
 
-Uint32 FPSManager::get_delta (  )
+Uint32 FPSManager::getDelta (  )
 {
 	return time_passed;
 }
 
-double FPSManager::get_delta_sec (  )
+double FPSManager::getDeltaSeconds (  )
 {
 	return double(time_passed)/1000.0;
 }
@@ -104,7 +104,7 @@ Uint32 FPSManager::update (  )
 	*/
 	if (baseticks == 0)
 	{
-		init_framerate();
+		initFramerate();
 	}
 
 	/*
@@ -115,7 +115,7 @@ Uint32 FPSManager::update (  )
 	/*
 	* Get/calc ticks
 	*/
-	current_ticks = get_ticks();
+	current_ticks = getTicks();
 	delta_time = current_ticks - lastticks;
 	lastticks = current_ticks;
 	target_ticks = baseticks + (Uint32) ((float) fpsdef.framecount * fpsdef.rateticks);
@@ -128,7 +128,7 @@ Uint32 FPSManager::update (  )
 	else
 	{
 		fpsdef.framecount = 0;
-		baseticks = get_ticks();
+		baseticks = getTicks();
 	}
 
 	time_passed = delta_time;

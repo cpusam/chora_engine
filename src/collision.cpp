@@ -129,7 +129,7 @@ SDL_Rect rectIntersect ( SDL_Rect a, SDL_Rect b )
 
 bool pointtile ( TileMap & map, std::vector <int> & coll_tile, Vect &  position )
 {
-	int tile = map.get_tile(position.x, position.y);
+	int tile = map.getTile(position.x, position.y);
 	for (unsigned int i = 0, s = coll_tile.size(); i < s; i++)
 		if (coll_tile[i] == tile)
 			return true;

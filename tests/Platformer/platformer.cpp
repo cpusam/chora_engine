@@ -28,12 +28,12 @@ enum EPlayerDir
 
 float toAcc ( float p )
 {
-	float vel = (FPSManager::instance()->get_delta() / 1000.f);
+	float velocity = (FPSManager::instance()->getDelta() / 1000.f);
 	
-	if (vel == 0)
-		vel = 1;
+	if (velocity == 0)
+		velocity = 1;
 	
-	return p / vel;
+	return p / velocity;
 }
 
 class Tux: public Entity {
@@ -210,7 +210,7 @@ public:
 
 	bool ground (  )
 	{
-		return has_coll_tile(map->get_tile(position.x + point_down[0].x, position.y + point_down[0].y + 1)) || has_coll_tile(map->get_tile(position.x + point_down[1].x, position.y + point_down[1].y + 1));
+		return has_coll_tile(map->getTile(position.x + point_down[0].x, position.y + point_down[0].y + 1)) || has_coll_tile(map->getTile(position.x + point_down[1].x, position.y + point_down[1].y + 1));
 	}
 
 	int update (  )
@@ -220,30 +220,30 @@ public:
 			case FLYING:
 				if (key_left)
 				{
-					vel.x = -2;
+					velocity.x = -2;
 				}
 				else if (key_right)
 				{
-					vel.x = 2;
+					velocity.x = 2;
 				}
 				else
 				{
-					vel.x = 0;
+					velocity.x = 0;
 				}
 				
 				if (key_up)
 				{
-					vel.y = -2;
+					velocity.y = -2;
 				}
 				else if (key_down)
 				{
-					vel.y = 2;
+					velocity.y = 2;
 				}
 				else
 				{
-					vel.y = 0;
+					velocity.y = 0;
 				}
-				position += vel;
+				position += velocity;
 				curr_anim = anim[1];
 				curr_anim->update();
 				break;
@@ -251,7 +251,7 @@ public:
 			case STANDING:
 				if (key_left)
 				{
-					vel.x = -acc.x;
+					velocity.x = -acc.x;
 					dir = LEFT_DIR;
 					curr_anim = anim[4];
 					curr_anim->reset();
@@ -261,7 +261,7 @@ public:
 				
 				if (key_right)
 				{
-					vel.x = acc.x;
+					velocity.x = acc.x;
 					dir = RIGHT_DIR;
 					curr_anim = anim[1];
 					curr_anim->reset();
@@ -271,9 +271,9 @@ public:
 				
 				if (ground() && key_up)
 				{
-					vel.y = -velStartJump;
-					position.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
-					collisionVertical(*map, coll_tiles, position, point_up, vel);
+					velocity.y = -velStartJump;
+					position.y += velocity.y * FPSManager::instance()->getDelta()/1000.f;
+					collisionVertical(*map, coll_tiles, position, point_up, velocity);
 					
 					if (dir == LEFT_DIR)
 						curr_anim = anim[5];
@@ -285,11 +285,11 @@ public:
 					break;
 				}
 				
-				vel.y += gravity;
-				if (vel.y > velStartJump)
-					vel.y = velStartJump;
-				position.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
-				collisionVertical(*map, coll_tiles, position, point_down, vel);
+				velocity.y += gravity;
+				if (velocity.y > velStartJump)
+					velocity.y = velStartJump;
+				position.y += velocity.y * FPSManager::instance()->getDelta()/1000.f;
+				collisionVertical(*map, coll_tiles, position, point_down, velocity);
 				
 				curr_anim->update();
 				break;
@@ -297,7 +297,7 @@ public:
 			case WALKING:
 					if (!ground())
 					{
-						vel.y = 0;
+						velocity.y = 0;
 						if (dir == LEFT_DIR)
 							curr_anim = anim[5]; // para esquerda
 						else
@@ -311,20 +311,20 @@ public:
 					{
 						if (key_right)
 						{
-							vel.x = acc.x;
+							velocity.x = acc.x;
 							dir = RIGHT_DIR;
 							curr_anim = anim[1];
 						}
 						else if (key_left)
 						{
-							vel.x = -acc.x;
+							velocity.x = -acc.x;
 							dir = LEFT_DIR;
 							curr_anim = anim[4];
 						}
 						else
 						{
-							vel.y = 0;
-							vel.x = 0;
+							velocity.y = 0;
+							velocity.x = 0;
 							if (dir == LEFT_DIR)
 								curr_anim = anim[5];
 							else
@@ -336,9 +336,9 @@ public:
 
 						if (key_up)
 						{
-							vel.y = -velStartJump;
-							position.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
-							collisionVertical(*map, coll_tiles, position, point_up, vel);
+							velocity.y = -velStartJump;
+							position.y += velocity.y * FPSManager::instance()->getDelta()/1000.f;
+							collisionVertical(*map, coll_tiles, position, point_up, velocity);
 				
 							if (dir == LEFT_DIR)
 								curr_anim = anim[5];
@@ -351,39 +351,39 @@ public:
 						}
 					}
 					
-					position.x += vel.x * FPSManager::instance()->get_delta()/1000.f;
+					position.x += velocity.x * FPSManager::instance()->getDelta()/1000.f;
 					
-					//tile_collision(*map, coll_tiles, position, point_right, vel, MOVE_TO_LEFT);
-					//tile_collision(*map, coll_tiles, position, point_left, vel, MOVE_TO_RIGHT);
+					//tile_collision(*map, coll_tiles, position, point_right, velocity, MOVE_TO_LEFT);
+					//tile_collision(*map, coll_tiles, position, point_left, velocity, MOVE_TO_RIGHT);
 					
-					//collisionHorizontal(*map, coll_tiles, position, point_left, vel);
-					//collisionHorizontal(*map, coll_tiles, position, point_right, vel);
+					//collisionHorizontal(*map, coll_tiles, position, point_left, velocity);
+					//collisionHorizontal(*map, coll_tiles, position, point_right, velocity);
 					curr_anim->update();
 					break;
 
 			case JUMPING:
 					if (key_right)
 					{
-						vel.x = acc.x;
+						velocity.x = acc.x;
 						dir = RIGHT_DIR;
 						curr_anim = anim[2];
 					}
 					else if (key_left)
 					{
-						vel.x = -acc.x;
+						velocity.x = -acc.x;
 						dir = LEFT_DIR;
 						curr_anim = anim[5];
 					}
 					else
 					{
-						vel.x = 0;
+						velocity.x = 0;
 					}
 					
 					if (ground())
 					{
-						collisionVertical(*map, coll_tiles, position, point_down, vel);
-						vel.y = 0;
-						vel.x = 0;
+						collisionVertical(*map, coll_tiles, position, point_down, velocity);
+						velocity.y = 0;
+						velocity.x = 0;
 						if (dir == LEFT_DIR)
 							curr_anim = anim[3];
 						else
@@ -394,17 +394,17 @@ public:
 						break;
 					}
 					
-					position.x += vel.x * FPSManager::instance()->get_delta()/1000.f;
-					collisionHorizontal(*map, coll_tiles, position, point_right, vel);
-					collisionHorizontal(*map, coll_tiles, position, point_left, vel);
+					position.x += velocity.x * FPSManager::instance()->getDelta()/1000.f;
+					collisionHorizontal(*map, coll_tiles, position, point_right, velocity);
+					collisionHorizontal(*map, coll_tiles, position, point_left, velocity);
 					
-					vel.y += gravity;
-					if (vel.y > velStartJump)
-						vel.y = velStartJump;
-					position.y += vel.y * FPSManager::instance()->get_delta()/1000.f;
+					velocity.y += gravity;
+					if (velocity.y > velStartJump)
+						velocity.y = velStartJump;
+					position.y += velocity.y * FPSManager::instance()->getDelta()/1000.f;
 					
-					collisionVertical(*map, coll_tiles, position, point_up, vel);
-					collisionVertical(*map, coll_tiles, position, point_down, vel);
+					collisionVertical(*map, coll_tiles, position, point_up, velocity);
+					collisionVertical(*map, coll_tiles, position, point_down, velocity);
 					
 					curr_anim->update();
 					break;
@@ -448,7 +448,7 @@ int main (  )
 		Tux player(renderer, &map);
 
 		map.texture = IMG_LoadTexture(renderer,"tiles.png");
-		map.remove_tile('.');
+		map.removeTile('.');
 		map.setSourceRect('a', (SDL_Rect){32,0,32,32});
 
 		Background background;
@@ -508,7 +508,7 @@ int main (  )
 		cam.lookat(player.getPosition());
 		
 		FPSManager::instance()->update();
-		if (FPSManager::instance()->get_delta() > 0)
+		if (FPSManager::instance()->getDelta() > 0)
 		{
 			SDL_SetRenderDrawColor(renderer, 0,0,0,255);
 			SDL_RenderClear(renderer);

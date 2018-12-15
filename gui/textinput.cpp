@@ -13,9 +13,9 @@ GuiTextInput::GuiTextInput ( int fontsize, SDL_Color c, int ss, std::string font
 	time_change = 200;
 
 	str_to_surface("a", fontName);
-	textsize = getTexture_width();
+	textsize = getTextureWidth();
 	int width = textsize;
-	int height = getTexture_height();
+	int height = getTextureHeight();
 	str_to_surface("", fontName);
 	str = "";
 
@@ -84,7 +84,7 @@ void GuiTextInput::set_cursor_size ( int w, int h )
 void GuiTextInput::setPosition ( Vect p )
 {
 	Widget::setPosition(p);
-	cursor.x = position.x + rel_pos.x + getTexture_width();
+	cursor.x = position.x + rel_pos.x + getTextureWidth();
 	cursor.y = position.y + rel_pos.y;
 
 	box.x = position.x + rel_pos.x;
@@ -94,7 +94,7 @@ void GuiTextInput::setPosition ( Vect p )
 void GuiTextInput::setRelativePosition ( Vect p )
 {
 	Widget::setRelativePosition(p);
-	cursor.x = position.x + rel_pos.x + getTexture_width();
+	cursor.x = position.x + rel_pos.x + getTextureWidth();
 	cursor.y = position.y + rel_pos.y;
 
 	box.x = position.x + rel_pos.x;
@@ -196,8 +196,8 @@ int GuiTextInput::update (  )
 		remakeTexture = false;
 		str_to_surface(str, fontName);
 
-		dim.w = getTexture_width();
-		dim.h = getTexture_height();
+		dim.w = getTextureWidth();
+		dim.h = getTextureHeight();
 	}
 
 	if (controls["backspace"].getState() == Key::PRESS && cursorStart > 0)

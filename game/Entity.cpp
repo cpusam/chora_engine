@@ -491,7 +491,7 @@ bool Entity::isSolid ( Vect p )
 		throw Exception("Entity::isSolid level é nulo");
 	}
 
-	int tile = level->get_tile(p.x, p.y);
+	int tile = level->getTile(p.x, p.y);
 	if (tile < 0)
 		return false;
 	
@@ -505,7 +505,7 @@ bool Entity::isSolidOneWayUp ( Vect p )
 		throw Exception("Entity::isSolid level é nulo");
 	}
 
-	int tile = level->get_tile(p.x, p.y);
+	int tile = level->getTile(p.x, p.y);
 	if (tile < 0)
 		return false;
 	
@@ -518,13 +518,13 @@ bool Entity::isSolidSlopeUp ( Vect p, Vect * result )
 		throw Exception("Entity::isSolidSlope level é nulo");
 
 	
-	int tile = level->get_tile(p.x, p.y);
+	int tile = level->getTile(p.x, p.y);
 	if (tile < 0)
 		return false;
 
 	if (upSolidSlopeAngles.find(tile) != upSolidSlopeAngles.end())
 	{
-		int tilesize = level->get_tilesize();
+		int tilesize = level->getTilesize();
 		Vect c = getCollCenter();
 		Vect center[2] = {Vect(c.x, c.y - collRect.h / 2), Vect(c.x, c.y + collRect.h / 2)};
 		Vect slopePos(int(p.x / tilesize) * tilesize, int(p.y / tilesize) * tilesize);
@@ -558,7 +558,7 @@ bool Entity::isGround (  )
 			return true;
 	}
 
-	if (vel.y == 0 && upSolid.size() != 0)
+	if (velocity.y == 0 && upSolid.size() != 0)
 	{
 		Vect q;
 		for (auto p: downSide)
@@ -593,10 +593,10 @@ bool Entity::isGround (  )
 
 	if (topLadderTile >= 0)
 	{
-		int levelY = (y1/level->get_tilesize())*level->get_tilesize();
+		int levelY = (y1/level->getTilesize())*level->getTilesize();
 		//verifica se é o topo da escada na parte de baixo (downSide)
-		if ((y1 - levelY) <= topTileSize && (level->get_tile(x1,y1) == topLadderTile || level->get_tile(x2,y2) == topLadderTile))
-			if (vel.y == 0)
+		if ((y1 - levelY) <= topTileSize && (level->getTile(x1,y1) == topLadderTile || level->getTile(x2,y2) == topLadderTile))
+			if (velocity.y == 0)
 				return true;
 	}
 
@@ -612,24 +612,24 @@ bool Entity::moveToPosition ( Vect position, float maxVelNow )
 {
 	Vect diff(position.x - this->position.x, position.y - this->position.y);
 
-	float seconds = FPSManager::instance()->get_delta_sec();
+	float seconds = FPSManager::instance()->getDeltaSeconds();
 
 	diff.normalize();
-	vel.x = maxVelNow * diff.x * seconds;
-	vel.y = maxVelNow * diff.y * seconds;
+	velocity.x = maxVelNow * diff.x * seconds;
+	velocity.y = maxVelNow * diff.y * seconds;
 
-	this->position.x += vel.x;
-	this->position.y += vel.y;
+	this->position.x += velocity.x;
+	this->position.y += velocity.y;
 
 	bool changeX = false, changeY = false;
-	if (vel.x < 0)
+	if (velocity.x < 0)
 		changeX = int(this->position.x) < int(position.x);
-	else if (vel.x > 0)
+	else if (velocity.x > 0)
 		changeX = int(this->position.x) > int(position.x);
 	
-	if (vel.y < 0)
+	if (velocity.y < 0)
 		changeY = int(this->position.y) < int(position.y);
-	else if (vel.y > 0)
+	else if (velocity.y > 0)
 		changeY = int(this->position.y) > int(position.y);
 	
 	return changeX && changeY;
@@ -692,7 +692,7 @@ bool Entity::oneWayUpCollision ()
 	if (!level)
 		throw Exception("Entity::Erro level é nulo");
 
-	if (vel.y <= 0)
+	if (velocity.y <= 0)
 		return false;
 
 	Vect collPos = position;
@@ -701,10 +701,10 @@ bool Entity::oneWayUpCollision ()
 		Vect before(Vect::add(collPos, p));
 		Vect after(before);
 
-		before.y -= vel.y;
+		before.y -= velocity.y;
 		if (isSolidOneWayUp(before) == false && isSolidOneWayUp(after))
 		{
-			int y = (int(after.y) / level->get_tilesize()) * level->get_tilesize();
+			int y = (int(after.y) / level->getTilesize()) * level->getTilesize();
 			after.y = y - collRect.h - 1;
 			after.x = collPos.x;
 			setCollPos(after);
@@ -717,7 +717,7 @@ bool Entity::oneWayUpCollision ()
 
 bool Entity::slopeUpCollision (  )
 {
-	if (vel.y <= 0)
+	if (velocity.y <= 0)
 		return false;
 	
 	Vect result;
@@ -744,14 +744,14 @@ bool Entity::collisionVertical (  )
 {
 	if (level == nullptr)
 		throw Exception("Entity::"+name+" collisionVertical level map é nulo");
-	if (vel.y == 0)
+	if (velocity.y == 0)
 		return false;
 	
 	bool ret = false;
 	float beforeX = getCollPos().x;
 	//setSides(collRect, collPoints);
 
-	if (vel.y < 0)
+	if (velocity.y < 0)
 	{
 		//colisão acima da cabeça e embaixo do tile
 		for (auto p: upSide)
@@ -760,11 +760,11 @@ bool Entity::collisionVertical (  )
 			p.y += position.y;
 			if (isSolid(p))
 			{
-				int y = ((int(p.y) / level->get_tilesize()) + 1) * level->get_tilesize();
+				int y = ((int(p.y) / level->getTilesize()) + 1) * level->getTilesize();
 				//tem que arrendondar o p.y para evitar bugs
 				//esse 5 não era pra estar aqui!
 				setCollPos(Vect(beforeX, p.y + collRect.y + (y - p.y)));
-				//level->set_tile(beforeX, getCollPos().y, '.');
+				//level->setTile(beforeX, getCollPos().y, '.');
 				ret = true;
 				break;
 			}
@@ -779,7 +779,7 @@ bool Entity::collisionVertical (  )
 			p.y += position.y;
 			if (isSolid(p))
 			{
-				int y = (int(p.y) / level->get_tilesize())*level->get_tilesize();
+				int y = (int(p.y) / level->getTilesize())*level->getTilesize();
 				setCollPos(Vect(beforeX, y - collRect.h - 1));
 				ret = true;
 				break;
@@ -798,13 +798,13 @@ bool Entity::collisionVertical (  )
 			for (auto p: downSide)
 			{
 				p = p + position;
-				p.y += vel.y;
+				p.y += velocity.y;
 				p.y = round(p.y);
 				int x = p.x;
 				int y = p.y;
-				int levelY = (y / level->get_tilesize())*level->get_tilesize();
+				int levelY = (y / level->getTilesize())*level->getTilesize();
 				if (y - levelY < topTileSize)
-					if (level->get_tile(x,y) == topLadderTile)
+					if (level->getTile(x,y) == topLadderTile)
 					{
 						p.y = p.y - (collRect.y + collRect.h) + (levelY - int(p.y));
 						p.y = floor(position.y) - 1;
@@ -824,13 +824,13 @@ bool Entity::collisionHorizontal (  )
 {
 	if (level == nullptr)
 		throw Exception("Entity::"+name+" collisionHorizontal level map é nulo");
-	if (vel.x == 0)
+	if (velocity.x == 0)
 		return false;
 	bool ret = false;
 	float beforeY = getCollPos().y;
 	//setSides(collRect, collPoints);
 
-	if (vel.x < 0)
+	if (velocity.x < 0)
 	{
 		for (auto p: leftSide)
 		{
@@ -838,7 +838,7 @@ bool Entity::collisionHorizontal (  )
 			p.y += position.y;
 			if (isSolid(p))
 			{
-				int x = (int(p.x) / level->get_tilesize() + 1) * level->get_tilesize();
+				int x = (int(p.x) / level->getTilesize() + 1) * level->getTilesize();
 				p.x = x;
 				setCollPos(Vect(p.x, beforeY));
 				ret = true;
@@ -854,7 +854,7 @@ bool Entity::collisionHorizontal (  )
 			p.y += position.y;
 			if (isSolid(p))
 			{
-				int x = (int(p.x) / level->get_tilesize()) * level->get_tilesize();
+				int x = (int(p.x) / level->getTilesize()) * level->getTilesize();
 				p.x = int(x - collRect.w - 1);
 				setCollPos(Vect(p.x,beforeY));
 				ret = true;
@@ -997,8 +997,8 @@ std::vector<int> Entity::getTilesHash (  )
 		return ret;
 	}
 
-	int tilesize = level->get_tilesize();
-	int width = level->get_width();
+	int tilesize = level->getTilesize();
+	int width = level->getWidth();
 
 	
 	if (leftSide.size())
@@ -1047,35 +1047,35 @@ std::vector<int> Entity::getTilesHash (  )
 
 void Entity::applyImpulse ( Vect impulse )
 {
-	vel = Vect::add(vel, impulse);
+	velocity = Vect::add(velocity, impulse);
 }
 
 void Entity::moveX ( float add )
 {
 	bool damped = false;
 	//aplica aceleração
-	add = double(acc.x + add) * 1.0/double(FPSManager::instance()->get_fpsdef().rate);
-	vel.x += add;
+	add = double(acc.x + add) * 1.0/double(FPSManager::instance()->getFPSDef().rate);
+	velocity.x += add;
 	
 	//se não está aplicando desaceleração e a aceleração for zero...
 	if (add == 0)
 	{
 		//então aplique a desaceleração
-		vel.x -= vel.x * damping.x;
+		velocity.x -= velocity.x * damping.x;
 		damped = true;
 	}
 	
-	if (vel.x > minVel.x && vel.x > maxVel.x)
-		vel.x = maxVel.x;
-	else if (vel.x < -minVel.x && vel.x < -maxVel.x)
-		vel.x = -maxVel.x;
+	if (velocity.x > minVel.x && velocity.x > maxVel.x)
+		velocity.x = maxVel.x;
+	else if (velocity.x < -minVel.x && velocity.x < -maxVel.x)
+		velocity.x = -maxVel.x;
 	//está abaixo do intervalo
 	else if (!damped && add == 0)
 	{
-		vel.x -= vel.x * damping.x;
+		velocity.x -= velocity.x * damping.x;
 	}
 
-	position.x += vel.x;
+	position.x += velocity.x;
 
 	//arredonda para evitar tremores no eixo X
 	position.x = roundf(position.x);
@@ -1085,27 +1085,27 @@ void Entity::moveY ( float add )
 {
 	bool damped = false;
 	//aplica aceleração
-	add = double(acc.y + add) * 1.0/double(FPSManager::instance()->get_fpsdef().rate);
-	vel.y += add;
+	add = double(acc.y + add) * 1.0/double(FPSManager::instance()->getFPSDef().rate);
+	velocity.y += add;
 
 	//se não está aplicando desaceleração e a aceleração for zero...
 	if (add == 0)
 	{
 		//então aplique a desaceleração
-		vel.y -= vel.y * damping.y;	
+		velocity.y -= velocity.y * damping.y;	
 		damped = true;
 	}
 	
-	if (vel.y > minVel.y && vel.y > maxVel.y)
-		vel.y = maxVel.y;
-	else if (vel.y < -minVel.y && vel.y < -maxVel.y)
-		vel.y = -maxVel.y;
+	if (velocity.y > minVel.y && velocity.y > maxVel.y)
+		velocity.y = maxVel.y;
+	else if (velocity.y < -minVel.y && velocity.y < -maxVel.y)
+		velocity.y = -maxVel.y;
 	//está abaixo do intervalo
 	else if (!damped && add == 0)
 	{
-		vel.y -= vel.y * damping.y;
+		velocity.y -= velocity.y * damping.y;
 	}
-	position.y += vel.y;
+	position.y += velocity.y;
 	//arredonda para evitar tremores no eixo Y
 	position.y = roundf(position.y);
 }
@@ -1127,7 +1127,7 @@ void Entity::input ( SDL_Event & event )
 
 void Entity::draw ( SDL_Renderer * renderer, Camera * camera )
 {
-	if (isVisible() && currAnim)
+	if (currAnim)
 		currAnim->draw(renderer, camera, position.x, position.y);
 }
 

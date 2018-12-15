@@ -79,24 +79,24 @@ class FPSManager
 	protected:
 		FPSManager (  );
 
-		void init_framerate (  );
+		void initFramerate (  );
 
 	public:
 		static FPSManager * instance (  );
 
 		static void destroy (  );
 
-		Uint32 get_ticks (  );
+		Uint32 getTicks (  );
 
-		int set_framerate ( Uint32 rate );
+		int setFramerate ( Uint32 rate );
 
-		FPSDef get_fpsdef (  );
+		FPSDef getFPSDef (  );
 
-		bool set_fpsdef ( FPSDef d );
+		bool setFPSDef ( FPSDef d );
 
-		Uint32 get_delta (  );
+		Uint32 getDelta (  );
 		
-		double get_delta_sec (  );
+		double getDeltaSeconds (  );
 
 		Uint32 update (  );
 };

@@ -22,12 +22,12 @@ class CAnimatedTile: public Animation
 			return getCurrentFrame().getTexture();
 		}
 
-		int get_tile (  )
+		int getTile (  )
 		{
 			return tile;
 		}
 
-		void set_tile ( int t )
+		void setTile ( int t )
 		{
 			tile = t;
 		}
@@ -56,7 +56,7 @@ class TileMapView: public TileMap
 		CAnimatedTile get_animation ( int tile );
 		SDL_Rect getSourceRect ( int tile );
 		
-		void clear_source (  )
+		void clearSource (  )
 		{
 			source.clear();
 		}
@@ -66,11 +66,11 @@ class TileMapView: public TileMap
 			source[k] = f;
 		}
 
-		void add_animation ( CAnimatedTile & a, int t );
+		void addAnimation ( CAnimatedTile & a, int t );
 
-		bool is_animated ( int t );
+		bool isAnimated ( int t );
 
-		void update_animation (  );
+		void updateAnimation (  );
 
 		// desenha o mapa na posição 0,0
 		int draw ( SDL_Renderer * renderer, Camera * cam );
