@@ -26,6 +26,7 @@ Adicionar:
 	-Adicionar os códigos do Entity, Exception, Key, Elements na chora engine. Eles estão na pasta do projeto SuperMarioBros
 
 Tarefas:
+	-transformar os grupos de std::string para int, onde teria ai uns 32 grupos binários, 1 por bit do inteiro.
 	-trocar a passagem de SDL_Rect para referencias ou ponteiros
 	-[RESOLVIDO]fazer leitura de um mapa de tiles no formato de imagem XPM do kolourpaint
 	-refazer os singletons copiando da classe Elements, função instance()

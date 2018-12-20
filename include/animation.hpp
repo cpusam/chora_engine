@@ -82,7 +82,6 @@ struct STimer
 				
 				ticks += step;
 				lastTick = tick;
-				
 			}
 		}
 };

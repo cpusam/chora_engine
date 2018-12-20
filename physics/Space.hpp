@@ -1,0 +1,1 @@
+//Fazer o gerenciador de colisão, ver Engine3/ChoraEngine/MathPlay/Space.hpp

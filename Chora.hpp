@@ -26,13 +26,13 @@
 
 #define NO_THREAD_SAFE
 
+//core
 #include "sdl.hpp"
 #include "include/statemachine.hpp"
 #include "include/vect.hpp"
 #include "include/camera.hpp"
 #include "include/collision.hpp"
 #include "include/animation.hpp"
-#include "include/sprite.hpp"
 #include "include/movable.hpp"
 #include "include/util.hpp"
 #include "include/background.hpp"
@@ -60,6 +60,14 @@
 #include "game/Elements.hpp"
 #include "game/Input.hpp"
 #include "game/Key.hpp"
+
+#include "physics/RigidBody.hpp"
+#include "physics/Shape.hpp"
+#include "physics/Space.hpp"
+//módulo de física avançada
+#ifdef USE_CHIPMUNK
+	#include "chipmunk.h"
+#endif
 
 #endif
 

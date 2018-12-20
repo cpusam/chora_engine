@@ -1,0 +1,1 @@
+//TODO: fazer classe base para corpos rígidos, ver Engine3/ChoraEngine/MathPlay/RidigBody.hpp
