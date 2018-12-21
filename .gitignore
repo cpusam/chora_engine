@@ -11,6 +11,7 @@ SDL_gfx/*~
 sound/*~
 src/*.*~
 include/*~
+include/Modular
 game/*~
 
 #cmake e outros

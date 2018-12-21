@@ -31,6 +31,7 @@
 #include "../include/movable.hpp"
 #include "../include/statemachine.hpp"
 #include "../include/collision.hpp"
+#include "./Node.hpp"
 
 typedef long int EntityID;
 
@@ -52,7 +53,7 @@ enum RelativePosition
 	RELATIVE_ENTITY=0x2,
 };
 
-class Entity: public StateMachine, public Movable
+class Entity: public Node
 {
 
 	public:
@@ -63,8 +64,12 @@ class Entity: public StateMachine, public Movable
 		void setLayer ( int layer );
 		void setName ( std::string n );
 		std::string getName (  );
+		
+		//deprecated
 		void setGroup ( std::string g );
+		//deprecated
 		std::string getGroup (  );
+
 		EntityID getId (  );
 		virtual void show ( bool s );
 		bool isVisible (  );

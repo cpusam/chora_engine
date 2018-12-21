@@ -28,7 +28,6 @@
 #include "sdl.hpp"
 
 #define DEFAULT_STATE 0
-#define DEFAULT_STATE_ID -9999
 
 class StateMachine
 {
@@ -49,52 +48,6 @@ class StateMachine
 		virtual int getState (  );
 		virtual void input ( SDL_Event & event );
 		virtual int update (  );
-};
-
-class State
-{
-	private:
-		int id;
-
-	public:
-		State (  )
-		{
-			id = DEFAULT_STATE_ID;
-		}
-
-		void setID ( int i )
-		{
-			id = i;
-		}
-
-		int getID (  )
-		{
-			return id;
-		}
-};
-
-class StatePatternMachine
-{
-	private:
-		State * curr_state;
-		std::vector <State *> state;
-
-	public:
-		StatePatternMachine (  )
-		{
-			curr_state = 0; // default
-		}
-
-		virtual ~StatePatternMachine (  )
-		{
-		}
-
-		virtual bool has_state ( State * s );
-		virtual bool add_state ( State * s );
-		virtual bool setState ( int id ); // troca de estado
-		virtual State * getState ( int id );
-		virtual State * get_curr_state (  );
-		virtual int update (  ); // retorna o id do estado
 };
 
 #endif
