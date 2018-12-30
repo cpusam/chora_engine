@@ -212,6 +212,7 @@ void Elements::clearAll (  )
 {
 	nodes.clear();
 	nodesID.clear();
+	layers.clear();
 }
 
 const std::map<int, std::vector<Node *> > & Elements::getNodeLayers (  )
@@ -297,7 +298,7 @@ void Elements::print (  )
 		printf("ID[%zd] = %ld\n", i, (instance()->getIDs()[i]));
 	std::vector<Node*> nodes = instance()->getNodes();
 	std::cout<<"Temos "<<nodes.size()<<" ENTIDADES\n";
-	for (size_t i = 0; i < instance()->getNodes().size(); i++)
+	for (size_t i = 0; i < nodes.size(); i++)
 		if (nodes[i])
 		{
 			std::cout<<"id = "<<nodes[i]->getID()<<"|"

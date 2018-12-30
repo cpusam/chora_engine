@@ -60,13 +60,14 @@
 #include "game/Elements.hpp"
 #include "game/Input.hpp"
 #include "game/Key.hpp"
+#include "game/Node.hpp"
 
-#include "physics/RigidBody.hpp"
-#include "physics/Shape.hpp"
-#include "physics/Space.hpp"
 //módulo de física avançada
 #ifdef USE_CHIPMUNK
 	#include "chipmunk.h"
+	#include "physics/RigidBody.hpp"
+	#include "physics/Shape.hpp"
+	#include "physics/Space.hpp"
 #endif
 
 #endif

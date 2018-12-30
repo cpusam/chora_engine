@@ -24,10 +24,9 @@
 #ifndef CHORA_INPUT_HPP
 #define CHORA_INPUT_HPP
 
-#include "../sdl.hpp"
-#include "../include/statemachine.hpp"
+#include "Node.hpp"
 
-class Input: public StateMachine
+class Input: public Node
 {
 	public:
 		enum State: int

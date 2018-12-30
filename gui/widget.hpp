@@ -47,7 +47,7 @@ class Widget: public StateMachine
 		Widget ( std::string i="" )
 		{
 			id = i;
-			parent = 0;
+			parent = nullptr;
 			visible = true;
 			setState(1);
 		}
@@ -106,9 +106,9 @@ class Widget: public StateMachine
 		Widget * getChild ( int index );
 
 		//NOTE: precisa testar com wigets que tenha filhos
-		const std::vector<Widget *> getAllChildren();
+		std::vector<Widget *> getAllChildren();
 		//pega os filhos mais perto de this
-		const std::vector<Widget *> & getChildren (  );
+		std::vector<Widget *> getChildren (  );
 
 		/*
 			as funções childInput, childUpdate e childDraw devem ser chamadas nas

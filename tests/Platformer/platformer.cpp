@@ -1,260 +1,199 @@
 #include "Chora.hpp"
 
-#if defined(CHORA_WRITER_HPP)
-	#warning "writer.hpp definido"
-#endif
-
 #include <iostream>
 #include <vector>
-#include <iterator>
+#include <memory>
 
-#warning "precisa atualizar este programa"
 
-using namespace std;
-
-enum EPlayerState
+class Tux: public Entity 
 {
-	FLYING,
-	STANDING,
-	WALKING,
-	JUMPING,
-};
+	bool key_right, key_left, key_up, key_down;
+	float gravity;
+	float velStartJump;
+	Vect configAcc;
+	std::map<std::string, Input *> controls;
+	int inputType;
 
-enum EPlayerDir
-{
-	LEFT_DIR,
-	RIGHT_DIR,
-};
-
-float toAcc ( float p )
-{
-	float velocity = (FPSManager::instance()->getDelta() / 1000.f);
-	
-	if (velocity == 0)
-		velocity = 1;
-	
-	return p / velocity;
-}
-
-class Tux: public Entity {
-		bool key_right, key_left, key_up, key_down;
-		vector <Vect> point_up;
-		vector <Vect> point_down;
-		vector <Vect> point_left;
-		vector <Vect> point_right;
-		vector <int> coll_tiles;
-		float gravity;
-		float velStartJump;
-
-public:
-		Tux ( SDL_Renderer * renderer, TileMap * m )
+	public:
+		enum EPlayerState
 		{
-			SDL_Surface * aux = NULL;
-			SDL_Texture *texture = NULL;
-			map = m;
-			char buf1[] = {"tux_right.png"};
-			char buf2[] = {"tux_left.png"};
-			aux = IMG_Load(buf1);
-			if (!aux)
-			{
-				throw SDL_GetError();
-			}
-			texture = SDL_CreateTextureFromSurface(renderer,aux);
-			SDL_FreeSurface(aux);
-			aux = NULL;
-			int fd = 150;
+			FLYING,
+			STANDING,
+			WALKING,
+			JUMPING,
+		};
+	public:
+		Tux ( TileMap * m )
+		{
+			SDL_Texture *texture = Texturer::get("tuxSprites");
+			if (!texture)
+				throw Exception("Error:: textura tuxSprites não encontrada");
+			setLevel(m);
+
+			int frameDelay = 150;
 			// animações de direita
-			anim.push_back(new Animation());
-			anim[0]->addFrame(texture,(SDL_Rect){144,0,48,43}, 60);
-			anim.push_back(new Animation());
-			anim[1]->addFrame(texture, (SDL_Rect){0 ,0,48,43}, fd);
-			anim[1]->addFrame(texture, (SDL_Rect){48,0,48,43}, fd);
-			anim[1]->addFrame(texture, (SDL_Rect){96,0,48,43}, fd);
-			anim[1]->addFrame(texture, (SDL_Rect){48,0,48,43}, fd);
-			anim.push_back(new Animation());
-			anim[2]->addFrame(texture, (SDL_Rect){192,0,48,43}, fd);
-
-			aux = IMG_Load(buf2);
-			if (!aux)
 			{
-				throw SDL_GetError();
-			}
-			texture = SDL_CreateTextureFromSurface(renderer,aux);
-			SDL_FreeSurface(aux);
-			aux = NULL;
-			// animações de esquerda
-			anim.push_back(new Animation());
-			anim[3]->addFrame(texture,(SDL_Rect){144,0,48,43}, 60);
-			anim.push_back(new Animation());
-			anim[4]->addFrame(texture, (SDL_Rect){0 ,0,48,43}, fd);
-			anim[4]->addFrame(texture, (SDL_Rect){48,0,48,43}, fd);
-			anim[4]->addFrame(texture, (SDL_Rect){96,0,48,43}, fd);
-			anim[4]->addFrame(texture, (SDL_Rect){48,0,48,43}, fd);
-			anim.push_back(new Animation());
-			anim[5]->addFrame(texture, (SDL_Rect){192,0,48,43}, fd);
-			
-			
-			coll_tiles.push_back('a');
+				Animation aux;
+				aux.addFrame(texture,(SDL_Rect){144,0,48,43}, 60);
+				anim["stand"] = aux;
+				aux.clearFrames();
 
-			curr_anim = anim[0];
-			dir = RIGHT_DIR;
+				aux.addFrame(texture, (SDL_Rect){0 ,0,48,43}, frameDelay);
+				aux.addFrame(texture, (SDL_Rect){48,0,48,43}, frameDelay);
+				aux.addFrame(texture, (SDL_Rect){96,0,48,43}, frameDelay);
+				aux.addFrame(texture, (SDL_Rect){48,0,48,43}, frameDelay);
+				anim["walk"] = aux;
+				aux.clearFrames();
+
+				aux.addFrame(texture, (SDL_Rect){192,0,48,43}, frameDelay);
+				anim["jump"] = aux;
+			}
+
+			//adiciona sólidopara colisão com o mapa
+			addSolid('a');
+
+			changeAnim("stand", true);
+			setDir(Direction::RIGHT_DIR);
 			key_right = key_left = key_up = false;
 
-			// colisão a direita
-			point_right.push_back(Vect(31,6));
-			point_right.push_back(Vect(31,21));
-			point_right.push_back(Vect(31,42));
-			// colisão a esquerda
-			point_left.push_back(Vect(15,6));
-			point_right.push_back(Vect(15,21));
-			point_left.push_back(Vect(15,42));
-			// colisão abaixo
-			point_down.push_back(Vect(15,42));
-			point_down.push_back(Vect(31,42));
-			// colisão acima
-			point_up.push_back(Vect(15,6));
-			point_up.push_back(Vect(31,6));
+			// colisão
+			setCollRect((SDL_Rect){15,6,16,36}, 5);
 
-			gravity = (90);
-			acc.x = (100);
-			acc.y = (100);
-			velStartJump = (200);
+			gravity = 90;
+			velStartJump = 200;
+			maxVel.set(200,200);
+			setDamping(Vect(1.0,0));
 			setState(STANDING);
+			configAcc.set(100,100);
+
+			controls["left"] = new Key(SDLK_LEFT);
+			controls["right"] = new Key(SDLK_RIGHT);
+			controls["down"] = new Key(SDLK_DOWN);
+			controls["up"] = new Key(SDLK_UP);
+			controls["jump"] = new Key(SDLK_s);
+			
+			inputType = 0;
+			#ifdef __ANDROID__
+				inputType = 1;
+			#endif
 		}
 
 		~Tux (  )
 		{
-			anim[0]->destroyTextures();
-			anim[2]->destroyTextures();
-			for (unsigned int i = 0; i < anim.size(); i++)
-				delete anim[i];
+			for (auto & it: controls)
+				delete it.second;
 		}
 
-		void input ( SDL_Event & event )
+		void input ( SDL_Event & event ) override
 		{
-			
-			switch (event.type)
-			{
-				case SDL_KEYDOWN:
-					switch (event.key.keysym.sym)
-					{
-						case SDLK_RIGHT:
-								key_right = true;
-								break;
-						case SDLK_LEFT:
-								key_left = true;
-								break;
-						case SDLK_UP:
-								key_up = true;
-								break;
-						
-						case SDLK_DOWN:
-								key_down = true;
-								break;
-						
-						default:
-								break;
-					}
-					break;
-
-				case SDL_KEYUP:
-					switch (event.key.keysym.sym)
-					{
-						case SDLK_RIGHT:
-								key_right = false;
-								break;
-						case SDLK_LEFT:
-								key_left = false;
-								break;
-						case SDLK_UP:
-								key_up = false;
-								break;
-						case SDLK_DOWN:
-								key_down = false;
-								break;
-
-						default:
-								break;
-					}
-					break;
-			}
+			for (auto & it: controls)
+				it.second->input(event);
 		}
 
-		void input ( Widget & widget )
+		void guiInput ( Widget & widget )
 		{
 			
-			if (widget.getChild("keyLeft")->getState() == 3) // pressionado
+			if (widget.getChild("keyLeft")->getState() == GuiButton::PRESSED) // pressionado
 				key_left = true;
 			else
 				key_left = false;
 			
-			if (widget.getChild("keyRight")->getState() == 3) // pressionado
+			if (widget.getChild("keyRight")->getState() == GuiButton::PRESSED) // pressionado
 				key_right = true;
 			else
 				key_right = false;
 			
-			if (widget.getChild("keyJump")->getState() == 3) // pressionado
+			if (widget.getChild("keyJump")->getState() == GuiButton::PRESSED) // pressionado
 				key_up = true;
 			else
 				key_up = false;
 		}
 
-	bool has_coll_tile ( int t )
+	void updateControls (  )
 	{
-		for (unsigned int i = 0; i < coll_tiles.size(); i++)
-			if (coll_tiles[i] == t)
-				return true;
+		if (inputType == 1)
+			return;
 		
+		for (auto & it: controls)
+			it.second->update();
+		
+		key_left = controls["left"]->getState() == Key::HOLD;
+		key_right = controls["right"]->getState() == Key::HOLD;
+		key_down = controls["down"]->getState() == Key::HOLD;
+		key_up = controls["up"]->getState() == Key::PRESS;
+	}
+
+	bool isGround (  ) override
+	{
+		SDL_Rect rect = getCollRect();
+		return isSolid(Vect(rect.x, rect.y + rect.h + 1)) || isSolid(Vect(rect.x + rect.w, rect.y + rect.h + 1));
+	}
+
+	bool collisionHorizontal (  )
+	{
+		if (collisionX())
+		{
+			acc.x = 0;
+			velocity.x = 0;
+			return true;
+		}
 		return false;
 	}
 
-	bool ground (  )
+	bool collisionVertical (  )
 	{
-		return has_coll_tile(map->getTile(position.x + point_down[0].x, position.y + point_down[0].y + 1)) || has_coll_tile(map->getTile(position.x + point_down[1].x, position.y + point_down[1].y + 1));
+		if (collisionY())
+		{
+			acc.y = 0;
+			velocity.y = 0;
+			return true;
+		}
+		return false;
 	}
 
 	int update (  )
 	{
+		updateControls();
 		switch (getState())
 		{
 			case FLYING:
 				if (key_left)
 				{
-					velocity.x = -2;
+					acc.x = -configAcc.x;
 				}
 				else if (key_right)
 				{
-					velocity.x = 2;
+					acc.x = configAcc.x;
 				}
 				else
 				{
-					velocity.x = 0;
+					acc.x = 0;
 				}
 				
 				if (key_up)
 				{
-					velocity.y = -2;
+					acc.y = -configAcc.y;
 				}
 				else if (key_down)
 				{
-					velocity.y = 2;
+					acc.y = configAcc.y;
 				}
 				else
 				{
-					velocity.y = 0;
+					acc.y = 0;
 				}
-				position += velocity;
-				curr_anim = anim[1];
-				curr_anim->update();
+				moveX();
+				moveY();
+				
+				updateAnim();
 				break;
 				
 			case STANDING:
 				if (key_left)
 				{
 					velocity.x = -acc.x;
-					dir = LEFT_DIR;
-					curr_anim = anim[4];
-					curr_anim->reset();
+					changeDir(Direction::LEFT_DIR);
+					changeAnim("walk", true);
 					setState(WALKING);
 					break;
 				}
@@ -262,25 +201,18 @@ public:
 				if (key_right)
 				{
 					velocity.x = acc.x;
-					dir = RIGHT_DIR;
-					curr_anim = anim[1];
-					curr_anim->reset();
+					changeDir(Direction::RIGHT_DIR);
+					changeAnim("walk", true);
 					setState(WALKING);
 					break;
 				}
 				
-				if (ground() && key_up)
+				if (isGround() && key_up)
 				{
 					velocity.y = -velStartJump;
 					position.y += velocity.y * FPSManager::instance()->getDelta()/1000.f;
-					collisionVertical(*map, coll_tiles, position, point_up, velocity);
-					
-					if (dir == LEFT_DIR)
-						curr_anim = anim[5];
-					else
-						curr_anim = anim[2];
-					
-					curr_anim->reset();
+					collisionVertical();
+					changeAnim("jump", true);
 					setState(JUMPING);
 					break;
 				}
@@ -289,21 +221,16 @@ public:
 				if (velocity.y > velStartJump)
 					velocity.y = velStartJump;
 				position.y += velocity.y * FPSManager::instance()->getDelta()/1000.f;
-				collisionVertical(*map, coll_tiles, position, point_down, velocity);
+				collisionVertical();
 				
-				curr_anim->update();
+				updateAnim();
 				break;
 
 			case WALKING:
-					if (!ground())
+					if (!isGround())
 					{
 						velocity.y = 0;
-						if (dir == LEFT_DIR)
-							curr_anim = anim[5]; // para esquerda
-						else
-							curr_anim = anim[2]; // para direita;
-						
-						curr_anim->reset();
+						changeAnim("jump", true);
 						setState(JUMPING);
 						break;
 					}
@@ -312,25 +239,19 @@ public:
 						if (key_right)
 						{
 							velocity.x = acc.x;
-							dir = RIGHT_DIR;
-							curr_anim = anim[1];
+							changeDir(Direction::RIGHT_DIR);
 						}
 						else if (key_left)
 						{
 							velocity.x = -acc.x;
-							dir = LEFT_DIR;
-							curr_anim = anim[4];
+							changeDir(Direction::LEFT_DIR);
 						}
 						else
 						{
 							velocity.y = 0;
 							velocity.x = 0;
-							if (dir == LEFT_DIR)
-								curr_anim = anim[5];
-							else
-								curr_anim = anim[2];
-							curr_anim->reset();
-							setState(JUMPING);
+							changeAnim("stand",true);
+							setState(STANDING);
 							break;
 						}
 
@@ -338,75 +259,52 @@ public:
 						{
 							velocity.y = -velStartJump;
 							position.y += velocity.y * FPSManager::instance()->getDelta()/1000.f;
-							collisionVertical(*map, coll_tiles, position, point_up, velocity);
-				
-							if (dir == LEFT_DIR)
-								curr_anim = anim[5];
-							else
-								curr_anim = anim[2];
-				
-							curr_anim->reset();
+							collisionVertical();
+							changeAnim("jump", true);
 							setState(JUMPING);
 							break;
 						}
 					}
 					
-					position.x += velocity.x * FPSManager::instance()->getDelta()/1000.f;
+					moveX();
+					collisionHorizontal();
 					
-					//tile_collision(*map, coll_tiles, position, point_right, velocity, MOVE_TO_LEFT);
-					//tile_collision(*map, coll_tiles, position, point_left, velocity, MOVE_TO_RIGHT);
-					
-					//collisionHorizontal(*map, coll_tiles, position, point_left, velocity);
-					//collisionHorizontal(*map, coll_tiles, position, point_right, velocity);
-					curr_anim->update();
+					updateAnim();
 					break;
 
 			case JUMPING:
 					if (key_right)
 					{
-						velocity.x = acc.x;
-						dir = RIGHT_DIR;
-						curr_anim = anim[2];
+						acc.x = configAcc.x;
+						changeDir(Direction::RIGHT_DIR);
 					}
 					else if (key_left)
 					{
-						velocity.x = -acc.x;
-						dir = LEFT_DIR;
-						curr_anim = anim[5];
+						acc.x = -configAcc.x;
+						changeDir(Direction::LEFT_DIR);
 					}
 					else
 					{
-						velocity.x = 0;
+						acc.x = 0;
 					}
 					
-					if (ground())
+					if (isGround())
 					{
-						collisionVertical(*map, coll_tiles, position, point_down, velocity);
+						collisionVertical();
 						velocity.y = 0;
 						velocity.x = 0;
-						if (dir == LEFT_DIR)
-							curr_anim = anim[3];
-						else
-							curr_anim = anim[0];
-						
-						curr_anim->reset();
+						changeAnim("stand", true);
 						setState(STANDING);
 						break;
 					}
 					
-					position.x += velocity.x * FPSManager::instance()->getDelta()/1000.f;
-					collisionHorizontal(*map, coll_tiles, position, point_right, velocity);
-					collisionHorizontal(*map, coll_tiles, position, point_left, velocity);
+					moveX();
+					collisionHorizontal();
 					
-					velocity.y += gravity;
-					if (velocity.y > velStartJump)
-						velocity.y = velStartJump;
-					position.y += velocity.y * FPSManager::instance()->getDelta()/1000.f;
+					moveY(gravity);
+					collisionVertical();
 					
-					collisionVertical(*map, coll_tiles, position, point_up, velocity);
-					collisionVertical(*map, coll_tiles, position, point_down, velocity);
-					
-					curr_anim->update();
+					updateAnim();
 					break;
 		
 			default:
@@ -416,24 +314,21 @@ public:
 		
 		return getState();
 	}
-
-	void draw(SDL_Renderer *renderer, Camera *cam)
-	{
-		if (curr_anim)
-			curr_anim->draw(renderer, cam, position.x, position.y);
-	}
 };
 
 
 int main (  )
 {
 		SDL_Init(SDL_INIT_VIDEO);
-		
+		IMG_Init((unsigned int)-1);
+
 		if (TTF_Init() < 0)
 		{
 			printf("Erro %s\n", SDL_GetError());
 			return 1;
 		}
+
+		
 		
 		SDL_Window *window = SDL_CreateWindow("Platformer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,20*32,15*32,SDL_WINDOW_SHOWN);
 		SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -445,7 +340,9 @@ int main (  )
 		//char buf3[] = {"back.jpg"};
 		map.read("map.txt");
 		
-		Tux player(renderer, &map);
+		Texturer::add(IMG_LoadTexture(renderer, "tux.png"), "tuxSprites");
+
+		Tux player(&map);
 
 		map.texture = IMG_LoadTexture(renderer,"tiles.png");
 		map.removeTile('.');
@@ -454,8 +351,9 @@ int main (  )
 		Background background;
 		
 		background.setTexture(IMG_LoadTexture(renderer, "back.jpg"));
-		Camera cam((SDL_Rect){100,100,15*32,10*32}, map.getDimension());
-		
+		Camera cam((SDL_Rect){0,0,20*32,15*32}, map.getDimension());
+		SDL_RenderSetLogicalSize(renderer, 20*32,15*32);
+
 		Texturer::instance()->add(renderer, "background.png");
 		Widget widget;
 		GuiButton * button;
@@ -481,9 +379,6 @@ int main (  )
 			printf("Error %s\n", e);
 		}
 
-		
-		
-
 		int done = 0;
 		player.setPosition(Vect(0, cam.getDimension().h/2));
 
@@ -499,32 +394,45 @@ int main (  )
 				
 				widget.input(event);
 				player.input(event);
+				player.guiInput(widget);
 			}
 		
-		//player.input(widget);
+		#ifdef __ANDROID__
+		player.guiInput(widget);
+		#endif
 		
-		player.update();
+		
 		widget.update();
+		player.update();
 		cam.lookat(player.getPosition());
 		
 		FPSManager::instance()->update();
 		if (FPSManager::instance()->getDelta() > 0)
 		{
-			SDL_SetRenderDrawColor(renderer, 0,0,0,255);
-			SDL_RenderClear(renderer);
+			//SDL_SetRenderDrawColor(renderer, 0,0,0,255);
+			//SDL_RenderClear(renderer);
 			background.draw(renderer, &cam);
 			map.draw(renderer,&cam);
 			player.draw(renderer, &cam);
+			#ifdef __ANDROID__
 			widget.draw(renderer);
+			#endif
 			SDL_RenderPresent(renderer);
 		}
 		//SDL_Delay(60);
 	}
-	
+
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	Texturer::instance()->destroy();
 	
+	std::vector<Widget *> childs = widget.getChildren();
+	for (Widget * child: childs)
+		delete child;
+	widget.clearChildren();
+
+	IMG_Quit();
+	TTF_Quit();
 	SDL_Quit();
 	
 	return 0;

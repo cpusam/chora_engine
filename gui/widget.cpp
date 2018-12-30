@@ -125,6 +125,9 @@ void Widget::showChild ( bool s )
 
 bool Widget::addChild ( Widget * w )
 {
+	if (!w)
+		return false;
+	
 	if (!hasChild(w))
 	{
 		w->setParent(this);
@@ -172,7 +175,7 @@ Widget * Widget::getChild ( int index )
 	return 0;
 }
 
-const std::vector<Widget *> Widget::getAllChildren()
+std::vector<Widget *> Widget::getAllChildren()
 {
 	std::vector<Widget *> all = this->child;
 	
@@ -187,7 +190,7 @@ const std::vector<Widget *> Widget::getAllChildren()
 	return all;
 }
 
-const std::vector<Widget *> & Widget::getChildren (  )
+std::vector<Widget *> Widget::getChildren (  )
 {
 	return child;
 }

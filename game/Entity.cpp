@@ -69,10 +69,6 @@ std::string Entity::getGroup (  )
 	return group;
 }
 
-EntityID Entity::getId (  )
-{
-	return id;
-}
 
 void Entity::show ( bool s )
 {
@@ -112,6 +108,66 @@ void Entity::setMinVel ( Vect minVel )
 void Entity::setMaxVel ( Vect maxVel )
 {
 	this->maxVel = maxVel;
+}
+
+Vect Entity::getVelocity (  )
+{
+	return velocity;
+}
+
+float Entity::getVelocityX (  )
+{
+	return velocity.x;
+}
+
+float Entity::getVelocityY (  )
+{
+	return velocity.y;
+}
+
+void Entity::setVelocity ( Vect v )
+{
+	velocity = v;
+}
+
+void Entity::setVelocityX ( float vx )
+{
+	velocity.x = vx;
+}
+
+void Entity::setVelocityY ( float vy )
+{
+	velocity.y = vy;
+}
+
+Vect Entity::getAccel (  )
+{
+	return acc;
+}
+
+float Entity::getAccelX (  )
+{
+	return acc.x;
+}
+
+float Entity::getAccelY (  )
+{
+	return acc.y;
+}
+
+void Entity::setAccel ( Vect a )
+{
+	acc = a;
+}
+
+void Entity::setAccelX ( float ax )
+{
+	acc.x = ax;
+}
+
+void Entity::setAccelY ( float ay )
+{
+	acc.y = ay;
 }
 
 Vect Entity::getDamping (  )
@@ -740,10 +796,10 @@ bool Entity::slopeUpCollision (  )
 	return false;
 }
 
-bool Entity::collisionVertical (  )
+bool Entity::collisionY (  )
 {
 	if (level == nullptr)
-		throw Exception("Entity::"+name+" collisionVertical level map é nulo");
+		throw Exception("Entity::"+name+" collisionY level map é nulo");
 	if (velocity.y == 0)
 		return false;
 	
@@ -820,10 +876,10 @@ bool Entity::collisionVertical (  )
 	return ret;
 }
 
-bool Entity::collisionHorizontal (  )
+bool Entity::collisionX (  )
 {
 	if (level == nullptr)
-		throw Exception("Entity::"+name+" collisionHorizontal level map é nulo");
+		throw Exception("Entity::"+name+" collisionX level map é nulo");
 	if (velocity.x == 0)
 		return false;
 	bool ret = false;

@@ -28,6 +28,8 @@
 #include "label.hpp"
 #include "../include/collision.hpp"
 
+#include <memory>
+
 /*
 	Botão simples de 4 estados, normal, selecionado, pressionado e solto depois de press
 */
@@ -45,7 +47,7 @@ class GuiButton: public Widget
 		bool run_release;
 	protected:
 		void (* callback) ( Widget * b );
-		GuiLabel * label;
+		std::shared_ptr<GuiLabel> label;
 		SDL_Texture * texture;
 		SDL_Rect src[3];
 
@@ -73,7 +75,7 @@ class GuiButton: public Widget
 
 		virtual void setDimension ( SDL_Rect d );
 
-		virtual void set_label ( GuiLabel * l );
+		virtual void setLabel ( GuiLabel * l );
 
 		virtual void input ( SDL_Event & event );
 

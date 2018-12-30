@@ -67,8 +67,8 @@ void Elements::addEntity ( Entity * e )
 	if (hasEntity(e))
 		return;
 	
-	std::cout<<"Elements::Adicionando "<<e->getId()<<" name = "<<e->getName()<<std::endl;
-	entitiesID.push_back(e->getId());
+	std::cout<<"Elements::Adicionando "<<e->getID()<<" name = "<<e->getName()<<std::endl;
+	entitiesID.push_back(e->getID());
 	entities.push_back(e);
 	layers[e->getLayer()].push_back(e);
 }
@@ -76,7 +76,7 @@ void Elements::addEntity ( Entity * e )
 Entity * Elements::getEntity ( EntityID id )
 {
 	for (auto * entity: entities)
-		if (entity->getId() == id)
+		if (entity->getID() == id)
 			return entity;
 
 	return nullptr;
@@ -111,7 +111,7 @@ Entity * Elements::remEntity ( EntityID id )
 	Entity * ret = getEntity(id);
 	std::vector<Entity *>::iterator itEntity = std::find(entities.begin(), entities.end(), ret);
 	
-	std::cout<<"Elements::Removendo "<<ret->getId()<<" name = "<<ret->getName()<<std::endl;
+	std::cout<<"Elements::Removendo "<<ret->getID()<<" name = "<<ret->getName()<<std::endl;
 	entities.erase(itEntity);
 	entitiesID.erase(itID);
 	
@@ -195,7 +195,7 @@ void Elements::destroy (  )
 		for (Entity *it: entities)
 			if (it)
 			{
-				instance()->remEntity(it->getId());
+				instance()->remEntity(it->getID());
 				delete it;
 			}
 		instance()->clearAll();
@@ -209,6 +209,7 @@ void Elements::clearAll (  )
 {
 	entities.clear();
 	entitiesID.clear();
+	layers.clear();
 }
 
 const std::map<int, std::vector<Entity *> > & Elements::getEntitiesLayers (  )
@@ -297,7 +298,7 @@ void Elements::print (  )
 	for (size_t i = 0; i < instance()->getEntities().size(); i++)
 		if (entities[i])
 		{
-			std::cout<<"id = "<<entities[i]->getId()<<"|"
+			std::cout<<"id = "<<entities[i]->getID()<<"|"
 			         <<entities[i]->getName()<<"|ptr="
 							 <<entities[i]<<std::endl;
 		}

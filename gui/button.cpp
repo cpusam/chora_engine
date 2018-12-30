@@ -2,7 +2,6 @@
 
 GuiButton::GuiButton ( SDL_Rect d )
 {
-	label = nullptr;
 	callback = nullptr;
 	this->texture = nullptr;
 	color1 = (SDL_Color){0xFF, 0xFF, 0x00, 0xFF};
@@ -18,7 +17,6 @@ GuiButton::GuiButton ( SDL_Rect d )
 
 GuiButton::GuiButton ( SDL_Rect d, std::string str, std::string fontName, SDL_Rect * src, SDL_Texture * texture )
 {
-	label = nullptr;
 	callback = nullptr;
 	color1 = (SDL_Color){0xFF, 0xFF, 0x00, 0xFF};
 	color2 = (SDL_Color){0x00, 0xFF, 0xFF, 0xFF};
@@ -26,7 +24,7 @@ GuiButton::GuiButton ( SDL_Rect d, std::string str, std::string fontName, SDL_Re
 	position.x = d.x, position.y = d.y;
 	// dimensão padrão
 	dim = d;
-	set_label(new GuiLabel(str, (SDL_Color){0,0,0,255}, fontName)); // por padrão na cor preta
+	setLabel(new GuiLabel(str, (SDL_Color){0,0,0,255}, fontName)); // por padrão na cor preta
 	setState(State::NORMAL);
 	this->texture = nullptr;
 	setTexture(texture);
@@ -36,7 +34,10 @@ GuiButton::GuiButton ( SDL_Rect d, std::string str, std::string fontName, SDL_Re
 
 GuiButton::~GuiButton (  )
 {
-	//widget::destroy trata de dar conta de label, que foi adicionada com addChild
+	if (label.get())
+		removeChild(label.get());
+	if (texture)
+		SDL_DestroyTexture(texture);
 }
 
 void GuiButton::press (  )
@@ -93,7 +94,7 @@ SDL_Texture * GuiButton::getTexture (  )
 
 GuiLabel * GuiButton::get_label (  )
 {
-	return label;
+	return label.get();
 }
 
 void GuiButton::set_callback ( void (* c) ( Widget * b ) )
@@ -107,46 +108,46 @@ void GuiButton::setDimension ( SDL_Rect d )
 	position.x = d.x;
 	position.y = d.y;
 
-	if (!label)
+	if (!label.get())
 		return;
 
 	Vect p;
 	SDL_Rect dst;
-	dst = label->getDimension();
+	dst = label.get()->getDimension();
 	// posição do label relativo ao botão
 	p.x = (dst.w - d.w)/2.0f;
 	p.y = (dst.h - d.h)/2.0f;
-	label->setRelativePosition(p);
+	label.get()->setRelativePosition(p);
 }
 
-void GuiButton::set_label ( GuiLabel * l )
+void GuiButton::setLabel ( GuiLabel * l )
 {
 	if (!l)
 		return;
 
-	if (label && label != l)
+	if (label.get() && label.get() != l)
 	{
-		removeChild(label);
-		delete label;
-		label = nullptr;
-		throw 1;
+		removeChild(label.get());
 	}
-
-
-	label = l;
-	addChild(label);
+	
+	//tem que ser fora de um subbloco de if
+	label = std::make_shared<GuiLabel>(*l);
+	
+	if (label.get() == nullptr)
+		throw Exception("Button::erro ao alocar novo label");
+	addChild(label.get());
 
 	Vect p;
 	SDL_Rect d;
 	int w, h;
-	d = label->getDimension();
+	d = label.get()->getDimension();
 	w = d.w, d.w += 10;
 	h = d.h, d.h += 5;
 	dim.w = d.w, dim.h = d.h; // tamanho do botão
 	// posição do label relativo ao botão
 	p.x = (d.w - w)/2.0f;
 	p.y = (d.h - h)/2.0f;
-	label->setRelativePosition(p);
+	label.get()->setRelativePosition(p);
 }
 
 void GuiButton::input ( SDL_Event & event )

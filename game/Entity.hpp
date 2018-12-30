@@ -55,7 +55,6 @@ enum RelativePosition
 
 class Entity: public Node
 {
-
 	public:
 		Entity();
 		virtual ~Entity();
@@ -70,7 +69,6 @@ class Entity: public Node
 		//deprecated
 		std::string getGroup (  );
 
-		EntityID getId (  );
 		virtual void show ( bool s );
 		bool isVisible (  );
 		void setDir ( Direction d );
@@ -79,6 +77,21 @@ class Entity: public Node
 		Vect getMaxVel (  );
 		void setMinVel ( Vect minVel );
 		void setMaxVel ( Vect maxVel );
+
+		Vect getVelocity (  );
+		float getVelocityX (  );
+		float getVelocityY (  );
+		void setVelocity ( Vect v );
+		void setVelocityX ( float vx );
+		void setVelocityY ( float vy );
+
+		Vect getAccel (  );
+		float getAccelX (  );
+		float getAccelY (  );
+		void setAccel ( Vect a );
+		void setAccelX ( float ax );
+		void setAccelY ( float ay );
+
 		Vect getDamping (  );
 		void setDamping ( Vect d );
 
@@ -92,8 +105,8 @@ class Entity: public Node
 		virtual void changeAnim ( std::string animName, bool reset=false );
 		//atualiza a animação
 		virtual void updateAnim (  );
-		virtual void setPosition ( Vect p );
-		virtual Vect getPosition (  );
+		void setPosition ( Vect p ) override;
+		Vect getPosition (  ) override;
 		void setTopLadderTile ( int t );
 		int getTopLadderTile (  );
 		virtual void changeDir ( Direction d );
@@ -141,8 +154,8 @@ class Entity: public Node
 		virtual bool moveToPosition (Vect position, float maxVel );
 		virtual void setCountPath ( int count );
 		virtual bool moveInPath ( Vect startPos, std::vector<Vect> & path, float maxVel, bool back );
-		virtual bool collisionVertical (  );
-		virtual bool collisionHorizontal (  );
+		virtual bool collisionY (  );
+		virtual bool collisionX (  );
 		
 		void setCollPos ( Vect p );
 		Vect getCollPos (  );//retorna posição do collRect somada à posição do this
@@ -178,11 +191,13 @@ class Entity: public Node
 	protected:
 		//definido apenas uma vez, depois volta para false
 		bool ground;//se é chão definido por setGround
+		int layer;//camada de desenho, quanto meno primeiro desenha
 		Vect damping;//desaceleração (de 0 ao 1)
 		Vect maxVel, minVel;
-		int layer;//camada de desenho, quanto meno primeiro desenha
 		TileMap * level;//mapa de tiles sólidos e vázios, é o mapa de colisão
 		Direction dir;
+		Vect velocity;
+		Vect acc;
 
 		int collPoints;//numero de pontos de colisão
 		int ladderTile;//tile da escada que não é o final
@@ -196,6 +211,7 @@ class Entity: public Node
 		std::string name;
 		std::string group; //grupo desta entidade
 
+		
 		//tile one way sólido em cima
 		std::vector<int> upSolid;
 		std::vector<int> upSolidSlope;

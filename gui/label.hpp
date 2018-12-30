@@ -51,7 +51,7 @@ class GuiLabel: public Widget
 
 	public:
 		GuiLabel ( std::string s, SDL_Color c, const std::string fontName="=>default" );
-		~GuiLabel (  );
+		virtual ~GuiLabel (  );
 
 	protected:
 		void str_to_surface ( std::string s, std::string fontName="=>default" );

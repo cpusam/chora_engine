@@ -66,7 +66,7 @@ IF (WIN32 OR COMPILE_TO_WINDOWS)
 ENDIF(WIN32 OR COMPILE_TO_WINDOWS)
 
 IF (UNIX AND NOT COMPILE_TO_WINDOWS)
-	target_link_libraries(chora SDL2 SDL2_ttf SDL2_image SDL2_mixer m)
+	target_link_libraries(chora STATIC SDL2 SDL2_ttf SDL2_image SDL2_mixer m)
 ENDIF(UNIX AND NOT COMPILE_TO_WINDOWS)
 
 

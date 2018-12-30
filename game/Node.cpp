@@ -1,15 +1,17 @@
 #include "Node.hpp"
-#include "Elements.hpp"
+//#include "Elements.hpp"
 
 NodeID Node::countID = 0;
 
-Node::Node (  )
+Node::Node ( std::string name, int initState, NodeGroups groups, NodeType type )
 {
 	countID++;
 	id = countID;
-	groups = 0;
+	setState(initState);
+	this->groups = groups;
 	layer = 0;
-	name = "Node";
+	this->name = name;
+	this->type = type;
 	nextA = nullptr;
 	nextB = nullptr;
 	parent = nullptr;
@@ -17,13 +19,25 @@ Node::Node (  )
 
 Node::~Node (  )
 {
-	Elements::remove(Node::getID());
+	#ifdef ELEMENTS_HPP
+		Elements::remove(Node::getID());
+	#endif
 }
 
- bool receive ( Node * sender, std::string mesg )
- {
-	 return false;
- }
+bool Node::receive ( Node * sender, std::string mesg )
+{
+	return false;
+}
+
+Node * Node::clone (  )
+{
+	//retorna um novo Node
+	Node * newNode = new Node(name, groups, type);
+	#ifdef ELEMENTS_HPP
+		Elements::add(newNode);
+	#endif
+	return newNode;
+}
 
 void Node::addGroups ( NodeGroups g )
 {
@@ -32,7 +46,54 @@ void Node::addGroups ( NodeGroups g )
 
 void Node::draw ( SDL_Renderer * renderer, Camera * camera )
 {
+	
+}
 
+//tem de colocar essas funções quando forem usadas engines diferentes
+Vect Node::getPosition (  )
+{
+	return position;
+}
+
+float Node::getPositionX (  )
+{
+	return position.x;
+}
+
+float Node::getPositionY (  )
+{
+	return position.y;
+}
+
+void Node::setPosition ( Vect p )
+{
+	position.set(p.x,p.y);
+}
+
+void Node::setPositionX ( float px )
+{
+	position.x = px;
+}
+
+void Node::setPositionY ( float py )
+{
+	position.y = py;
+}
+
+//escala
+Vect Node::getScale (  )
+{
+	return scale;
+}
+
+float Node::getScaleX (  )
+{
+	return scale.x;
+}
+
+float Node::getScaleY (  )
+{
+	return scale.y;
 }
 
 bool Node::isVisible (  )
@@ -76,6 +137,11 @@ Node * Node::getParent (  )
 	return parent;
 }
 
+NodeType Node::getType (  )
+{
+	return type;
+}
+
 void Node::setGroup ( bool g, int pos )
 {
 	groups = groups | (g << pos);
@@ -114,5 +180,10 @@ void Node::setNextB ( Node * n )
 void Node::setParent ( Node * p )
 {
 	parent = p;
+}
+
+void Node::setType ( NodeType type )
+{
+	this->type = type;
 }
 
