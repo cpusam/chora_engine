@@ -103,23 +103,47 @@ std::vector<Entity *> Elements::getAllEntityByGroup ( const std::string & group 
 
 
 Entity * Elements::remEntity ( EntityID id )
-{
-	std::vector<EntityID>::iterator itID = std::find(entitiesID.begin(), entitiesID.end(), id);
-	if (itID == entitiesID.end())
+{	
+	Entity * ret = getEntity(id);
+	if (!ret)
 		return nullptr;
 	
-	Entity * ret = getEntity(id);
-	std::vector<Entity *>::iterator itEntity = std::find(entities.begin(), entities.end(), ret);
-	
-	std::cout<<"Elements::Removendo "<<ret->getID()<<" name = "<<ret->getName()<<std::endl;
-	entities.erase(itEntity);
-	entitiesID.erase(itID);
-	
-	itEntity = std::find(layers[ret->getLayer()].begin(), layers[ret->getLayer()].end(), ret);
-	if (itEntity != layers[ret->getLayer()].end())
-		layers[ret->getLayer()].erase(itEntity);
+	eraseEntity.push_back(ret);
 
 	return ret;
+}
+
+void Elements::updateErase ()
+{
+	for (std::vector<Entity *>::iterator it = eraseEntity.begin(), end = eraseEntity.end(); it != end; ++it)
+	{
+		Entity * ret = *it;
+		if (!ret)
+			continue;
+		
+		std::vector<Entity *>::iterator itEntity = std::find(entities.begin(), entities.end(), ret);
+
+		if (itEntity != entities.end())
+		{
+			std::cout<<"Elements::Removendo "<<ret->getID()<<" name = "<<ret->getName()<<std::endl;
+			entities.erase(itEntity);
+			std::vector<EntityID>::iterator itID = std::find(entitiesID.begin(), entitiesID.end(), ret->getID());
+			if (itID != entitiesID.end())
+				entitiesID.erase(itID);
+		}
+		else
+			continue;
+		
+		std::vector<Entity *> & layerEntities = layers[ret->getLayer()];
+		itEntity = std::find(layerEntities.begin(), layerEntities.end(), ret);
+		if (itEntity != layerEntities.end())
+		{
+			layerEntities.erase(itEntity);
+		}
+	}
+
+	if (eraseEntity.size())
+		eraseEntity.clear();
 }
 
 void Elements::add ( Entity * e )
@@ -266,27 +290,36 @@ void Elements::inputEntities ( SDL_Event & event )
 void Elements::drawEntities ( SDL_Renderer * renderer, Camera * camera )
 {
 	std::map<int, std::vector<Entity*> > layers = instance()->getEntitiesLayers();
-	
-	for (auto & it: layers)
-		for (auto * entity: it.second)
-			if (entity && renderer && camera && entity->isVisible())
-				entity->draw(renderer, camera);
+	if (renderer && camera)
+		for (auto & it: layers)
+			for (auto * entity: it.second)
+				if (entity)
+				{
+					if (entity->isVisible())
+						entity->draw(renderer, camera);
+				}
 }
 
+//#define DEBUG_ELEMENTS
 void Elements::updateEntities (  )
 {
-	if (entities.size())
-		for (size_t i = 0, size = entities.size(); i < size; i++)
-			if (entities[i])
-			{
-				#ifdef DEBUG_ELEMENTS
-				printf("Atualizando %s\n", entities[i]->getName().c_str());
-				#endif
-				entities[i]->update();
-				#ifdef DEBUG_ELEMENTS
-				printf("Atualizado %s\n\n", entities[i]->getName().c_str());
-				#endif
-			}
+	for (size_t i = 0, size = entities.size(); i < size; i++)
+		if (entities[i])
+		{
+			if (std::find(eraseEntity.begin(), eraseEntity.end(), entities[i]) != eraseEntity.end())
+				continue;
+			#ifdef DEBUG_ELEMENTS
+			//std::cout<<"[PTR] "<<(*entities[i])<<std::endl;
+			std::cout<<"Atualizando "<<entities[i]->getName()<<" id="<<entities[i]->getID()<<std::endl;
+			#endif
+			entities[i]->update();
+			#ifdef DEBUG_ELEMENTS
+			printf("Atualizado %s\n\n", entities[i]->getName().c_str());
+			#endif
+		}
+	
+	//remove de forma segura as entidades excluidas
+	updateErase();
 }
 
 void Elements::print (  )

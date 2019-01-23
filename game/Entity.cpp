@@ -12,15 +12,14 @@ Entity::Entity()
 	layer = 0;
 	id = countID;
 	countID++;
-	std::cout<<"ID="<<id<<std::endl;
+	std::cout<<"New Entity ID="<<id<<std::endl;
 	dir = NONE_DIR;
 	visible = true;
 
 	ground = false;
+	noground = false;
 	level = nullptr;
 	collPoints = 3;
-	topLadderTile = -1;
-	topTileSize = 10;//mesmo valor que maxVel;
 	texture = nullptr;
 	currAnim = nullptr;
 	name = "";
@@ -28,7 +27,7 @@ Entity::Entity()
 	
 	//coloca a velocidade máxima... ao máximo
 	maxVel.set(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
-	//máximo de desaceleração, pará bruscamente quando não movendo
+	//minimo de desaceleração
 	damping.set(0.0,0.0);
 	//
 	setCollRect((SDL_Rect){0,0,3,3}, collPoints);
@@ -39,26 +38,6 @@ Entity::~Entity()
 
 }
 
-int Entity::getLayer (  )
-{
-	return layer;
-}
-
-void Entity::setLayer ( int layer )
-{
-	this->layer = layer;
-}
-
-void Entity::setName ( std::string n )
-{
-	name = n;
-}
-
-std::string Entity::getName (  )
-{
-	return name;
-}
-
 void Entity::setGroup ( std::string g )
 {
 	group = g;
@@ -67,17 +46,6 @@ void Entity::setGroup ( std::string g )
 std::string Entity::getGroup (  )
 {
 	return group;
-}
-
-
-void Entity::show ( bool s )
-{
-	visible = s;
-}
-
-bool Entity::isVisible (  )
-{
-	return visible;
 }
 
 void Entity::setDir ( Direction d )
@@ -242,16 +210,6 @@ Vect Entity::getPosition (  )
 void Entity::setPosition ( Vect p )
 {
 	position = p;
-}
-
-void Entity::setTopLadderTile ( int t )
-{
-	topLadderTile = t;
-}
-
-int Entity::getTopLadderTile (  )
-{
-	return topLadderTile;
 }
 
 void Entity::changeDir ( Direction d )
@@ -594,6 +552,13 @@ bool Entity::isSolidSlopeUp ( Vect p, Vect * result )
 
 bool Entity::isGround (  )
 {
+	//retorna sempre false sem desativar
+	if (noground)
+	{
+		return false;
+	}
+
+	//ativa o chão somente uma vez
 	if (ground)
 	{
 		ground = false;
@@ -637,7 +602,7 @@ bool Entity::isGround (  )
 		if (isSolid(p))
 			return true;
 	}
-
+/*
 	// meio da lateral de baixo do retangulo de colisão (collRect)
 	int x1 = position.x + collRect.x;
 	int y1 = position.y + collRect.y + collRect.h;
@@ -655,13 +620,18 @@ bool Entity::isGround (  )
 			if (velocity.y == 0)
 				return true;
 	}
-
+*/
 	return false;
 }
 
 void Entity::setGround ( bool g )
 {	
 	ground = g;
+}
+
+void Entity::activeGround ( bool g )
+{
+	noground = g;
 }
 
 bool Entity::moveToPosition ( Vect position, float maxVelNow )
@@ -687,7 +657,7 @@ bool Entity::moveToPosition ( Vect position, float maxVelNow )
 		changeY = int(this->position.y) < int(position.y);
 	else if (velocity.y > 0)
 		changeY = int(this->position.y) > int(position.y);
-	
+
 	return changeX && changeY;
 }
 
@@ -1106,11 +1076,21 @@ void Entity::applyImpulse ( Vect impulse )
 	velocity = Vect::add(velocity, impulse);
 }
 
+void Entity::applyImpulseX ( float ix )
+{
+	velocity.x += ix;
+}
+
+void Entity::applyImpulseY ( float iy )
+{
+	velocity.y += iy;
+}
+
 void Entity::moveX ( float add )
 {
 	bool damped = false;
 	//aplica aceleração
-	add = double(acc.x + add) * 1.0/double(FPSManager::instance()->getFPSDef().rate);
+	add = double(acc.x + add) * double(FPSManager::instance()->getDeltaSeconds());
 	velocity.x += add;
 	
 	//se não está aplicando desaceleração e a aceleração for zero...
@@ -1141,7 +1121,7 @@ void Entity::moveY ( float add )
 {
 	bool damped = false;
 	//aplica aceleração
-	add = double(acc.y + add) * 1.0/double(FPSManager::instance()->getFPSDef().rate);
+	add = double(acc.y + add) * double(FPSManager::instance()->getDeltaSeconds());
 	velocity.y += add;
 
 	//se não está aplicando desaceleração e a aceleração for zero...

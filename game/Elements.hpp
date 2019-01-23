@@ -86,6 +86,8 @@ class Elements
 		Entity * getEntityByName ( const std::string & name );
 		std::vector<Entity *> getAllEntityByGroup ( const std::string & group );
 		Entity * remEntity ( EntityID id );
+		//remove de forma segura as entidades excluidas
+		void updateErase (  );
 		void clearAll (  );
 		const std::map<int, std::vector<Entity *> > & getEntitiesLayers (  );
 
@@ -94,7 +96,7 @@ class Elements
 		SDL_Renderer * currRenderer;
 		Camera * currCamera;
 		std::vector<EntityID> entitiesID;
-		std::vector<Entity *> entities;
+		std::vector<Entity *> entities, eraseEntity;
 		static Elements * singleton;
 };
 

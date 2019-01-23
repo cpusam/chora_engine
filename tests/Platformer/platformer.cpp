@@ -61,7 +61,7 @@ class Tux: public Entity
 
 			gravity = 90;
 			velStartJump = 200;
-			maxVel.set(200,200);
+			maxVel.set(15,20);
 			setDamping(Vect(1.0,0));
 			setState(STANDING);
 			configAcc.set(100,100);
@@ -137,6 +137,23 @@ class Tux: public Entity
 			velocity.x = 0;
 			return true;
 		}
+
+		SDL_Rect dim = level->getDimension();
+		if (position.x + collRect.x < dim.x)
+		{
+			position.x = dim.x - collRect.x;
+			velocity.x = 0;
+			acc.x = 0;
+			return true;
+		}
+		else if (position.x + collRect.x + collRect.w > dim.x + dim.w)
+		{
+			position.x = dim.x + dim.w - (collRect.x + collRect.w);
+			velocity.x = 0;
+			acc.x = 0;
+			return true;
+		}
+
 		return false;
 	}
 
@@ -191,7 +208,7 @@ class Tux: public Entity
 			case STANDING:
 				if (key_left)
 				{
-					velocity.x = -acc.x;
+					acc.x = -configAcc.x;
 					changeDir(Direction::LEFT_DIR);
 					changeAnim("walk", true);
 					setState(WALKING);
@@ -200,7 +217,7 @@ class Tux: public Entity
 				
 				if (key_right)
 				{
-					velocity.x = acc.x;
+					acc.x = configAcc.x;
 					changeDir(Direction::RIGHT_DIR);
 					changeAnim("walk", true);
 					setState(WALKING);
@@ -238,18 +255,18 @@ class Tux: public Entity
 					{
 						if (key_right)
 						{
-							velocity.x = acc.x;
+							acc.x = configAcc.x;
 							changeDir(Direction::RIGHT_DIR);
 						}
 						else if (key_left)
 						{
-							velocity.x = -acc.x;
+							acc.x = -configAcc.x;
 							changeDir(Direction::LEFT_DIR);
 						}
 						else
 						{
-							velocity.y = 0;
 							velocity.x = 0;
+							acc.x = 0;
 							changeAnim("stand",true);
 							setState(STANDING);
 							break;

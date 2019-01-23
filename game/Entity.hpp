@@ -58,19 +58,12 @@ class Entity: public Node
 	public:
 		Entity();
 		virtual ~Entity();
-
-		int getLayer (  );
-		void setLayer ( int layer );
-		void setName ( std::string n );
-		std::string getName (  );
 		
 		//deprecated
 		void setGroup ( std::string g );
 		//deprecated
 		std::string getGroup (  );
 
-		virtual void show ( bool s );
-		bool isVisible (  );
 		void setDir ( Direction d );
 		Direction getDir (  );
 		Vect getMinVel (  );
@@ -107,8 +100,6 @@ class Entity: public Node
 		virtual void updateAnim (  );
 		void setPosition ( Vect p ) override;
 		Vect getPosition (  ) override;
-		void setTopLadderTile ( int t );
-		int getTopLadderTile (  );
 		virtual void changeDir ( Direction d );
 		
 		// método que recebe mensagens de outros elementos
@@ -143,13 +134,11 @@ class Entity: public Node
 		bool isSolid ( Vect p );
 		bool isSolidOneWayUp ( Vect p );
 		bool isSolidSlopeUp ( Vect p, Vect * result=nullptr );
-		bool isLadder (  );
-		bool isTopLadder (  );
-		void catchLadder (  );
 		bool oneWayUpCollision (  );
 		bool slopeUpCollision (  );
 		virtual bool isGround (  );
 		virtual void setGround ( bool g );
+		virtual void activeGround ( bool g );
 
 		virtual bool moveToPosition (Vect position, float maxVel );
 		virtual void setCountPath ( int count );
@@ -176,6 +165,8 @@ class Entity: public Node
 
 		//aplica impulso
 		virtual void applyImpulse ( Vect impulse );
+		virtual void applyImpulseX ( float ix );
+		virtual void applyImpulseY ( float iy );
 		//move com velocidade limitada por maxVel
 		// add = adiciona à velocidade antes junto com a aceleração
 		virtual void moveX ( float add = 0 );
@@ -184,13 +175,14 @@ class Entity: public Node
 		virtual std::string getStateString (  );
 		virtual std::string to_json ();
 
-		virtual void input ( SDL_Event & event );
-		virtual void draw ( SDL_Renderer * renderer, Camera * camera );
-		virtual int update (  );
+		void input ( SDL_Event & event ) override;
+		void draw ( SDL_Renderer * renderer, Camera * camera ) override;
+		int update (  ) override;
 
 	protected:
 		//definido apenas uma vez, depois volta para false
 		bool ground;//se é chão definido por setGround
+		bool noground;//se true isGround vai retornar sempre false
 		int layer;//camada de desenho, quanto meno primeiro desenha
 		Vect damping;//desaceleração (de 0 ao 1)
 		Vect maxVel, minVel;
@@ -200,9 +192,6 @@ class Entity: public Node
 		Vect acc;
 
 		int collPoints;//numero de pontos de colisão
-		int ladderTile;//tile da escada que não é o final
-		int topLadderTile;//tile ponta de escada
-		int topTileSize; // altura para colisão do tile da ponta da escada
 		SDL_Rect collRect;//retangulo de colisão
 		SDL_Rect view;//rect que cobre toda a imagem de entity
 		SDL_Texture * texture;

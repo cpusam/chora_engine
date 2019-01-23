@@ -1,5 +1,5 @@
 #include "Node.hpp"
-//#include "Elements.hpp"
+#include "Elements.hpp"
 
 NodeID Node::countID = 0;
 
@@ -15,13 +15,12 @@ Node::Node ( std::string name, int initState, NodeGroups groups, NodeType type )
 	nextA = nullptr;
 	nextB = nullptr;
 	parent = nullptr;
+	show(true);
 }
 
 Node::~Node (  )
 {
-	#ifdef ELEMENTS_HPP
-		Elements::remove(Node::getID());
-	#endif
+	Elements::remove(getID());
 }
 
 bool Node::receive ( Node * sender, std::string mesg )
@@ -33,9 +32,6 @@ Node * Node::clone (  )
 {
 	//retorna um novo Node
 	Node * newNode = new Node(name, groups, type);
-	#ifdef ELEMENTS_HPP
-		Elements::add(newNode);
-	#endif
 	return newNode;
 }
 

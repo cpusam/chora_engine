@@ -403,12 +403,14 @@ AnimationFrame Animation::getCurrentFrame (  )
 
 int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 {
+	if (frames.size() == 0 || size_t(index) >= frames.size())
+		return -1;
+	
 	int ret = 0;
 	static SDL_Rect dest, source;
-	{
-		dest = frames.at(index).getDestinyRect();
-		source = frames.at(index).getSourceRect();
-	}
+
+	dest = frames.at(index).getDestinyRect();
+	source = frames.at(index).getSourceRect();
 
 	dest.x = dest.x + x;
 	dest.y = dest.y + y;
@@ -445,6 +447,9 @@ int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 
 int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int destW, int destH )
 {
+	if (frames.size() == 0 || size_t(index) >= frames.size())
+		return -1;
+	
 	int ret = 0;
 	SDL_Rect dest, source;
 	//if (getState() == CHANGE_FRAME)
@@ -504,6 +509,9 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int d
 
 int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 {
+	if (frames.size() == 0 || size_t(index) >= frames.size())
+		return -1;
+	
 	int ret = 0;
 	SDL_Rect dest, source;
 	dest = frames.at(index).getDestinyRect();
