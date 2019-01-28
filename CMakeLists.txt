@@ -32,8 +32,24 @@ if (DEBUG)
 	SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_GLIBCXX_DEBUG")
 endif (DEBUG)
 
-file(GLOB_RECURSE SRCS "src/*.cpp" "game/*.cpp" "gui/*.cpp" "platform/*.cpp" "SDL_gfx/*.cpp" "sound/*.cpp" "src/renderer/*.cpp")
-file(GLOB_RECURSE HDRS "Chora.hpp" "sdl.hpp" "include/*.hpp" "game/*.hpp" "gui/*.hpp" "platform/*.hpp" "SDL_gfx/*.hpp" "sound/*.hpp" "include/renderer/*.hpp")
+file(GLOB_RECURSE SRCS "src/*.cpp" 
+											 "game/*.cpp" 
+											 "game/Camera/*.cpp" 
+											 "gui/*.cpp" 
+											 "platform/*.cpp" 
+											 "SDL_gfx/*.cpp" 
+											 "sound/*.cpp" 
+											 "src/renderer/*.cpp")
+
+file(GLOB_RECURSE HDRS "Chora.hpp" "sdl.hpp" 
+											 "include/*.hpp" 
+											 "game/*.hpp" 
+											 "game/Camera/*.hpp" 
+											 "gui/*.hpp" 
+											 "platform/*.hpp" 
+											 "SDL_gfx/*.hpp" 
+											 "sound/*.hpp" 
+											 "include/renderer/*.hpp")
 
 add_definitions("-DNO_THREAD_SAFE")
 

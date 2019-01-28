@@ -61,6 +61,7 @@
 #include "game/Input.hpp"
 #include "game/Key.hpp"
 #include "game/Node.hpp"
+#include "game/Camera/CameraRectFocus.hpp"
 
 //módulo de física avançada
 #ifdef USE_CHIPMUNK

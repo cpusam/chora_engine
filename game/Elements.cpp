@@ -101,6 +101,16 @@ std::vector<Entity *> Elements::getAllEntityByGroup ( const std::string & group 
 	return ret;
 }
 
+std::vector<Entity *> Elements::getAllEntityByGroup ( const NodeGroups group )
+{
+	std::vector<Entity*> ret;
+	for (auto * entity: entities)
+		if (entity->isInsideGroup(group))
+			ret.push_back(entity);
+	
+	return ret;
+}
+
 
 Entity * Elements::remEntity ( EntityID id )
 {	
@@ -169,6 +179,11 @@ std::vector<Entity *> Elements::getAllEntities (  )
 std::vector<Entity *> Elements::getAllByGroup ( const std::string & group )
 {
 	return instance()->getAllEntityByGroup(group);
+}
+
+std::vector<Entity *> Elements::getAllByGroup ( const NodeGroups groups )
+{
+	return instance()->getAllEntityByGroup(groups);
 }
 
 void Elements::setRenderer ( SDL_Renderer * renderer )

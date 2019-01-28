@@ -53,6 +53,7 @@ class Elements
 		static std::vector<Entity *> getAllEntities (  );
 		//retorna todas entidades do group e sem nenhuma nulaou de id nulo
 		static std::vector<Entity *> getAllByGroup ( const std::string & group ); // pega objeto pelo grupo
+		static std::vector<Entity *> getAllByGroup ( const NodeGroups groups ); // pega objeto pelo grupo
 		static Entity * remove ( EntityID id ); //remove uma entity
 		static void clear (  );
 		static void destroy (  );
@@ -85,6 +86,7 @@ class Elements
 		Entity * getEntity ( EntityID id );
 		Entity * getEntityByName ( const std::string & name );
 		std::vector<Entity *> getAllEntityByGroup ( const std::string & group );
+		std::vector<Entity *> getAllEntityByGroup ( const NodeGroups group );
 		Entity * remEntity ( EntityID id );
 		//remove de forma segura as entidades excluidas
 		void updateErase (  );
