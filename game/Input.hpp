@@ -55,6 +55,7 @@ class Input: public Node
 	protected:
 		int in;
 		bool press;
+		//tempo que foi pressionado
 		Uint32 pressTime;
 };
 

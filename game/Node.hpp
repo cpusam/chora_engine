@@ -40,7 +40,7 @@ class Node: public StateMachine
 
 		virtual bool isVisible (  );
 		//verifica se os bits de g estão em groups
-		virtual bool isInsideGroup ( NodeGroups g );
+		virtual bool insideGroup ( NodeGroups g );
 		NodeGroups getGroups (  );
 
 		NodeID getID (  );
@@ -62,8 +62,13 @@ class Node: public StateMachine
 		void setLayer ( int l );
 
 		virtual void setName ( std::string name );
-		virtual void setNextA ( Node * n );
-		virtual void setNextB ( Node * n );
+		virtual std::vector<Node *> const & getChildren (  ); 
+		//adiciona um filho
+		virtual void addChild ( Node * child );
+		//remove um filho 
+		virtual void removeChild ( Node * child );
+		//atualiza a posição dos filhos
+		virtual void updateChildrenPosition (  );
 		virtual void setParent ( Node * p );
 		virtual void setType ( NodeType t );
 
@@ -71,8 +76,8 @@ class Node: public StateMachine
 		bool visible;
 		int layer;
 		Node * parent;
-		Node * nextA;
-		Node * nextB;
+		std::vector<Node *> children;
+
 		SDL_Rect dimension;
 		Vect position;
 		Vect scale;

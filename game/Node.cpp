@@ -1,5 +1,6 @@
 #include "Node.hpp"
 #include "Elements.hpp"
+#include <algorithm>
 
 NodeID Node::countID = 0;
 
@@ -12,8 +13,6 @@ Node::Node ( std::string name, int initState, NodeGroups groups, NodeType type )
 	layer = 0;
 	this->name = name;
 	this->type = type;
-	nextA = nullptr;
-	nextB = nullptr;
 	parent = nullptr;
 	show(true);
 }
@@ -98,7 +97,7 @@ bool Node::isVisible (  )
 }
 
 //verifica se os bits de g estão em groups
-bool Node::isInsideGroup ( NodeGroups g )
+bool Node::insideGroup ( NodeGroups g )
 {
 	return groups & g;
 }
@@ -118,14 +117,28 @@ std::string Node::getName (  )
 	return name;
 }
 
-Node * Node::getNextA (  )
+std::vector<Node *> const & Node::getChildren (  )
 {
-	return nextA;
+	return children;
 }
 
-Node * Node::getNextB (  )
+void Node::addChild ( Node * child )
 {
-	return nextB;
+	if (child && std::find(children.begin(), children.end(), child) == children.end())
+		children.push_back(child);
+}
+
+void Node::removeChild ( Node * child )
+{
+	std::vector<Node *>::iterator it = std::find(children.begin(), children.end(), child);
+
+	if (it != children.end())
+		children.erase(it);
+}
+
+void Node::updateChildrenPosition (  )
+{
+	//TODO multiplicar a matriz deste node pela posição dos child
 }
 
 Node * Node::getParent (  )
@@ -161,16 +174,6 @@ void Node::setLayer ( int l )
 void Node::setName ( std::string name )
 {
 	this->name = name;
-}
-
-void Node::setNextA ( Node * n )
-{
-	nextA = n;
-}
-
-void Node::setNextB ( Node * n )
-{
-	nextB = n;
 }
 
 void Node::setParent ( Node * p )

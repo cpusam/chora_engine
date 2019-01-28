@@ -105,7 +105,7 @@ std::vector<Entity *> Elements::getAllEntityByGroup ( const NodeGroups group )
 {
 	std::vector<Entity*> ret;
 	for (auto * entity: entities)
-		if (entity->isInsideGroup(group))
+		if (entity->insideGroup(group))
 			ret.push_back(entity);
 	
 	return ret;

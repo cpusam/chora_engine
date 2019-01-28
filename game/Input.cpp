@@ -70,6 +70,7 @@ int Input::update (  )
 			}
 			else
 			{
+				pressTime = 0;
 				setState(State::RELEASE);
 			}
 			break;
@@ -81,6 +82,7 @@ int Input::update (  )
 		
 		case State::RELEASE:
 			press = false;
+			pressTime = 0;
 			setState(State::FREE);
 			break;
 		
