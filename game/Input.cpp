@@ -30,6 +30,11 @@ bool Input::isPressed()
 	return press;
 }
 
+void Input::setPressed ( bool p )
+{
+	press = p;
+}
+
 void Input::setInput ( int k )
 {
 	in = k;

@@ -48,8 +48,6 @@ class Node: public StateMachine
 		int getLayer (  );
 
 		virtual std::string getName (  );
-		virtual Node * getNextA (  );
-		virtual Node * getNextB (  );
 		virtual Node * getParent (  );
 		virtual NodeType getType (  ); 
 

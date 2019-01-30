@@ -44,7 +44,10 @@ class Input: public Node
 		
 		Uint32 getPressTime (  );
 
+		//retorna se está pressionado ou não
 		bool isPressed();
+		//define se está pressionado ou não
+		virtual void setPressed ( bool p );
 		virtual void setInput ( int k );
 		virtual int getInput (  );
 		

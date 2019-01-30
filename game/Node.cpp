@@ -99,7 +99,7 @@ bool Node::isVisible (  )
 //verifica se os bits de g estão em groups
 bool Node::insideGroup ( NodeGroups g )
 {
-	return groups & g;
+	return (groups & g) != 0;
 }
 
 NodeGroups Node::getGroups (  )

@@ -1,9 +1,22 @@
 #include "texturer.hpp"
 #include "Exception.hpp"
+#include "../game/Elements.hpp"
 
 Texturer * Texturer::singleton = nullptr;
+SDL_Texture * Texturer::defaultTexture = nullptr;
 
-Texturer::Texturer(){}
+Texturer::Texturer()
+{
+	if (defaultTexture == nullptr)
+	{
+		if (Elements::getRenderer() == nullptr)
+			return;
+		
+		defaultTexture = SDL_CreateTexture(Elements::getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 32, 32);
+		if (!defaultTexture)
+			throw Exception("Texturer::erro ao criar defaultTexture");
+	}
+}
 
 Texturer::~Texturer(){}
 
@@ -29,7 +42,10 @@ SDL_Texture * Texturer::addTexture (SDL_Renderer * renderer, std::string path){
 
 void Texturer::addTexture (SDL_Texture *tex, std::string name){
 	if (tex == nullptr)
-		throw IMG_GetError();
+	{
+		printf("Texturer::%s\n",IMG_GetError());
+		return;
+	}
 	
 	for(unsigned int i = 0;i<textureID.size();i++){
 		if(textureID[i].texture == tex){
@@ -78,7 +94,7 @@ SDL_Texture *Texturer::getTexture(std::string name, bool throwOnError) {
 	if (throwOnError)
 		throw Exception("[Texture Manager] Error : Texture \"" + name + "\" não encontrada");
 	std::cerr << "[Texture Manager] Error : Texture \"" + name + "\" não encontrada";
-	return nullptr;
+	return defaultTexture;
 }
 
 void Texturer::destroyAll() {

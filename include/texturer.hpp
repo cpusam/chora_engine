@@ -31,7 +31,8 @@
 class Texturer{
 	std::vector<TextureID>	 textureID;
 	static Texturer * singleton;
-
+	static SDL_Texture * defaultTexture;
+	
 	Texturer();
 	virtual ~Texturer();
 	
