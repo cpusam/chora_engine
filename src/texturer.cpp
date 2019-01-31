@@ -14,7 +14,7 @@ Texturer::Texturer()
 		
 		defaultTexture = SDL_CreateTexture(Elements::getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 32, 32);
 		if (!defaultTexture)
-			throw Exception("Texturer::erro ao criar defaultTexture");
+			std::cerr<<"Texturer::erro ao criar defaultTexture: "<<SDL_GetError()<<std::endl;
 	}
 }
 

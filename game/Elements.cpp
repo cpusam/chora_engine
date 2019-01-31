@@ -101,12 +101,23 @@ std::vector<Entity *> Elements::getAllEntityByGroup ( const std::string & group 
 	return ret;
 }
 
-std::vector<Entity *> Elements::getAllEntityByGroup ( const NodeGroups group )
+std::vector<Entity *> Elements::getAllEntityByGroup ( const NodeGroups group, bool onlyVisible )
 {
 	std::vector<Entity*> ret;
 	for (auto * entity: entities)
-		if (entity->insideGroup(group))
-			ret.push_back(entity);
+	{
+		if (onlyVisible)
+		{
+			if (entity->isVisible() && entity->insideGroup(group))
+				ret.push_back(entity);
+		}
+		else
+		{
+			if (entity->insideGroup(group))
+				ret.push_back(entity);
+		}
+	}
+			
 	
 	return ret;
 }
@@ -181,9 +192,9 @@ std::vector<Entity *> Elements::getAllByGroup ( const std::string & group )
 	return instance()->getAllEntityByGroup(group);
 }
 
-std::vector<Entity *> Elements::getAllByGroup ( const NodeGroups groups )
+std::vector<Entity *> Elements::getAllByGroup ( const NodeGroups groups, bool onlyVisible )
 {
-	return instance()->getAllEntityByGroup(groups);
+	return instance()->getAllEntityByGroup(groups, onlyVisible);
 }
 
 void Elements::setRenderer ( SDL_Renderer * renderer )
