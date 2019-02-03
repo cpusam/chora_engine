@@ -89,7 +89,7 @@ class Entity: public Node
 		void setDamping ( Vect d );
 
 		//adicona mais animação
-		void addAnim ( Animation & anim, std::string name );
+		virtual void addAnim ( const Animation & anim, std::string name );
 		Animation * getCurrAnim (  );
 		//retorna a animação atual dada um nome qualquer, 
 		//usada internamente por changeAnim

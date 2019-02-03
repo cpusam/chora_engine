@@ -9,12 +9,14 @@ Texturer::Texturer()
 {
 	if (defaultTexture == nullptr)
 	{
+		/*
 		if (Elements::getRenderer() == nullptr)
 			return;
 		
 		defaultTexture = SDL_CreateTexture(Elements::getRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 32, 32);
 		if (!defaultTexture)
 			std::cerr<<"Texturer::erro ao criar defaultTexture: "<<SDL_GetError()<<std::endl;
+		*/
 	}
 }
 

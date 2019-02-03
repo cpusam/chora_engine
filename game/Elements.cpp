@@ -290,6 +290,16 @@ void Elements::notifyGroup ( Entity * sender, const std::string & mesg, const st
 	}
 }
 
+
+void Elements::notifyGroup ( Entity * sender, const std::string & mesg, const NodeGroups & group )
+{
+	std::vector<Entity *> entities = instance()->getAllByGroup(group);
+
+	for (auto *entity: entities)
+		if (entity != sender)
+			entity->receive(sender, mesg);
+}
+
 ////////////////////////////////////////////////////////////////////////
 void Elements::input ( SDL_Event & event )
 {

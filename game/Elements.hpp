@@ -61,6 +61,8 @@ class Elements
 
 		//se group == "ALL" notifica todo mundo
 		static void notifyGroup ( Entity *sender, const std::string & mesg, const std::string & group );
+		//notifica por grupo, -1 é ṕara todos
+		static void notifyGroup ( Entity * sender, const std::string & mesg, const NodeGroups & group );
 		
 		static void input ( SDL_Event & event );
 		static void draw ( SDL_Renderer * renderer, Camera * camera );
