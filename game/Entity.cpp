@@ -500,9 +500,11 @@ bool Entity::remSlopeUp ( int s )
 
 bool Entity::isSolid ( Vect p )
 {
-	if (level == nullptr)
+	if (!level)
 	{
-		throw Exception("Entity::isSolid level é nulo");
+		std::cerr<<"Entity::isSolid level é nulo p=";
+		p.print();
+		return false;
 	}
 
 	int tile = level->getTile(p.x, p.y);
@@ -514,9 +516,11 @@ bool Entity::isSolid ( Vect p )
 
 bool Entity::isSolidOneWayUp ( Vect p )
 {
-	if (level == nullptr)
+	if (!level)
 	{
-		throw Exception("Entity::isSolid level é nulo");
+		std::cerr<<"Entity::isSolid level é nulo p=";
+		p.print();
+		return false;
 	}
 
 	int tile = level->getTile(p.x, p.y);
@@ -528,8 +532,12 @@ bool Entity::isSolidOneWayUp ( Vect p )
 
 bool Entity::isSolidSlopeUp ( Vect p, Vect * result )
 {
-	if (level == nullptr)
-		throw Exception("Entity::isSolidSlope level é nulo");
+	if (!level)
+	{
+		std::cerr<<"Entity::isSolidSlope level é nulo p=";
+		p.print();
+		return false;
+	}
 
 	
 	int tile = level->getTile(p.x, p.y);
@@ -565,8 +573,11 @@ bool Entity::isGround (  )
 		return true;
 	}
 
-	if (level == nullptr)
-		throw Exception("Entity::isGround level é nulo");
+	if (!level)
+	{
+		std::cerr<<"Entity::isGround level é nulo\n";
+		return false;
+	}
 
 	setSides(collRect, collPoints);
 
@@ -716,7 +727,10 @@ bool Entity::moveInPath (Vect position, std::vector<Vect> & path, float maxVel, 
 bool Entity::oneWayUpCollision ()
 {
 	if (!level)
-		throw Exception("Entity::Erro level é nulo");
+	{
+		std::cerr<<"Entity::Erro level é nulo\n";
+		return false;
+	}
 
 	if (velocity.y <= 0)
 		return false;
@@ -768,8 +782,11 @@ bool Entity::slopeUpCollision (  )
 
 bool Entity::collisionY (  )
 {
-	if (level == nullptr)
-		throw Exception("Entity::"+name+" collisionY level map é nulo");
+	if (!level)
+	{
+		std::cerr<<"Entity::"+name+" collisionY level map é nulo"<<std::endl;
+		return false;
+	}
 	if (velocity.y == 0)
 		return false;
 	
@@ -848,8 +865,12 @@ bool Entity::collisionY (  )
 
 bool Entity::collisionX (  )
 {
-	if (level == nullptr)
-		throw Exception("Entity::"+name+" collisionX level map é nulo");
+	if (!level)
+	{
+		std::cerr<<"Entity::"+name+" collisionX level map é nulo"<<std::endl;
+		return false;
+	}
+
 	if (velocity.x == 0)
 		return false;
 	bool ret = false;
