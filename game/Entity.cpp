@@ -504,6 +504,7 @@ bool Entity::isSolid ( Vect p )
 	{
 		std::cerr<<"Entity::isSolid level é nulo p=";
 		p.print();
+		throw 1;
 		return false;
 	}
 

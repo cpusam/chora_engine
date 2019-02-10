@@ -415,12 +415,6 @@ int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 	dest.x = dest.x + x;
 	dest.y = dest.y + y;
 
-	if (use_center)
-	{
-		dest.x = dest.x - source.w / 2;
-		dest.y = dest.y - source.h / 2;
-	}
-
 	if (texture.size() && texture.at(index))
 	{
 		if (use_rot == false)
@@ -468,12 +462,6 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int d
 	dest.x = dest.x + x;
 	dest.y = dest.y + y;
 
-	if (use_center)
-	{
-		dest.x = dest.x - dest.w / 2;
-		dest.y = dest.y - dest.h / 2;
-	}
-	
 	
 	dest.x = (dest.x - position.x) + dim.x;
 	dest.y = (dest.y - position.y) + dim.y;
@@ -524,12 +512,6 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 	dest.x += x;
 	dest.y += y;
 
-	if (use_center)
-	{
-		dest.x = dest.x - dest.w / 2;
-		dest.y = dest.y - dest.h / 2;
-	}
-	
 	
 	dest.x = (dest.x - position.x) + dim.x;
 	dest.y = (dest.y - position.y) + dim.y;
