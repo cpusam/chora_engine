@@ -504,7 +504,6 @@ bool Entity::isSolid ( Vect p )
 	{
 		std::cerr<<"Entity::isSolid level é nulo p=";
 		p.print();
-		throw 1;
 		return false;
 	}
 
@@ -548,7 +547,7 @@ bool Entity::isSolidSlopeUp ( Vect p, Vect * result )
 	if (upSolidSlopeAngles.find(tile) != upSolidSlopeAngles.end())
 	{
 		int tilesize = level->getTilesize();
-		Vect c = getCollCenter();
+		Vect c = p;
 		Vect center[2] = {Vect(c.x, c.y - collRect.h / 2), Vect(c.x, c.y + collRect.h / 2)};
 		Vect slopePos(int(p.x / tilesize) * tilesize, int(p.y / tilesize) * tilesize);
 		Vect aux[2] = {upSolidSlopeAngles[tile][0], upSolidSlopeAngles[tile][1]};
@@ -582,13 +581,24 @@ bool Entity::isGround (  )
 
 	setSides(collRect, collPoints);
 
-	float centerX = position.x + collRect.x + collRect.w / 2;
-	for (auto p: leftSide)
+	float posX = position.x + collRect.x;
+	float posY = position.y + collRect.y + collRect.h;
+	
 	{
-		p.x += centerX;
-		p.y += position.y + 1;
+		Vect p;
+		p.x = posX;
+		p.y = posY + 1;
 		if (isSolidSlopeUp(p))
+		{
 			return true;
+		}
+
+		p.x = posX + collRect.w;
+		p.y = posY + 1;
+		if (isSolidSlopeUp(p))
+		{
+			return true;
+		}
 	}
 
 	if (velocity.y == 0 && upSolid.size() != 0)
@@ -835,6 +845,22 @@ bool Entity::collisionY (  )
 		//colidir em cima do tile e embaixo de Entity
 		if (oneWayUpCollision())
 			ret = true;
+		
+		//colisão com os slopes
+		//SlopeUP
+		Vect result;
+		for (Vect p: leftSide)
+		{
+			p.x += position.x;
+			p.y += position.y;
+			if (isSolidSlopeUp(p, &result))
+			{
+				p.y = result.y - (collRect.y + collRect.h);
+				setCollPos(p);
+				ret = true;
+				break;
+			}
+		}
 		/*
 		// colisão com a ponta da escada
 		// aqui é colisão "oneway" do lado de cima
