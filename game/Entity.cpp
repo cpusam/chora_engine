@@ -31,6 +31,7 @@ Entity::Entity()
 	damping.set(0.0,0.0);
 	//
 	setCollRect((SDL_Rect){0,0,3,3}, collPoints);
+	slopeUpPivot.set(collRect.w/2, collRect.h);
 }
 
 Entity::~Entity()
@@ -772,7 +773,7 @@ bool Entity::slopeUpCollision (  )
 		return false;
 	
 	Vect result;
-	float centerX = position.x + collRect.x + collRect.w / 2;
+	float centerX = position.x + collRect.x + slopeUpPivot.x;
 	for (auto p: leftSide)
 	{
 		p.x += centerX;
@@ -781,7 +782,7 @@ bool Entity::slopeUpCollision (  )
 		if (isSolidSlopeUp(p, &result))
 		{
 			//move pra fora do slope
-			result.y -= collRect.h;
+			result.y -= slopeUpPivot.y;
 			result.x = position.x + collRect.x;
 			setCollPos(result);
 			return true;
@@ -789,6 +790,16 @@ bool Entity::slopeUpCollision (  )
 	}
 
 	return false;
+}
+
+void Entity::setSlopeUpPivot ( const Vect & p )
+{
+	slopeUpPivot = p;
+}
+
+Vect Entity::getSlopeUpPivot (  )
+{
+	return slopeUpPivot;
 }
 
 bool Entity::collisionY (  )

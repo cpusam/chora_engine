@@ -70,7 +70,8 @@ void Elements::addEntity ( Entity * e )
 	std::cout<<"Elements::Adicionando "<<e->getID()<<" name = "<<e->getName()<<std::endl;
 	entitiesID.push_back(e->getID());
 	entities.push_back(e);
-	layers[e->getLayer()].push_back(e);
+	if (std::find(layers[e->getLayer()].begin(), layers[e->getLayer()].end(), e) == layers[e->getLayer()].end())
+		layers[e->getLayer()].push_back(e);
 }
 
 Entity * Elements::getEntity ( EntityID id )
@@ -278,14 +279,15 @@ void Elements::notifyGroup ( Entity * sender, const std::string & mesg, const st
 	{
 		std::vector<Entity*> all = instance()->getAllEntities();
 		for (auto * it: all)
-			it->receive(sender, mesg);
+			if (it)
+				it->receive(sender, mesg);
 	}
 	else
 	{
 		std::vector<Entity *> entities = instance()->getAllByGroup(group);
 	
 		for (auto *entity: entities)
-			if (entity != sender)
+			if (entity && entity != sender)
 				entity->receive(sender, mesg);
 	}
 }
@@ -326,14 +328,27 @@ void Elements::inputEntities ( SDL_Event & event )
 void Elements::drawEntities ( SDL_Renderer * renderer, Camera * camera )
 {
 	std::map<int, std::vector<Entity*> > layers = instance()->getEntitiesLayers();
+	#if DEBUG
+	std::map<Entity *, int> calls;
+	#endif
 	if (renderer && camera)
 		for (auto & it: layers)
 			for (auto * entity: it.second)
 				if (entity)
 				{
+					#if DEBUG
+					calls[entity]++;
+					#endif
 					if (entity->isVisible())
 						entity->draw(renderer, camera);
 				}
+	
+	#ifdef DEBUG
+	std::cout<<"Elements::drawEntities\n";
+	for (auto & it: calls)
+		if (it.second && it.first)
+			std::cout<<"Para "<<it.first->getName()<<" foram "<<it.second<<" chamadas\n";
+	#endif
 }
 
 //#define DEBUG_ELEMENTS
