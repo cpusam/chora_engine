@@ -181,7 +181,15 @@ class Entity: public Node
 		void draw ( SDL_Renderer * renderer, Camera * camera ) override;
 		int update (  ) override;
 
+		virtual void updatePosition (  )
+		{
+			if (beforePos.x != position.x)
+				beforePos.x = position.x;
+			if (beforePos.y != position.y)
+				beforePos.y = position.y;
+		}
 	protected:
+		Vect beforePos;
 		//definido apenas uma vez, depois volta para false
 		bool ground;//se é chão definido por setGround
 		bool noground;//se true isGround vai retornar sempre false

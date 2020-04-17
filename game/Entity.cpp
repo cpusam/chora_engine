@@ -211,6 +211,7 @@ Vect Entity::getPosition (  )
 void Entity::setPosition ( Vect p )
 {
 	position = p;
+	updatePosition();
 }
 
 void Entity::changeDir ( Direction d )
@@ -247,6 +248,7 @@ void Entity::setLevel ( TileMap * level )
 
 void Entity::setCollPos ( Vect p )
 {
+	updatePosition();
 	position.x = p.x - collRect.x;
 	position.y = p.y - collRect.y;
 }
@@ -543,17 +545,23 @@ bool Entity::isSolidSlopeUp ( Vect p, Vect * result )
 	
 	int tile = level->getTile(p.x, p.y);
 	if (tile < 0)
-		return false;
+	{
+		p = getCollCenter();
+		tile = level->getTile(p.x, p.y);
+		if (tile < 0)
+			return false;
+		p.x = getCollPos().x + slopeUpPivot.x;
+		p.y = getCollPos().y + slopeUpPivot.y;
+	}
 
 	if (upSolidSlopeAngles.find(tile) != upSolidSlopeAngles.end())
 	{
 		int tilesize = level->getTilesize();
-		Vect c = p;
-		Vect center[2] = {Vect(c.x, c.y - collRect.h / 2), Vect(c.x, c.y + collRect.h / 2)};
+		Vect center[2] = {Vect(p.x, p.y - slopeUpPivot.y), Vect(p.x, p.y + 5)};
+		//Vect center[2] = {Vect(p.x, p.y), Vect(p.x, p.y + (slopeUpPivot.y - (p.y - getCollPos().y)))};
 		Vect slopePos(int(p.x / tilesize) * tilesize, int(p.y / tilesize) * tilesize);
 		Vect aux[2] = {upSolidSlopeAngles[tile][0], upSolidSlopeAngles[tile][1]};
-		if (lineIntersects(Vect::add(slopePos, aux[0]), Vect::add(slopePos, aux[1]), center[0], center[1], result))
-			return true;
+		return lineIntersects(Vect::add(slopePos, aux[0]), Vect::add(slopePos, aux[1]), center[0], center[1], result);
 	}
 
 	return false;
@@ -580,7 +588,7 @@ bool Entity::isGround (  )
 		return false;
 	}
 
-	setSides(collRect, collPoints);
+	//setSides(collRect, collPoints);
 
 	float posX = position.x + collRect.x;
 	float posY = position.y + collRect.y + collRect.h;
@@ -588,14 +596,14 @@ bool Entity::isGround (  )
 	{
 		Vect p;
 		p.x = posX;
-		p.y = posY + 1;
+		p.y = posY;
 		if (isSolidSlopeUp(p))
 		{
 			return true;
 		}
 
 		p.x = posX + collRect.w;
-		p.y = posY + 1;
+		p.y = posY;
 		if (isSolidSlopeUp(p))
 		{
 			return true;
@@ -667,8 +675,10 @@ bool Entity::moveToPosition ( Vect position, float maxVelNow )
 	velocity.x = maxVelNow * diff.x * seconds;
 	velocity.y = maxVelNow * diff.y * seconds;
 
+	updatePosition();
 	this->position.x += velocity.x;
 	this->position.y += velocity.y;
+	
 
 	bool changeX = false, changeY = false;
 	if (velocity.x < 0)
@@ -752,13 +762,14 @@ bool Entity::oneWayUpCollision ()
 	{
 		Vect before(Vect::add(collPos, p));
 		Vect after(before);
+		before.y = beforePos.y;
 
-		before.y -= velocity.y;
 		if (isSolidOneWayUp(before) == false && isSolidOneWayUp(after))
 		{
 			int y = (int(after.y) / level->getTilesize()) * level->getTilesize();
 			after.y = y - collRect.h - 1;
 			after.x = collPos.x;
+			updatePosition();
 			setCollPos(after);
 			return true;
 		}
@@ -776,14 +787,15 @@ bool Entity::slopeUpCollision (  )
 	float centerX = position.x + collRect.x + slopeUpPivot.x;
 	for (auto p: leftSide)
 	{
-		p.x += centerX;
+		p.x = centerX;
 		p.y += position.y;
 	
 		if (isSolidSlopeUp(p, &result))
 		{
 			//move pra fora do slope
 			result.y -= slopeUpPivot.y;
-			result.x = position.x + collRect.x;
+			updatePosition();
+			//result.x = position.x + collRect.x;
 			setCollPos(result);
 			return true;
 		}
@@ -826,6 +838,7 @@ bool Entity::collisionY (  )
 			if (isSolid(p))
 			{
 				int y = ((int(p.y) / level->getTilesize()) + 1) * level->getTilesize();
+				updatePosition();
 				//tem que arrendondar o p.y para evitar bugs
 				//esse 5 não era pra estar aqui!
 				setCollPos(Vect(beforeX, p.y + collRect.y + (y - p.y)));
@@ -845,12 +858,12 @@ bool Entity::collisionY (  )
 			if (isSolid(p))
 			{
 				int y = (int(p.y) / level->getTilesize())*level->getTilesize();
+				updatePosition();
 				setCollPos(Vect(beforeX, y - collRect.h - 1));
 				ret = true;
 				break;
 			}
 		}
-
 
 		//tenta colidir com algum tile one way, 
 		//colidir em cima do tile e embaixo de Entity
@@ -867,6 +880,7 @@ bool Entity::collisionY (  )
 			if (isSolidSlopeUp(p, &result))
 			{
 				p.y = result.y - (collRect.y + collRect.h);
+				updatePosition();
 				setCollPos(p);
 				ret = true;
 				break;
@@ -925,6 +939,7 @@ bool Entity::collisionX (  )
 			{
 				int x = (int(p.x) / level->getTilesize() + 1) * level->getTilesize();
 				p.x = x;
+				updatePosition();
 				setCollPos(Vect(p.x, beforeY));
 				ret = true;
 				break;
@@ -941,6 +956,7 @@ bool Entity::collisionX (  )
 			{
 				int x = (int(p.x) / level->getTilesize()) * level->getTilesize();
 				p.x = int(x - collRect.w - 1);
+				updatePosition();
 				setCollPos(Vect(p.x,beforeY));
 				ret = true;
 				break;
@@ -1149,7 +1165,7 @@ void Entity::moveX ( float add )
 {
 	bool damped = false;
 	//aplica aceleração
-	add = double(acc.x + add) * double(FPSManager::instance()->getDeltaSeconds());
+	add = double(acc.x + add);//* double(FPSManager::instance()->getDeltaSeconds())
 	velocity.x += add;
 	
 	//se não está aplicando desaceleração e a aceleração for zero...
@@ -1170,17 +1186,20 @@ void Entity::moveX ( float add )
 		velocity.x -= velocity.x * damping.x;
 	}
 
-	position.x += velocity.x;
-
-	//arredonda para evitar tremores no eixo X
-	position.x = roundf(position.x);
+	updatePosition();
+	/*
+		NOTA IMPORTANTE:
+		pra manter o movimento fluido e constante, tem de multiplicar
+		a velocidade pelo delta apenas quando vai somar na posição
+	*/
+	position.x += velocity.x * double(FPSManager::instance()->getDeltaSeconds());
 }
 
 void Entity::moveY ( float add )
 {
 	bool damped = false;
 	//aplica aceleração
-	add = double(acc.y + add) * double(FPSManager::instance()->getDeltaSeconds());
+	add = double(acc.y + add);// * double(FPSManager::instance()->getDeltaSeconds());
 	velocity.y += add;
 
 	//se não está aplicando desaceleração e a aceleração for zero...
@@ -1200,9 +1219,13 @@ void Entity::moveY ( float add )
 	{
 		velocity.y -= velocity.y * damping.y;
 	}
-	position.y += velocity.y;
-	//arredonda para evitar tremores no eixo Y
-	position.y = roundf(position.y);
+	
+/*
+	NOTA IMPORTANTE:
+	pra manter o movimento fluido e constante, tem de multiplicar
+	a velocidade pelo delta apenas quando vai somar na posição
+*/
+	position.y += velocity.y * double(FPSManager::instance()->getDeltaSeconds());
 }
 
 std::string Entity::getStateString (  )

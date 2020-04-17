@@ -363,7 +363,9 @@ void Elements::updateEntities (  )
 			//std::cout<<"[PTR] "<<(*entities[i])<<std::endl;
 			std::cout<<"Atualizando "<<entities[i]->getName()<<" id="<<entities[i]->getID()<<std::endl;
 			#endif
+			
 			entities[i]->update();
+			entities[i]->updatePosition();
 			#ifdef DEBUG_ELEMENTS
 			printf("Atualizado %s\n\n", entities[i]->getName().c_str());
 			#endif
