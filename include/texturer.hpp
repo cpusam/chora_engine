@@ -48,6 +48,7 @@ class Texturer{
 		
 		static SDL_Texture * add (SDL_Renderer * renderer, std::string path);
 		static SDL_Texture * add (SDL_Renderer * renderer, std::string path, SDL_Color colorKey );
+		static SDL_Texture * add (SDL_Renderer * renderer, std::string path, std::string name );
 		static void add (SDL_Texture *tex, std::string name );
 		static void rem ( std::string name );
 		static SDL_Texture* get ( std::string name, bool throwOnError=true );

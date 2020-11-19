@@ -121,6 +121,22 @@ SDL_Texture * Texturer::add (SDL_Renderer * renderer, std::string path, SDL_Colo
 	return instance()->addTexture(renderer, path, colorKey);
 }
 
+SDL_Texture * Texturer::add (SDL_Renderer * renderer, std::string path, std::string name )
+{
+	SDL_Surface *surface = IMG_Load(path.c_str());
+	if (!surface) {
+		throw Exception("[Texture Manager]::erro ao carregar "+path);
+	}
+
+	SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, surface);
+	if (texture == nullptr) {
+		throw Exception("[Texture Manager]::erro ao converter surface para textura com nome "+name);
+	}
+	SDL_FreeSurface(surface);
+	instance()->addTexture(texture, name);
+	return texture;
+}
+
 void Texturer::add (SDL_Texture *tex, std::string name )
 {
 	instance()->addTexture(tex,name);
