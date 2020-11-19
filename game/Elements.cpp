@@ -130,13 +130,21 @@ Entity * Elements::remEntity ( EntityID id )
 	if (!ret)
 		return nullptr;
 	
-	eraseEntity.push_back(ret);
+	
+	auto it = std::find(entities.begin(), entities.end(), ret);
+	if (it != entities.end()) {
+		eraseEntity.push_back(ret);
+		entities.erase(it);
+	}
 
 	return ret;
 }
 
 void Elements::updateErase ()
 {
+	if (1)
+		return;
+	
 	for (std::vector<Entity *>::iterator it = eraseEntity.begin(), end = eraseEntity.end(); it != end; ++it)
 	{
 		Entity * ret = *it;
@@ -334,7 +342,7 @@ void Elements::drawEntities ( SDL_Renderer * renderer, Camera * camera )
 	if (renderer && camera)
 		for (auto & it: layers)
 			for (auto * entity: it.second)
-				if (entity)
+				if (entity != nullptr)
 				{
 					#if DEBUG
 					calls[entity]++;
