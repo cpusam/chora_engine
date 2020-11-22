@@ -48,6 +48,8 @@ extern void fillRect ( SDL_Renderer * renderer, Camera * cam, SDL_Color color, S
 
 extern void fillRect ( SDL_Renderer * renderer, SDL_Color color, SDL_Rect r );
 
+extern int drawTexture (SDL_Renderer * renderer, SDL_Texture * texture, SDL_Rect *src, SDL_Rect *dest);
+
 extern int drawTexture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, int x, int y, int sizeW=0, int sizeH=0 );
 
 extern int drawTexture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, const SDL_Rect * src, const SDL_Rect * dst, double angle, SDL_Point * center, SDL_RendererFlip flip );

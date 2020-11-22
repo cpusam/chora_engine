@@ -36,7 +36,7 @@ Entity::Entity()
 
 Entity::~Entity()
 {
-
+	std::cout<<"Deletando "<<getName()<<" id="<<getID()<<std::endl;
 }
 
 void Entity::setGroup ( std::string g )
@@ -1245,7 +1245,7 @@ void Entity::input ( SDL_Event & event )
 
 void Entity::draw ( SDL_Renderer * renderer, Camera * camera )
 {
-	if (currAnim)
+	if (currAnim && isVisible())
 		currAnim->draw(renderer, camera, position.x, position.y);
 }
 

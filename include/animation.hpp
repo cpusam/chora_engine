@@ -58,11 +58,12 @@ struct STimer
 		}
 		void pause (  )
 		{
-			state = 0;
+			state = 2;
 		}
 
 		void reset (  )
 		{
+			state = 0;
 			ticks = 0;
 			lastTick = SDL_GetTicks();
 		}
@@ -72,17 +73,26 @@ struct STimer
 			return int(ticks);
 		}
 
+		bool finish ( int maxTime ) {
+			if (ticks >= maxTime) {
+				state = 0;
+				return true;
+			}
+			state = 1;
+			return false;
+		}
+
 		void update (  )
 		{
-			if (state)
-			{
-				Uint32 tick = SDL_GetTicks();
-				//#warning "Aqui deveria usar FPSManager::getDelta para tempo gasto"
-				step = FPSManager::instance()->getDelta();//(float)tick - lastTick;
-				
-				ticks += step;
-				lastTick = tick;
-			}
+			if (state == 2)
+				return;
+			
+			Uint32 tick = SDL_GetTicks();
+			//#warning "Aqui deveria usar FPSManager::getDelta para tempo gasto"
+			step = FPSManager::instance()->getDelta();//(float)tick - lastTick;
+			
+			ticks += step;
+			lastTick = tick;
 		}
 };
 

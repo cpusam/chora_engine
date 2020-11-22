@@ -257,6 +257,16 @@ void fillRect ( SDL_Renderer * renderer, SDL_Color color, SDL_Rect r )
 	SDL_RenderFillRect(renderer, &r);
 }
 
+int drawTexture (SDL_Renderer * renderer, SDL_Texture * texture, SDL_Rect *src, SDL_Rect *dest) {
+	if (dest == nullptr && src == nullptr) {
+		SDL_Rect dst = {0,0,textureWidth(texture), textureHeight(texture)};
+		return SDL_RenderCopy(renderer, texture, nullptr, &dst);
+	}
+	else {
+		return SDL_RenderCopy(renderer, texture, src, dest);
+	}
+}
+
 int drawTexture ( SDL_Renderer * renderer,  Camera * cam, SDL_Texture * texture, int x, int y, int sizeW, int sizeH )
 {
 	if (!texture || !cam || !renderer)
