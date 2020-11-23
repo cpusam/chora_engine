@@ -79,7 +79,7 @@ class SoundFX: public StateMachine
 
 		void destroy (  );
 
-		void loadChunk ( std::string p );
+		void loadChunk ( std::string path, std::string id );
 
 		void loadMusic ( std::string p );
 

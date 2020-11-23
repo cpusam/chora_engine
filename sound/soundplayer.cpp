@@ -1,4 +1,5 @@
 #include "soundplayer.hpp"
+#include "../include/Exception.hpp"
 
 int SoundFX::getType (  )
 {
@@ -157,24 +158,21 @@ void SoundFX::destroy (  )
 	type = SoundFX::Type::UNDEF;
 }
 
-void SoundFX::loadChunk ( std::string p )
+void SoundFX::loadChunk ( std::string p, std::string id )
 {
 	Mix_Chunk * c = Mix_LoadWAV(p.c_str());
 	if (c)
 	{
 		unsigned int f = p.find_last_of("/\\");
 		path = p.substr(0, f);
-		id = p.substr(f + 1);
+		this->id = id;
 
 		chunk = c;
 		type = SoundFX::Type::CHUNK;
 	}
 	else
 	{
-		std::string t;
-		t = "SoundFX: não conseguiu abrir efeito ";
-		t.append(p);
-		throw t.c_str();
+		throw new Exception("SoundFX: não conseguiu abrir efeito "+path+" ID="+id);
 	}
 }
 
