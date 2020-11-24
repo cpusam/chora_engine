@@ -164,6 +164,8 @@ class Entity: public Node
 		std::vector<int> getTilesHash (  );
 		//faz espelhar as animações
 		void flipAnim ( bool hor, bool ver );
+		//espelha a entidade
+		void mirrorHor (  );
 
 		//aplica impulso
 		virtual void applyImpulse ( Vect impulse );

@@ -700,6 +700,15 @@ void Entity::flipAnim ( bool hor, bool ver )
 		it.second.flip(hor, ver);
 }
 
+void Entity::mirrorHor (  ) {
+	if (getDir() == Direction::LEFT_DIR) {
+		changeDir(Direction::RIGHT_DIR);
+	}
+	else if (getDir() == Direction::RIGHT_DIR) {
+		changeDir(Direction::LEFT_DIR);
+	}
+}
+
 //move num caminho realtivo à posição do corpo
 // back é pra retornar quando chegar ao fim
 void Entity::setCountPath ( int count)
