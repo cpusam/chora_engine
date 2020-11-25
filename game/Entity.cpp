@@ -273,9 +273,26 @@ SDL_Rect Entity::getCollRect ( RelativePosition relative )
 
 void Entity::setCollRect ( SDL_Rect rect, int numPoints )
 {
-	collRect = rect;
+	if (numPoints == 0) {
+		collRect.w = rect.w;
+		collRect.h = rect.h;
+	}
+	else
+		collRect = rect;
 	if (numPoints > 2)
 		setSides(rect, numPoints);
+}
+
+
+void Entity::setCollRect ( SDL_Rect rect, bool relative )
+{
+	if (!relative) {
+		collRect.w = rect.w;
+		collRect.h = rect.h;
+	}
+	else {
+		collRect = rect;
+	}
 }
 
 SDL_Rect Entity::getView (  )

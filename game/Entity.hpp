@@ -154,6 +154,7 @@ class Entity: public Node
 		//se relative == true retorna collRect sem somar 'position'
 		SDL_Rect getCollRect ( RelativePosition relative=RELATIVE_WORLD );// retorna o retângulo de colisão em coordenadas do mundo
 		void setCollRect ( SDL_Rect rect, int numPoints=0 );
+		void setCollRect ( SDL_Rect rect, bool relative );
 		SDL_Rect getView (  );
 		std::vector<Vect> getSide ( std::string side, RelativePosition relative=RELATIVE_ENTITY );
 		// define as laterais do corpo baseado num retangulo usando numPoints por lateral
