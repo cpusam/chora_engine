@@ -287,11 +287,16 @@ void Entity::setCollRect ( SDL_Rect rect, int numPoints )
 void Entity::setCollRect ( SDL_Rect rect, bool relative )
 {
 	if (!relative) {
+		collRect.x = rect.x;
+		collRect.y = rect.y;
 		collRect.w = rect.w;
 		collRect.h = rect.h;
 	}
 	else {
-		collRect = rect;
+		collRect.x = position.x - rect.x;
+		collRect.y = position.y - rect.y;
+		collRect.w = rect.w;
+		collRect.h = rect.h;
 	}
 }
 
