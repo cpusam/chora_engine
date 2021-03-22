@@ -146,6 +146,11 @@ void putPixel ( SDL_Surface *surface, int x, int y, Uint32 pixel )
 	}
 }
 
+SDL_Surface * changeColor ( SDL_Surface *surface, SDL_Color target, SDL_Color other ) {
+	//SDL_Surface * tmp = SDL_CreateRGBSurface(0, surface->w, surface->h)
+	return nullptr;
+}
+
 SDL_Surface * optimizeSurface ( SDL_Surface * s, SDL_Surface * screen )
 {
 	if (!s || !screen)

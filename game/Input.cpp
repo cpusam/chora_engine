@@ -56,7 +56,7 @@ void Input::input ( SDL_Event & event )
 	
 }
 
-int Input::update (  )
+int Input::update ( double delta )
 {
 	switch (getState())
 	{

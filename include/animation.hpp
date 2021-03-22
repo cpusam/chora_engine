@@ -194,6 +194,8 @@ class AnimationFrame
 		SDL_Texture * getTexture (  );
 
 		bool destroy (  );
+
+		std::string toJSON (  );
 };
 
 /*

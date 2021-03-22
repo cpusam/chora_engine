@@ -1,5 +1,6 @@
 {
 	"files.associations": {
+		"*.fj": "java",
 		"cctype": "cpp",
 		"cmath": "cpp",
 		"cstdarg": "cpp",
@@ -44,7 +45,8 @@
 		"typeindex": "cpp",
 		"typeinfo": "cpp",
 		"utility": "cpp",
-		"algorithm": "cpp"
+		"algorithm": "cpp",
+		"string": "cpp"
 	},
 	"C_Cpp.intelliSenseEngineFallback": "Disabled"
 }

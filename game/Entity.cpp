@@ -1280,7 +1280,7 @@ void Entity::draw ( SDL_Renderer * renderer, Camera * camera )
 		currAnim->draw(renderer, camera, position.x, position.y);
 }
 
-int Entity::update (  )
+int Entity::update ( double delta )
 {
 	return getState();
 }

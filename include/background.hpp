@@ -112,7 +112,7 @@ class AnimatedBackground: private StateMachine
 
 		void addFrame ( SDL_Texture *t, SDL_Rect & f, int d );
 
-		int update (  ) override;
+		int update ( double delta=0 ) override;
 
 		void draw ( SDL_Renderer * renderer, Camera * cam );
 

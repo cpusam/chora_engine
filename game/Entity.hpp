@@ -182,7 +182,7 @@ class Entity: public Node
 
 		void input ( SDL_Event & event ) override;
 		void draw ( SDL_Renderer * renderer, Camera * camera ) override;
-		int update (  ) override;
+		int update ( double delta=0 ) override;
 
 		virtual void updatePosition (  )
 		{

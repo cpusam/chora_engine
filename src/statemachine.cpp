@@ -14,7 +14,7 @@ void StateMachine::input ( SDL_Event & event )
 {
 }
 
-int StateMachine::update (  )
+int StateMachine::update ( double delta )
 {
 	return getState();
 }

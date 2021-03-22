@@ -107,6 +107,20 @@ bool AnimationFrame::destroy (  )
 	return ret;
 }
 
+std::string AnimationFrame::toJSON (  ) {
+	return std::string("{")
+	+"'source':{"+"'x':"+std::to_string(source.x)+",'y':"+std::to_string(source.y)
+	+",'w':"+std::to_string(source.w)
+	+",'h':"+std::to_string(source.h)
+	+"},"
+	+"'destiny':{"+"'x':"+std::to_string(destiny.x)+",'y':"+std::to_string(destiny.y)
+	+",'w':"+std::to_string(destiny.w)
+	+",'h':"+std::to_string(destiny.h)
+	+"},"
+	+"'delay':"+std::to_string(delay)
+	+"}\n";
+}
+
 //////////////////////////////////////////////////////////////////
 
 void Animation::play (  )

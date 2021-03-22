@@ -38,6 +38,8 @@ extern void printVideoDriver (  );
 extern Uint32 getPixel ( SDL_Surface * surface, int x, int y );
 extern void putPixel ( SDL_Surface *surface, int x, int y, Uint32 pixel );
 
+extern SDL_Surface * changeColor ( SDL_Surface *surface, SDL_Color target, SDL_Color other );
+
 extern SDL_Surface * optimizeSurface ( SDL_Surface * s, SDL_Surface * screen );
 
 extern int textureWidth ( SDL_Texture * t );

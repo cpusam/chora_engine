@@ -53,7 +53,7 @@ class Input: public Node
 		
 		virtual void reset (  );
 		void input ( SDL_Event & event ) override;
-		int update (  ) override;
+		int update ( double delta=0 ) override;
 	
 	protected:
 		int in;

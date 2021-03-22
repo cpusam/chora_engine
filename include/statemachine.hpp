@@ -47,7 +47,7 @@ class StateMachine
 		virtual void setState ( int s );
 		virtual int getState (  );
 		virtual void input ( SDL_Event & event );
-		virtual int update (  );
+		virtual int update ( double delta=0 );
 };
 
 #endif

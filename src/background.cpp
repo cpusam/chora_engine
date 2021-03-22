@@ -176,7 +176,7 @@ void AnimatedBackground::addFrame ( SDL_Texture *t, SDL_Rect & f, int d )
 }
 
 
-int AnimatedBackground::update (  )
+int AnimatedBackground::update ( double delta )
 {
 	int ret = DEFAULT_STATE;
 	switch (getState())
