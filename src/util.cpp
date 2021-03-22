@@ -169,6 +169,20 @@ int textureWidth ( SDL_Texture * t )
 	return w;
 }
 
+bool textureDimension (SDL_Texture * texture, SDL_Rect * dest) {
+	int w = textureWidth(texture);
+	int h = textureHeight(texture);
+	
+	if (w && h) {
+		dest->x = 0;
+		dest->y = 0;
+		dest->w = w;
+		dest->h = h;
+		return true;
+	}
+	return false;
+}
+
 int textureHeight ( SDL_Texture * t )
 {
 	if (!t)

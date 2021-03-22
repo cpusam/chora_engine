@@ -46,6 +46,8 @@ extern int textureWidth ( SDL_Texture * t );
 
 extern int textureHeight ( SDL_Texture * t );
 
+extern bool textureDimension (SDL_Texture * texture, SDL_Rect * dest);
+
 extern void fillRect ( SDL_Renderer * renderer, Camera * cam, SDL_Color color, SDL_Rect r );
 
 extern void fillRect ( SDL_Renderer * renderer, SDL_Color color, SDL_Rect r );
