@@ -59,6 +59,7 @@ class Entity: public Node
 		Entity();
 		virtual ~Entity();
 		static int next (  );
+		std::string instanceof (  );
 		
 		//deprecated
 		void setGroup ( std::string g );

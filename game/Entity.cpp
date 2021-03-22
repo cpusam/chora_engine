@@ -43,6 +43,10 @@ int Entity::next (  ) {
 	return countID + 1;
 }
 
+std::string Entity::instanceof (  ) {
+	return "Entity";
+}
+
 void Entity::setGroup ( std::string g )
 {
 	group = g;
