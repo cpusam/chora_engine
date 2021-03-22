@@ -9,7 +9,7 @@ Writer::Writer (  )
 	renderer = 0;
 
 	if (!TTF_WasInit())
-		throw "Writer: SDL_ttf não inicializada\n";
+		throw Exception("Writer: SDL_ttf não inicializada\n");
 }
 
 Writer::~Writer (  )

@@ -1,4 +1,5 @@
 #include "textureid.hpp"
+#include "Exception.hpp"
 
 TextureID::TextureID(){
 	path = "";
@@ -13,7 +14,7 @@ TextureID::TextureID(SDL_Texture *tex, std::string n){
 	
 	if (tex == 0)
 	{
-		throw "Erro: ao setar textura NULA";
+		throw Exception("Erro: ao setar textura NULA");
 	}
 }
 

@@ -39,6 +39,10 @@ Entity::~Entity()
 	std::cout<<"Deletando "<<getName()<<" id="<<getID()<<std::endl;
 }
 
+int Entity::next (  ) {
+	return countID + 1;
+}
+
 void Entity::setGroup ( std::string g )
 {
 	group = g;
