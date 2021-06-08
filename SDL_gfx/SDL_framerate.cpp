@@ -84,6 +84,8 @@ bool FPSManager::setFPSDef ( FPSDef d )
 
 Uint32 FPSManager::getDelta (  )
 {
+	if (fpsdef.fixedDelta)
+		return double(fpsdef.rateticks);
 	return time_passed;
 }
 
