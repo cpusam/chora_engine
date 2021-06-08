@@ -25,6 +25,7 @@ Entity::Entity()
 	name = "";
 	countPath = 0;
 	
+	oldPosition.set(0,0);
 	//coloca a velocidade máxima... ao máximo
 	maxVel.set(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
 	//minimo de desaceleração
@@ -801,7 +802,7 @@ bool Entity::oneWayUpCollision ()
 	{
 		Vect before(Vect::add(collPos, p));
 		Vect after(before);
-		before.y = beforePos.y;
+		before.y = oldPosition.y;
 
 		if (isSolidOneWayUp(before) == false && isSolidOneWayUp(after))
 		{

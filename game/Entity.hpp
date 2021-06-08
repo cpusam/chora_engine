@@ -102,6 +102,7 @@ class Entity: public Node
 		virtual void updateAnim (  );
 		void setPosition ( Vect p ) override;
 		Vect getPosition (  ) override;
+		Vect getOldPosition (  );
 		virtual void changeDir ( Direction d );
 		
 		// método que recebe mensagens de outros elementos
@@ -188,13 +189,13 @@ class Entity: public Node
 
 		virtual void updatePosition (  )
 		{
-			if (beforePos.x != position.x)
-				beforePos.x = position.x;
-			if (beforePos.y != position.y)
-				beforePos.y = position.y;
+			if (oldPosition.x != position.x)
+				oldPosition.x = position.x;
+			if (oldPosition.y != position.y)
+				oldPosition.y = position.y;
 		}
 	protected:
-		Vect beforePos;
+		Vect oldPosition;
 		//definido apenas uma vez, depois volta para false
 		bool ground;//se é chão definido por setGround
 		bool noground;//se true isGround vai retornar sempre false
