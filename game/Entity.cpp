@@ -158,9 +158,8 @@ void Entity::setDamping ( Vect d )
 	damping = d;
 }
 
-void Entity::addAnim ( const Animation & anim, std::string name )
-{
-	this->anim[name] = anim;
+void Entity::addAnimation(const std::string & key, const Animation & anim) {
+	this->anim[key] = anim;
 }
 
 Animation * Entity::getCurrAnim (  )
@@ -1279,10 +1278,6 @@ std::string Entity::getStateString (  )
 std::string Entity::to_json ()
 {
 	return "";
-}
-
-void Entity::addAnimation(const std::string & key, const Animation & anim) {
-	this->anim[key] = anim;
 }
 
 void Entity::input ( SDL_Event & event )

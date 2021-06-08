@@ -91,7 +91,7 @@ class Entity: public Node
 		void setDamping ( Vect d );
 
 		//adicona mais animação
-		virtual void addAnim ( const Animation & anim, std::string name );
+		virtual void addAnimation(const std::string & key, const Animation & anim);
 		Animation * getCurrAnim (  );
 		//retorna a animação atual dada um nome qualquer, 
 		//usada internamente por changeAnim
@@ -182,7 +182,6 @@ class Entity: public Node
 
 		virtual std::string getStateString (  );
 		virtual std::string to_json ();
-		virtual void addAnimation(const std::string & key, const Animation & anim);
 
 		void input ( SDL_Event & event ) override;
 		void draw ( SDL_Renderer * renderer, Camera * camera ) override;
