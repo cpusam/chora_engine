@@ -89,7 +89,13 @@ Uint32 FPSManager::getDelta (  )
 
 double FPSManager::getDeltaSeconds (  )
 {
+	if (fpsdef.fixedDelta)
+		return double(fpsdef.rateticks / 1000.0);
 	return double(time_passed)/1000.0;
+}
+
+void FPSManager::setFixedDelta (bool fixed) {
+	fpsdef.fixedDelta = fixed;
 }
 
 Uint32 FPSManager::update (  )

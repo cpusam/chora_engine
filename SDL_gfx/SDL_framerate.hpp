@@ -57,12 +57,14 @@ struct FPSDef
 	Uint32 framecount;
 	float rateticks;
 	Uint32 rate;
+	bool fixedDelta;
 
-	FPSDef ( Uint32 fc=0, float rt=(1000.0f / (float) FPS_DEFAULT), Uint32 r=FPS_DEFAULT )
+	FPSDef ( Uint32 fc=0, float rt=(1000.0f / (float) FPS_DEFAULT), Uint32 r=FPS_DEFAULT, bool fixedDelta=false )
 	{
 		framecount = fc;
 		rateticks = rt;
 		rate = r;
+		this->fixedDelta = fixedDelta;
 	}
 };
 
@@ -97,6 +99,7 @@ class FPSManager
 		Uint32 getDelta (  );
 		
 		double getDeltaSeconds (  );
+		void setFixedDelta (bool fixed);
 
 		Uint32 update (  );
 };
