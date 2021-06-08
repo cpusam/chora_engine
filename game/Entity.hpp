@@ -182,6 +182,7 @@ class Entity: public Node
 
 		virtual std::string getStateString (  );
 		virtual std::string to_json ();
+		virtual void addAnimation(const std::string & key, const Animation & anim);
 
 		void input ( SDL_Event & event ) override;
 		void draw ( SDL_Renderer * renderer, Camera * camera ) override;

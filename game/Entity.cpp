@@ -1281,6 +1281,10 @@ std::string Entity::to_json ()
 	return "";
 }
 
+void Entity::addAnimation(const std::string & key, const Animation & anim) {
+	this->anim[key] = anim;
+}
+
 void Entity::input ( SDL_Event & event )
 {
 
