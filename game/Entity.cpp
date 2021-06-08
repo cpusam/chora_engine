@@ -217,10 +217,14 @@ Vect Entity::getPosition (  )
 	return position;
 }
 
+Vect Entity::getOldPosition (  )
+{
+	return oldPosition;
+}
+
 void Entity::setPosition ( Vect p )
 {
 	position = p;
-	updatePosition();
 }
 
 void Entity::changeDir ( Direction d )
@@ -257,7 +261,6 @@ void Entity::setLevel ( TileMap * level )
 
 void Entity::setCollPos ( Vect p )
 {
-	updatePosition();
 	position.x = p.x - collRect.x;
 	position.y = p.y - collRect.y;
 }
@@ -809,7 +812,7 @@ bool Entity::oneWayUpCollision ()
 			int y = (int(after.y) / level->getTilesize()) * level->getTilesize();
 			after.y = y - collRect.h - 1;
 			after.x = collPos.x;
-			updatePosition();
+			//updatePosition();
 			setCollPos(after);
 			return true;
 		}
@@ -834,7 +837,7 @@ bool Entity::slopeUpCollision (  )
 		{
 			//move pra fora do slope
 			result.y -= slopeUpPivot.y;
-			updatePosition();
+			//updatePosition();
 			//result.x = position.x + collRect.x;
 			setCollPos(result);
 			return true;
@@ -878,7 +881,7 @@ bool Entity::collisionY (  )
 			if (isSolid(p))
 			{
 				int y = ((int(p.y) / level->getTilesize()) + 1) * level->getTilesize();
-				updatePosition();
+				//updatePosition();
 				//tem que arrendondar o p.y para evitar bugs
 				//esse 5 não era pra estar aqui!
 				setCollPos(Vect(beforeX, p.y + collRect.y + (y - p.y)));
@@ -898,7 +901,7 @@ bool Entity::collisionY (  )
 			if (isSolid(p))
 			{
 				int y = (int(p.y) / level->getTilesize())*level->getTilesize();
-				updatePosition();
+				//updatePosition();
 				setCollPos(Vect(beforeX, y - collRect.h - 1));
 				ret = true;
 				break;
@@ -920,7 +923,7 @@ bool Entity::collisionY (  )
 			if (isSolidSlopeUp(p, &result))
 			{
 				p.y = result.y - (collRect.y + collRect.h);
-				updatePosition();
+				//updatePosition();
 				setCollPos(p);
 				ret = true;
 				break;
@@ -979,7 +982,7 @@ bool Entity::collisionX (  )
 			{
 				int x = (int(p.x) / level->getTilesize() + 1) * level->getTilesize();
 				p.x = x;
-				updatePosition();
+				//updatePosition();
 				setCollPos(Vect(p.x, beforeY));
 				ret = true;
 				break;
@@ -996,7 +999,7 @@ bool Entity::collisionX (  )
 			{
 				int x = (int(p.x) / level->getTilesize()) * level->getTilesize();
 				p.x = int(x - collRect.w - 1);
-				updatePosition();
+				//updatePosition();
 				setCollPos(Vect(p.x,beforeY));
 				ret = true;
 				break;
@@ -1226,7 +1229,7 @@ void Entity::moveX ( float add )
 		velocity.x -= velocity.x * damping.x;
 	}
 
-	updatePosition();
+	//updatePosition();
 	/*
 		NOTA IMPORTANTE:
 		pra manter o movimento fluido e constante, tem de multiplicar
