@@ -96,6 +96,12 @@ class Entity: public Node
 		//retorna a animação atual dada um nome qualquer, 
 		//usada internamente por changeAnim
 		virtual std::string getAnimName ( std::string animName );
+		//retorna o nome usado pela animação atual
+		virtual std::string currentAnimName (  );
+		//retorna true caso tenha animName
+		virtual bool hasAnimName(const std::string & animName);
+		//apaga uma animação de anim caso exista
+		void eraseAnim (const std::string & animName);
 		bool setCurrAnim ( std::string animName );//muda para uma animação já carregada de nome animName
 		virtual void changeAnim ( std::string animName, bool reset=false );
 		//atualiza a animação

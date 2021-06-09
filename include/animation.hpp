@@ -73,6 +73,7 @@ struct STimer
 			return int(ticks);
 		}
 
+		//verifica se já passou de maxTime
 		bool finish ( int maxTime ) {
 			if (ticks >= maxTime) {
 				state = 0;

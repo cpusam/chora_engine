@@ -172,6 +172,26 @@ std::string Entity::getAnimName ( std::string animName )
 	return animName;
 }
 
+std::string Entity::currentAnimName (  ) {
+	for (auto &it: anim)
+		//compara os endereços
+		if (&(it.second) == currAnim)
+			return it.first;
+	return "";
+}
+
+bool Entity::hasAnimName(const std::string & animName) {
+	return anim.find(animName) != anim.end();
+}
+
+void Entity::eraseAnim (const std::string & animName) {
+	if (hasAnimName(animName)) {
+		if (currentAnimName() == animName)
+			currAnim = nullptr;
+		anim.erase(animName);
+	}
+}
+
 bool Entity::setCurrAnim ( std::string animName )
 {
 	std::map<std::string, Animation>::const_iterator it = anim.find(animName);
