@@ -131,14 +131,19 @@ struct Vect
 		return *this;
 	}
 
-	inline static Vect add (Vect a, Vect b)
+	inline static Vect add (const Vect & a, const Vect & b)
 	{
 		return Vect(a.x + b.x, a.y + b.y);
 	}
 
-	inline static Vect sub ( Vect a, Vect b )
+	inline static Vect sub ( const Vect & a, const Vect & b )
 	{
 		return Vect(a.x - b.x, a.y - b.y);
+	}
+
+	inline static Vect mult ( const Vect & a, const Vect & b )
+	{
+		return Vect(a.x * b.x, a.y * b.y);
 	}
 
 	inline Vect & scale ( float s )
