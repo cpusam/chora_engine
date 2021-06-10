@@ -19,7 +19,7 @@ bool Background::setTexture ( SDL_Texture * t )
 	scrolling nos eixos x e y mas limitado pelas bordas da surface
 */
 
-void Background::draw ( SDL_Renderer * renderer, Camera * cam )
+void Background::draw ( SDL_Renderer * renderer, Camera * cam, const SDL_Rect * source, const SDL_Rect * destiny )
 {
 	Vect p;
 	SDL_Rect d, src;
@@ -28,20 +28,25 @@ void Background::draw ( SDL_Renderer * renderer, Camera * cam )
 	if (!texture)
 		return;
 
-	SDL_QueryTexture(texture, 0, 0, &w, &h);
+	if (!destiny)
+		SDL_QueryTexture(texture, 0, 0, &w, &h);
 
-	if (cam)
+	bool withDestiny = false;
+	if (cam && !destiny)
 	{
 		p = cam->getPosition() + position;
 		d = cam->getDimension();
 		src = d;
 	}
-	else
+	else if (!destiny)
 	{
 		int rw, rh;
 		SDL_RenderGetLogicalSize(renderer, &rw, &rh);
 		d = (SDL_Rect){0,0,rw,rh};
 		src = d;
+	}
+	else {
+		withDestiny = true;
 	}
 
 	src.x = int(p.x);
@@ -65,7 +70,10 @@ void Background::draw ( SDL_Renderer * renderer, Camera * cam )
 		src.y = h - d.h;
 	}
 
-	SDL_RenderCopy(renderer, texture, &src, &d);
+	if (!withDestiny)
+		SDL_RenderCopy(renderer, texture, &src, &d);
+	else
+		SDL_RenderCopy(renderer, texture, source, destiny);
 }
 // apenas um scrolling horizontal
 void Background::drawHorizontal ( SDL_Renderer * renderer, Camera * cam )

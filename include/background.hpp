@@ -84,7 +84,7 @@ class Background
 			scrolling nos eixos x e y mas limitado pelas bordas da surface
 		*/
 
-		void draw ( SDL_Renderer * renderer, Camera * cam );
+		void draw ( SDL_Renderer * renderer, Camera * cam, const SDL_Rect * source=nullptr, const SDL_Rect * destiny=nullptr );
 
 		// apenas um scrolling horizontal
 		void drawHorizontal ( SDL_Renderer * renderer, Camera * cam );
