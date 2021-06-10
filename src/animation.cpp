@@ -93,6 +93,12 @@ SDL_Texture * AnimationFrame::getTexture (  )
 	return texture;
 }
 
+void AnimationFrame::setScale (const Vect & s) {
+	scale = s;
+	destiny.w = destiny.w * s.x;
+	destiny.h = destiny.h * s.y;
+}
+
 bool AnimationFrame::destroy (  )
 {
 	bool ret = false;
@@ -257,6 +263,12 @@ void Animation::flip ( bool hor, bool ver )
 		frames[i].setFlip(hor, ver);
 }
 
+void Animation::setScale (const Vect & s) {
+	for (auto &frame: frames)
+		frame.setScale(s);
+}
+
+
 SDL_RendererFlip Animation::get_flip (  )
 {
 	return frames.at(0).get_flip();
@@ -309,43 +321,6 @@ SDL_Texture * Animation::getTexture ( int i )
 void Animation::destroyTextures (  )
 {
 	
-	std::vector <SDL_Texture *> t;
-
-	for (unsigned int i(0); i < texture.size(); i++)
-	{
-		SDL_Texture * aux = texture[i];
-		int count = 0;
-		for (unsigned int j(0); j < texture.size(); j++)
-			if (j != i && aux == texture[j])
-				count++;
-
-		if (count == 0)
-		{
-			if (aux)
-				t.push_back(aux);
-		}
-		else
-		{
-			count = 0;
-			for (unsigned int j(0); j < t.size(); j++)
-				if (t.at(j) == aux)
-					count++;
-
-			if (count > 0)
-				if (aux)
-					t.push_back(aux);
-		}
-	}
-
-	for (unsigned int i(0); i < t.size(); i++)
-		if (t.at(i))
-			SDL_DestroyTexture(t.at(i));
-
-	for (unsigned int i = 0; i < frames.size(); i++)
-		frames[i].destroy();
-	
-	texture.clear();
-	//t.clear();
 }
 
 bool Animation::hasTexture ( SDL_Texture * t )

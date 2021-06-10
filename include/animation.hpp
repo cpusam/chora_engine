@@ -111,6 +111,7 @@ class AnimationFrame
 		int delay;
 		SDL_Rect source, destiny;
 		float angle; // em radianos
+		Vect scale;
 		Vect orientation;
 		SDL_Texture * texture;
 		SDL_RendererFlip flip;
@@ -130,6 +131,7 @@ class AnimationFrame
 			flip = SDL_FLIP_NONE;
 			angle = 0;
 			orientation.set(1,0);
+			scale.set(1,1);
 		}
 
 		AnimationFrame ( int d, SDL_Rect s )
@@ -141,6 +143,7 @@ class AnimationFrame
 			angle = 0;
 			orientation.set(1,0);
 			flip = SDL_FLIP_NONE;
+			scale.set(1,1);
 		}
 		
 		AnimationFrame ( SDL_Texture * t, int d, SDL_Rect s, SDL_Rect dst )
@@ -154,6 +157,7 @@ class AnimationFrame
 			angle = 0;
 			orientation.set(1,0);
 			flip = SDL_FLIP_NONE;
+			scale.set(1,1);
 		}
 		
 		AnimationFrame ( const AnimationFrame & frame )
@@ -167,6 +171,7 @@ class AnimationFrame
 			angle = frame.angle;
 			orientation = frame.orientation;
 			flip = frame.flip;
+			scale.set(1,1);
 		}
 
 		void setFrame ( int d, SDL_Rect src );
@@ -193,6 +198,8 @@ class AnimationFrame
 		SDL_RendererFlip get_flip (  );
 		void setTexture ( SDL_Texture * t );
 		SDL_Texture * getTexture (  );
+
+		void setScale (const Vect & s);
 
 		bool destroy (  );
 
@@ -282,6 +289,7 @@ class Animation: public StateMachine
 		
 		void flip ( SDL_RendererFlip f );
 		void flip ( bool hor, bool ver );
+		void setScale (const Vect & s);
 
 		virtual void addFrame ( SDL_Texture * t, AnimationFrame & f );
 		virtual void addFrame ( SDL_Texture * t, SDL_Rect const & src, int d );
