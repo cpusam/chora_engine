@@ -30,6 +30,8 @@
 #include "sdl.hpp"
 #include "camera.hpp"
 
+extern void setSeedRand(uint32_t seed);
+extern void setSeedRandInt(uint32_t seed);
 extern double Rand ( double min=0.0, double max=1.0 );
 extern int RandInt ( int min, int max );
 

@@ -1,15 +1,27 @@
 #include "util.hpp"
-#if defined(WIN32) || defined(_WIN64)
-	#include <ctime>
-#else
+#include <ctime>
+#ifndef USE_STDRAN
 	#include <random>
+
+	std::mt19937 rng, rng_int;  // the Mersenne Twister with a popular choice of parameters
 #endif
 
+uint32_t seed_val = 0, seed_val_int = 0;
+
+void setSeedRand(uint32_t s) {
+	seed_val = s;
+	rng.seed(seed_val);
+}
+
+void setSeedRandInt(uint32_t s) {
+	seed_val_int = s;
+	rng_int.seed(seed_val_int);
+}
 
 double Rand ( double min, double max )
 {
+	#if defined(USE_STDRAND)
 	//removido suporte a std::random por enquanto
-	#if defined(WIN32) || defined(_WIN64) || 1
 		static bool inited = false;
 		if (!inited)
 		{
@@ -18,17 +30,19 @@ double Rand ( double min, double max )
 		}
 		return max * (double(rand()) / (RAND_MAX+1.0)) + min;
 	#else
-		std::random_device rd;
-		std::mt19937 mt(rd());
-		std::uniform_real_distribution<double> dist(min, max);
+		if (seed_val == 0)
+		{
+			setSeedRand(time(nullptr));
+		}
 
-		return dist(mt);
+		std::uniform_int_distribution<int> r;
+		return min + (max - min) * (r(rng)/double(r.max()));
 	#endif
 }
 
 int RandInt ( int min, int max )
 {
-	#if defined(WIN32) || defined(_WIN64)
+	#if defined(USE_STDRAND)
 		static bool inited = false;
 		if (!inited)
 		{
@@ -37,11 +51,13 @@ int RandInt ( int min, int max )
 		}
 		return max * (double(rand()) / (RAND_MAX+1.0)) + min;
 	#else
-		std::random_device rd;
-		std::mt19937 mt(rd());
-		std::uniform_int_distribution<int> dist(min, max);
-		
-		return dist(mt);
+		if (seed_val_int == 0)
+		{
+			setSeedRandInt(time(nullptr));
+		}
+
+		std::uniform_int_distribution<int> r;
+		return int(min + (max - min) * (r(rng_int)/double(r.max())));
 	#endif
 }
 

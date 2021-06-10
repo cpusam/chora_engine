@@ -46,7 +46,16 @@
 		"typeinfo": "cpp",
 		"utility": "cpp",
 		"algorithm": "cpp",
-		"string": "cpp"
+		"string": "cpp",
+		"condition_variable": "cpp",
+		"optional": "cpp",
+		"string_view": "cpp",
+		"memory": "cpp",
+		"iterator": "cpp",
+		"map": "cpp",
+		"memory_resource": "cpp",
+		"random": "cpp",
+		"bit": "cpp"
 	},
 	"C_Cpp.intelliSenseEngineFallback": "Disabled"
 }
