@@ -95,8 +95,10 @@ SDL_Texture * AnimationFrame::getTexture (  )
 
 void AnimationFrame::setScale (const Vect & s) {
 	scale = s;
-	destiny.w = destiny.w * s.x;
-	destiny.h = destiny.h * s.y;
+}
+
+Vect AnimationFrame::getScale () {
+	return scale;
 }
 
 bool AnimationFrame::destroy (  )
@@ -404,6 +406,10 @@ int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 	dest.x = dest.x + x;
 	dest.y = dest.y + y;
 
+	Vect scale = frames.at(index).getScale();
+	dest.w *= scale.x;
+	dest.w *= scale.y;
+
 	if (texture.size() && texture.at(index))
 	{
 		if (use_rot == false)
@@ -455,10 +461,9 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int d
 	dest.x = (dest.x - position.x) + dim.x;
 	dest.y = (dest.y - position.y) + dim.y;
 	
-	/*
-	SDL_Rect rect = rectIntersect(dest,dim);
-	dest = rect;
-	*/
+	Vect scale = frames.at(index).getScale();
+	dest.w *= scale.x;
+	dest.w *= scale.y;
 
 	if (texture.size() && texture.at(index))
 	{
@@ -505,11 +510,9 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 	dest.x = (dest.x - position.x) + dim.x;
 	dest.y = (dest.y - position.y) + dim.y;
 	
-	
-	/*
-	SDL_Rect rect = rectIntersect(dest,dim);
-	dest = rect;
-	*/
+	Vect scale = frames.at(index).getScale();
+	dest.w *= scale.x;
+	dest.w *= scale.y;
 
 	if (texture.size() && texture.at(index))
 	{

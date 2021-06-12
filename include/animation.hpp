@@ -200,6 +200,7 @@ class AnimationFrame
 		SDL_Texture * getTexture (  );
 
 		void setScale (const Vect & s);
+		Vect getScale ();
 
 		bool destroy (  );
 
