@@ -1,6 +1,6 @@
 #include "util.hpp"
 #include <ctime>
-#ifndef USE_STDRAN
+#ifndef USE_STDRAND
 	#include <random>
 
 	std::mt19937 rng, rng_int;  // the Mersenne Twister with a popular choice of parameters
@@ -10,14 +10,14 @@ uint32_t seed_val = 0, seed_val_int = 0;
 
 void setSeedRand(uint32_t s) {
 	seed_val = s;
-	#ifndef USE_STDRAN
+	#ifndef USE_STDRAND
 		rng.seed(seed_val);
 	#endif
 }
 
 void setSeedRandInt(uint32_t s) {
 	seed_val_int = s;
-	#ifndef USE_STDRAN
+	#ifndef USE_STDRAND
 		rng_int.seed(seed_val_int);
 	#endif
 }
