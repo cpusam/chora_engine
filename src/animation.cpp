@@ -408,7 +408,7 @@ int Animation::draw ( SDL_Renderer * renderer, int x, int y )
 
 	Vect scale = frames.at(index).getScale();
 	dest.w *= scale.x;
-	dest.w *= scale.y;
+	dest.h *= scale.y;
 
 	if (texture.size() && texture.at(index))
 	{
@@ -463,7 +463,7 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y, int d
 	
 	Vect scale = frames.at(index).getScale();
 	dest.w *= scale.x;
-	dest.w *= scale.y;
+	dest.h *= scale.y;
 
 	if (texture.size() && texture.at(index))
 	{
@@ -512,7 +512,7 @@ int Animation::draw ( SDL_Renderer * renderer, Camera * cam, int x, int y )
 	
 	Vect scale = frames.at(index).getScale();
 	dest.w *= scale.x;
-	dest.w *= scale.y;
+	dest.h *= scale.y;
 
 	if (texture.size() && texture.at(index))
 	{
