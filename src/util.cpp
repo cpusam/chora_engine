@@ -10,12 +10,16 @@ uint32_t seed_val = 0, seed_val_int = 0;
 
 void setSeedRand(uint32_t s) {
 	seed_val = s;
-	rng.seed(seed_val);
+	#ifndef USE_STDRAN
+		rng.seed(seed_val);
+	#endif
 }
 
 void setSeedRandInt(uint32_t s) {
 	seed_val_int = s;
-	rng_int.seed(seed_val_int);
+	#ifndef USE_STDRAN
+		rng_int.seed(seed_val_int);
+	#endif
 }
 
 double Rand ( double min, double max )

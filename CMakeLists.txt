@@ -12,7 +12,8 @@ IF (USE_CLANG)
 ENDIF (USE_CLANG)
 
 #SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-#add_definitions(-DUSE_STDRAND) #pra usar rand() no Rand/RandInt
+#pra usar rand() no Rand/RandInt
+add_definitions(-DUSE_STDRAND)
 
 IF (CMAKE_VERSION VERSION_LESS "3.1")
 	IF (NOT USE_CLANG AND NOT COMPILE_TO_WINDOWS)
