@@ -33,7 +33,7 @@
 #include "../include/collision.hpp"
 #include "./Node.hpp"
 
-typedef long int EntityID;
+typedef NodeID EntityID;
 
 // devia estar em movable.hpp
 enum Direction: unsigned int
@@ -58,7 +58,6 @@ class Entity: public Node
 	public:
 		Entity();
 		virtual ~Entity();
-		static int next (  );
 		std::string instanceof (  );
 		
 		//deprecated
@@ -219,7 +218,6 @@ class Entity: public Node
 		SDL_Texture * texture;
 		Animation * currAnim;
 		std::map<std::string, Animation> anim;
-		std::string name;
 		std::string group; //grupo desta entidade
 
 		

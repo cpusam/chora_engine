@@ -365,8 +365,10 @@ void Elements::updateEntities (  )
 	for (size_t i = 0, size = entities.size(); i < size; i++)
 		if (entities[i])
 		{
-			if (std::find(eraseEntity.begin(), eraseEntity.end(), entities[i]) != eraseEntity.end())
-				continue;
+			#if 0
+				if (std::find(eraseEntity.begin(), eraseEntity.end(), entities[i]) != eraseEntity.end())
+					continue;
+			#endif
 			#ifdef DEBUG_ELEMENTS
 			//std::cout<<"[PTR] "<<(*entities[i])<<std::endl;
 			std::cout<<"Atualizando "<<entities[i]->getName()<<" id="<<entities[i]->getID()<<std::endl;
@@ -374,7 +376,6 @@ void Elements::updateEntities (  )
 
 			entities[i]->updatePosition();
 			entities[i]->update();
-
 			#ifdef DEBUG_ELEMENTS
 			printf("Atualizado %s\n\n", entities[i]->getName().c_str());
 			#endif

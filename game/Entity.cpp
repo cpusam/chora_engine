@@ -5,14 +5,10 @@
 #include <limits>
 #include <algorithm>
 
-EntityID Entity::countID = 1;
-
 Entity::Entity()
 {
 	layer = 0;
-	id = countID;
-	countID++;
-	std::cout<<"New Entity ID="<<id<<std::endl;
+	std::cout<<"New Entity ID="<<getID()<<std::endl;
 	dir = NONE_DIR;
 	visible = true;
 
@@ -22,7 +18,6 @@ Entity::Entity()
 	collPoints = 3;
 	texture = nullptr;
 	currAnim = nullptr;
-	name = "";
 	countPath = 0;
 	
 	oldPosition.set(0,0);
@@ -38,10 +33,6 @@ Entity::Entity()
 Entity::~Entity()
 {
 	std::cout<<"Deletando "<<getName()<<" id="<<getID()<<std::endl;
-}
-
-int Entity::next (  ) {
-	return countID + 1;
 }
 
 std::string Entity::instanceof (  ) {
