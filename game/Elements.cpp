@@ -133,7 +133,6 @@ Entity * Elements::remEntity ( EntityID id )
 	
 	auto it = std::find(entities.begin(), entities.end(), ret);
 	if (it != entities.end()) {
-		eraseEntity.push_back(ret);
 		entities.erase(it);
 	}
 

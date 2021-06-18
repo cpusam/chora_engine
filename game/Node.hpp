@@ -34,7 +34,7 @@ class Node: public StateMachine
 		virtual void setPositionY ( float py );
 
 		//escala
-		virtual Vect getScale (  );
+		virtual const Vect & getScale (  );
 		virtual float getScaleX (  );
 		virtual float getScaleY (  );
 

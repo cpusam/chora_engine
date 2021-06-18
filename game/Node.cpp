@@ -76,7 +76,7 @@ void Node::setPositionY ( float py )
 }
 
 //escala
-Vect Node::getScale (  )
+const Vect & Node::getScale (  )
 {
 	return scale;
 }
