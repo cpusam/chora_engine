@@ -228,6 +228,26 @@ bool SoundPlayer::addSound ( SoundFX & s )
 	return true;
 }
 
+bool SoundPlayer::addChunk (const std::string & path, const std::string & id) {
+	SoundFX s;
+	s.loadChunk(path, id);
+	std::vector<SoundFX>::iterator it = sound.begin();
+	
+	for (auto &snd: sound) {
+		if (snd.getID() == id) {
+			break;
+		}
+		it++;
+	}
+
+	if (it != sound.end())
+		*it = s;
+	else
+		sound.push_back(s);
+
+	return true;
+}
+
 bool SoundPlayer::playing ( std::string id )
 {
 	for (SoundFX & it: sound)

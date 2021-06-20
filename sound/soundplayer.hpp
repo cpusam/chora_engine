@@ -138,6 +138,7 @@ class SoundPlayer: public StateMachine
 		bool hasSound ( std::string id );
 
 		bool addSound ( SoundFX & s );
+		bool addChunk (const std::string & path, const std::string & id);
 
 		bool playing ( std::string id );
 
