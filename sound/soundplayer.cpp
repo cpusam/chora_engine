@@ -240,8 +240,10 @@ bool SoundPlayer::addChunk (const std::string & path, const std::string & id) {
 		it++;
 	}
 
-	if (it != sound.end())
+	if (it != sound.end()) {
+		(*it).destroy();
 		*it = s;
+	}
 	else
 		sound.push_back(s);
 
